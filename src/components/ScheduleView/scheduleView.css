@@ -1,0 +1,14 @@
+#calendarContainer {
+    background-color: lightblue;
+}
+
+.calendar {
+    background-color: darkorange;
+    display: grid;
+    grid-template-columns: 1;
+    grid-template-rows: 180;
+}
+
+.timebar {
+    background-color: lightgreen;
+}

@@ -11,6 +11,7 @@ import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import UserPage from './components/UserPage/UserPage';
 import InfoPage from './components/InfoPage/InfoPage';
+import scheduleView from './components/ScheduleView/ScheduleView';
 
 import './styles/main.css';
 
@@ -35,6 +36,10 @@ const App = () => (
         <Route
           path="/info"
           component={InfoPage}
+        />
+        <Route
+          path="/schedule"
+          component={scheduleView}
         />
         {/* OTHERWISE no path */}
         <Route
