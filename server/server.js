@@ -29,8 +29,8 @@ app.use(passport.session());
 
 /* Routes */
 app.use('/api/user', userRouter);
-app.use('api/acuity', acuityRouter);
-app.use('api/google', googleRouter);
+app.use('/api/acuity', acuityRouter);
+app.use('/api/google', googleRouter);
 
 // Serve static files
 app.use(express.static('build'));
