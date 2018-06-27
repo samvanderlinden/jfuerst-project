@@ -8,7 +8,7 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-class Calendar extends Component {
+class Schedule extends Component {
 
     constructor(props) {
         super(props);
@@ -58,5 +58,5 @@ class Calendar extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Calendar);
+export default connect(mapStateToProps)(Schedule);
 
