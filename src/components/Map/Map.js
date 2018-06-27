@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
+import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
+
 
 const mapStateToProps = state => ({
   user: state.user,
 });
 
-class InfoPage extends Component {
+class Map extends Component {
   componentDidMount() {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
@@ -21,27 +22,29 @@ class InfoPage extends Component {
     }
   }
 
-  render() {
-    let content = null;
+  logout = () => {
+    this.props.dispatch({
+      type: LOGIN_ACTIONS.LOGOUT
+    });
+  }
 
-    if (this.props.user.userName) {
-      content = (
-        <div>
-          <p>
-            Info Page
-          </p>
-        </div>
-      );
-    }
+  render() {
+
+    const content = (
+      <div>
+        <h1 id="map">Map</h1>
+        <button onClick={this.logout}>Log Out</button>
+      </div>
+    );
 
     return (
       <div>
         <Nav />
-        { content }
+        {content}
       </div>
     );
   }
 }
 
-// this allows us to use <App /> in index.js
-export default connect(mapStateToProps)(InfoPage);
+export default connect(mapStateToProps)(Map);
+
