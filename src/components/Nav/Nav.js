@@ -7,12 +7,12 @@ const Nav = () => (
       <ul>
         <li>
           <Link to="/schedule">
-          Schedule
+            Schedule
           </Link>
         </li>
         <li>
           <Link to="/map">
-          Map
+            Map
           </Link>
         </li>
       </ul>

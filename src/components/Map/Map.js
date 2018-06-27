@@ -40,7 +40,7 @@ class Map extends Component {
     return (
       <div>
         <Nav />
-        { content }
+        {content}
       </div>
     );
   }

@@ -10,11 +10,11 @@ const mapStateToProps = state => ({
 
 class Schedule extends Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
 
-    }
+  }
 
   componentDidMount() {
     this.props.dispatch({
@@ -34,25 +34,19 @@ class Schedule extends Component {
     });
   }
 
-
-
-
   render() {
 
-      const content = (
-        <div>
-          <h1 id="schedule">Schedule</h1>
-          <button onClick={this.logout}>Log Out</button>
-        </div>
-      );
-
-
-
+    const content = (
+      <div>
+        <h1 id="schedule">Schedule</h1>
+        <button onClick={this.logout}>Log Out</button>
+      </div>
+    );
 
     return (
       <div>
         <Nav />
-        { content } 
+        {content}
       </div>
     );
   }
