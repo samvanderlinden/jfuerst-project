@@ -1,0 +1,25 @@
+#mileage {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 40%;
+    margin: 10px;
+    float: center;
+}
+
+#mileage td, #mileage th {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+#mileage tr:nth-child(even){background-color: #f2f2f2;}
+
+#mileage tr:hover {background-color: #ddd;}
+
+#mileage th {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+    background-color: red;
+    color: white;
+}
+
