@@ -4,6 +4,8 @@ import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 import MapContainer from './MapContainer';
+import Mileage from './Mileage';
+import map from './map.css'
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -28,7 +30,6 @@ class Map extends Component {
     });
   }
 
-  
   render() {
 
     const content = (
@@ -38,12 +39,13 @@ class Map extends Component {
       </div>
     );
 
-
     return (
       <div>
         <Nav />
         {content}
+        <Mileage />
         <MapContainer/>
+ 
       </div>
     );
   }
