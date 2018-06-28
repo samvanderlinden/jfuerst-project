@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import dates from './utils/dates';
 import ResourceGrid from './ResourceGrid';
 import { navigate } from './utils/constants';
-const Resource = React.createClass({
-  propTypes: {
-    date: React.PropTypes.instanceOf(Date).isRequired
-  },
 
+class Resource extends Component {
   render() {
     let { date, ...props } = this.props;
     let { start, end } = Resource.range(date);
@@ -15,7 +13,11 @@ const Resource = React.createClass({
       <ResourceGrid {...props} start={start} end={end} eventOffset={10} />
     );
   }
-});
+}
+
+Resource.propTypes = {
+  date: PropTypes.instanceOf(Date).isRequired
+};
 
 Resource.navigate = (date, action) => {
   switch (action){

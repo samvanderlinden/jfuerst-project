@@ -84,7 +84,7 @@ export default {
     'practitionerName': 'Aaaa singh',
     'isUnCancel': true,
     'cancellationReason': 'Text is available under the Creative Commons Attribution-ShareAlike License; additional terms may apply. By using this site, you agree to the Terms of Use and Privacy Policy',
-    'isDragable': false,
+    'isDragable': true,
   }, {
     'title': 'Ccccccccccccc',
     'isRecurrence': true,
@@ -99,7 +99,7 @@ export default {
     'resourceId': 'sched01',
     'start': new Date(2018, 5, 27, 6, 0, 0, 0),
     'end': new Date(2018, 5, 27, 7, 30, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   }, {
     'title': 'Smartdata Events',
     'isRecurrence': false,
@@ -114,7 +114,7 @@ export default {
     'resourceId': 'sched01',
     'start': new Date(2018, 5, 27, 5, 30, 0, 0),
     'end': new Date(2018, 5, 27, 10, 30, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   }, {
     'title': 'Another Meeting',
     'isRecurrence': true,
@@ -130,7 +130,7 @@ export default {
     'statusId':1,
     'start': new Date(2018, 5, 27, 2, 30, 0, 0),
     'end': new Date(2018, 5, 27, 4, 30, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 1',
@@ -146,7 +146,7 @@ export default {
     'statusId':1,
     'start': new Date(2018, 5, 27, 4, 0, 0, 0),
     'end': new Date(2018, 5, 27, 4, 15, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 2',
@@ -161,7 +161,7 @@ export default {
     'resourceId': 'sched02',
     'start': new Date(2018, 5, 27, 4, 0, 0, 0),
     'end': new Date(2018, 5, 27, 4, 15, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 3',
@@ -175,7 +175,7 @@ export default {
     'resourceId': 'c',
     'start': new Date(2018, 5, 27, 4, 0, 0, 0),
     'end': new Date(2018, 5, 27, 4, 15, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 4',
@@ -189,7 +189,7 @@ export default {
     'resourceId': 'sched03',
     'start': new Date(2018, 5, 27, 3, 45, 0, 0),
     'end': new Date(2018, 5, 27, 4, 15, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 5',
@@ -203,7 +203,7 @@ export default {
     'resourceId': 'sched03',
     'start': new Date(2018, 5, 27, 2, 10, 0, 0),
     'end': new Date(2018, 5, 27, 6, 30, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting 6',
@@ -217,7 +217,7 @@ export default {
     'resourceId': 'sched02',
     'start': new Date(2018, 5, 27, 1, 50, 0, 0),
     'end': new Date(2018, 5, 27, 5, 0, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   },
   {
     'title': 'Another Meeting',
@@ -232,7 +232,7 @@ export default {
     'statusId':1,
     'start': new Date(2018, 5, 27, 2, 30, 0, 0),
     'end': new Date(2018, 5, 27, 4, 30, 0, 0),
-    'isDragable': false,
+    'isDragable': true,
   }
   ],
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
+import PropTypes from 'prop-types';
 
 import dates from './utils/dates';
 import localizer from './localizer'
@@ -22,43 +23,43 @@ import { inRange, sortEvents, segStyle } from './utils/eventLevels';
 export default class ResourceGrid extends Component {
 
   static propTypes = {
-    events: React.PropTypes.array.isRequired,
-    resources: React.PropTypes.array.isRequired,
+    events: PropTypes.array.isRequired,
+    resources: PropTypes.array.isRequired,
 
-    step: React.PropTypes.number,
-    start: React.PropTypes.instanceOf(Date),
-    end: React.PropTypes.instanceOf(Date),
-    min: React.PropTypes.instanceOf(Date),
-    max: React.PropTypes.instanceOf(Date),
-    now: React.PropTypes.instanceOf(Date),
+    step: PropTypes.number,
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+    min: PropTypes.instanceOf(Date),
+    max: PropTypes.instanceOf(Date),
+    now: PropTypes.instanceOf(Date),
 
-    scrollToTime: React.PropTypes.instanceOf(Date),
-    eventPropGetter: React.PropTypes.func,
+    scrollToTime: PropTypes.instanceOf(Date),
+    eventPropGetter: PropTypes.func,
     dayFormat: dateFormat,
-    culture: React.PropTypes.string,
+    culture: PropTypes.string,
 
-    rtl: React.PropTypes.bool,
-    width: React.PropTypes.number,
+    rtl: PropTypes.bool,
+    width: PropTypes.number,
 
     titleAccessor: accessor.isRequired,
     allDayAccessor: accessor.isRequired,
     startAccessor: accessor.isRequired,
     endAccessor: accessor.isRequired,
 
-    selected: React.PropTypes.object,
-    selectable: React.PropTypes.oneOf([true, false, 'ignoreEvents']),
+    selected: PropTypes.object,
+    selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
-    onNavigate: React.PropTypes.func,
-    onSelectSlot: React.PropTypes.func,
-    onSelectEnd: React.PropTypes.func,
-    onSelectStart: React.PropTypes.func,
-    onSelectEvent: React.PropTypes.func,
-    onDrillDown: React.PropTypes.func,
+    onNavigate: PropTypes.func,
+    onSelectSlot: PropTypes.func,
+    onSelectEnd: PropTypes.func,
+    onSelectStart: PropTypes.func,
+    onSelectEvent: PropTypes.func,
+    onDrillDown: PropTypes.func,
 
-    messages: React.PropTypes.object,
-    components: React.PropTypes.object.isRequired,
+    messages: PropTypes.object,
+    components: PropTypes.object.isRequired,
 
-    businessHours: React.PropTypes.array,
+    businessHours: PropTypes.array,
   }
 
   static defaultProps = {

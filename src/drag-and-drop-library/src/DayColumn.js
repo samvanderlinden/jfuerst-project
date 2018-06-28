@@ -11,7 +11,6 @@ import localizer from './localizer'
 import { notify } from './utils/helpers';
 import { accessor, elementType, dateFormat } from './utils/propTypes';
 import { accessor as get } from './utils/accessors';
-import Img from './img/doctor.png';
 import getStyledEvents, { positionFromDate, startsBefore } from './utils/dayViewLayout'
 
 import TimeColumn from './TimeColumn'
@@ -101,7 +100,7 @@ class DaySlot extends React.Component {
     dayWrapperComponent: elementType,
     eventComponent: elementType,
     eventWrapperComponent: elementType.isRequired,
-    resource: React.PropTypes.string,
+    resource: PropTypes.string,
   };
 
   static defaultProps = { dragThroughEvents: true };

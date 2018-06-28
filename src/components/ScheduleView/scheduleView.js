@@ -1,6 +1,22 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import cn from 'classnames';
+
+// dnd library imports //
+import localizer from '../../drag-and-drop-library/src/localizers/globalize';
+import globalize from 'globalize';
+
+import '../../drag-and-drop-library/src/less/styles.less';
+import '../../drag-and-drop-library/examples/styles.less';
+import '../../drag-and-drop-library/examples/prism.less';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+
+import BigCalendar from '../../drag-and-drop-library/src/index';
+import withDragAndDrop from '../../drag-and-drop-library/src/addons/dragAndDrop';
+import resources from '../../drag-and-drop-library/stories/resourceEvents';
+// end dnd library imports //
 
 import Nav from '../../components/Nav/Nav';
 
@@ -8,66 +24,23 @@ import { USER_ACTIONS } from '../../redux/actions/userActions';
 
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 
-
-
-//START CALENDAR LIBRARY IMPORTS//
-import FullCalendar from 'fullcalendar-reactwrapper';
-import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css';
-//END CALENDAR LIBRARY IMPORTS//
-
-
+localizer(globalize);
 
 const mapStateToProps = state => ({
     user: state.user,
 });
 
-class ExampleComponent extends Component {
+const DragAndDropCalendar = withDragAndDrop(BigCalendar);
+
+class Dnd extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-        events:[
-                    {
-                        title: 'All Day Event',
-                        start: '2017-05-01'
-                    },
-                    {
-                        title: 'Long Event',
-                        start: '2017-05-07',
-                        end: '2017-05-10'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2017-05-09T16:00:00'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2017-05-16T16:00:00'
-                    },
-                    {
-                        title: 'Conference',
-                        start: '2017-05-11',
-                        end: '2017-05-13'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: '2017-05-12T10:30:00',
-                        end: '2017-05-12T12:30:00'
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: '2017-05-13T07:00:00'
-                    },
-                    {
-                        title: 'Click for Google',
-                        url: 'http://google.com/',
-                        start: '2017-05-28'
-                    }
-                ],		
+            events: resources.events,
         }
-      }
-    
+        this.moveEvent = this.moveEvent.bind(this)
+    }
+
     componentDidMount() {
         this.props.dispatch({
             type: USER_ACTIONS.FETCH_USER
@@ -87,26 +60,70 @@ class ExampleComponent extends Component {
         // this.props.history.push('home');
     }
 
+    moveEvent({ event, start, end, ...rest }) {
+        const { events } = this.state;
+
+        const idx = events.indexOf(event);
+        const resourceId = rest.resource || event.resourceId;
+        const updatedEvent = { ...event, start, end, resourceId };
+
+        const nextEvents = [...events]
+        nextEvents.splice(idx, 1, updatedEvent)
+
+        this.setState({
+            events: nextEvents
+        })
+
+        alert(`${event.title} was dropped onto ${event.start}`);
+    }
+
+
+    slotPropGetter(date) { // , start, end, isSelected
+        // console.log('date.getDate()...', Object.prototype.toString.call(date))
+        if (Object.prototype.toString.call(date) === '[object Date]') {
+            let style = {
+                backgroundColor: '#ccc',
+            };
+            let style1 = {
+                backgroundColor: '#fff',
+            };
+            if (date.getDate() === 7) {
+
+                return {
+                    style: style,
+                };
+            } else {
+                return {
+                    style: style1,
+                }
+            }
+        }
+    }
+
     render() {
         let content = null;
 
         if (this.props.user.userName) {
             content = (
-                <div id="example-component">
-                <FullCalendar
-                     id = "your-custom-ID"
-                 header = {{
-                    left: 'prev,next today myCustomButton',
-                    center: 'title',
-                    right: 'month,basicWeek,basicDay'
-                }}
-                 defaultDate={'2017-09-12'}
-                navLinks= {true} // can click day/week names to navigate views
-                editable= {true}
-                eventLimit= {true} // allow "more" link when too many events
-                events = {this.state.events}	
-            />
-              </div>
+                <DragAndDropCalendar
+                    className = 'demo'
+                    selectable
+                    events={this.state.events}
+                    // events={resources.events}
+                    resources={resources.list}
+                    statusHeadings={[{ id: 1, title: 'connected' }, { id: 2, title: 'Confirmed' }]}
+                    // slotProp={this.slotPropGetter(date)}
+                    // slotPropGetter={(date) => this.slotPropGetter(date) }
+                    // usersAvailability = {this.state.usersAvailability}
+                    onEventDrop={this.moveEvent}
+                    defaultView='resource' // set to 'resource' for default resource view
+                    defaultDate={new Date()}
+                    onSelectEvent={event => console.log(event)}
+                // onSelectSlot={(slotInfo) => alert(
+                //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+                //     `\nend: ${slotInfo.end.toLocaleString()}`
+                //   )}
+                />
             );
         }
 
@@ -120,5 +137,5 @@ class ExampleComponent extends Component {
 }
 
 // this allows us to use <App /> in index.js
-export default connect(mapStateToProps)(ExampleComponent);
+export default connect(mapStateToProps)(DragDropContext(HTML5Backend)(Dnd));
 
