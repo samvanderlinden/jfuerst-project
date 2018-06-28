@@ -9,14 +9,15 @@ import {
 import Header from './components/Header/Header';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
-import UserPage from './components/UserPage/UserPage';
-import InfoPage from './components/InfoPage/InfoPage';
+import Schedule from './components/Schedule/Schedule';
+import Map from './components/Map/Map';
+
 
 import './styles/main.css';
 
 const App = () => (
   <div>
-    <Header title="Project Base" />
+    <Header title="JFuerst Real Estate Photography" />
     <Router>
       <Switch>
         <Redirect exact from="/" to="/home" />
@@ -29,12 +30,12 @@ const App = () => (
           component={RegisterPage}
         />
         <Route
-          path="/user"
-          component={UserPage}
+          path="/schedule"
+          component={Schedule}
         />
         <Route
-          path="/info"
-          component={InfoPage}
+          path="/map"
+          component={Map}
         />
         {/* OTHERWISE no path */}
         <Route
