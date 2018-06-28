@@ -37,6 +37,7 @@ class Dnd extends Component {
         super(props)
         this.state = {
             events: resources.events,
+            usersAvailability: {},
         }
         this.moveEvent = this.moveEvent.bind(this)
     }
@@ -114,7 +115,7 @@ class Dnd extends Component {
                     statusHeadings={[{ id: 1, title: 'connected' }, { id: 2, title: 'Confirmed' }]}
                     // slotProp={this.slotPropGetter(date)}
                     // slotPropGetter={(date) => this.slotPropGetter(date) }
-                    // usersAvailability = {this.state.usersAvailability}
+                    usersAvailability = {this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource' for default resource view
                     defaultDate={new Date()}

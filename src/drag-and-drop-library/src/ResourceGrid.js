@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
-import PropTypes from 'prop-types';
 
 import dates from './utils/dates';
 import localizer from './localizer'
