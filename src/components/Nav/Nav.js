@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Date from '../Schedule/Date/Date';
+// import Date from '../Schedule/Date/Date';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
+import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 
 const styles = {
   list: {
@@ -38,11 +38,19 @@ class Nav extends Component {
     }
   }
 
+  
+
   toggleDrawer = (side, open) => () => {
     this.setState({
       [side]: open,
     });
   };
+
+  logout = () => {
+    this.props.dispatch({
+      type: LOGIN_ACTIONS.LOGOUT
+    });
+  }
 
   render() {
     const { classes } = this.props;
@@ -56,6 +64,10 @@ class Nav extends Component {
           <Divider />
           <List>            
               <Link to="/map">Map</Link>
+          </List>
+          <Divider />
+          <List>
+          <button onClick={this.logout}>Log Out</button>
           </List>
         </div>
       </div>

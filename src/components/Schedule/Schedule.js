@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Nav from '../../components/Nav/Nav';
-import TimeBar from '../Schedule/TimeBar/TimeBar';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
-import AppointmentCard from './AppointmentCard/AppointmentCard';
-import SchedRow from './SchedRow/SchedRow';
 
 
 const mapStateToProps = state => ({
@@ -32,18 +28,11 @@ class Schedule extends Component {
     }
   }
 
-  logout = () => {
-    this.props.dispatch({
-      type: LOGIN_ACTIONS.LOGOUT
-    });
-  }
-
   render() {
 
     const content = (
       <div>
         <h1 id="schedule">Schedule</h1>
-        <button onClick={this.logout}>Log Out</button>
       </div>
     );
 
@@ -51,7 +40,6 @@ class Schedule extends Component {
       <div>
         <Nav />
         {content}
-        <TimeBar />
       </div>
     );
   }
