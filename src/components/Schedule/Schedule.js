@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Nav from '../../components/Nav/Nav';
+import TimeBar from '../Schedule/TimeBar/TimeBar';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
+import AppointmentCard from './AppointmentCard/AppointmentCard';
+import SchedRow from './SchedRow/SchedRow';
+
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -47,6 +51,7 @@ class Schedule extends Component {
       <div>
         <Nav />
         {content}
+        <TimeBar />
       </div>
     );
   }
