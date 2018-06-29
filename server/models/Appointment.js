@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AppointmentSchema = new Schema({
-  id: { type: Number, required: true, index:{ unique: true } },
+  id: { type: Number, index:{ unique: true } },
   firstName: { type: String },
   lastName: { type: String },
   phone: { type: String },
@@ -34,7 +34,7 @@ const AppointmentSchema = new Schema({
   canClientCancel: { type: Boolean },
   canClientReschedule: { type: Boolean },
   lat: { type: String },
-  lon: { type: String }
+  lng: { type: String }
 });
 
 module.exports = mongoose.model('Appointment', AppointmentSchema);
