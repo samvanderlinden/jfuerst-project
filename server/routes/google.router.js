@@ -55,8 +55,8 @@ router.post('/geocode', (req, res) => {
       res.sendStatus(200);
   })
   .catch((error) => {
-      console.log('POST \'/geocode\' error:', error); // log to the terminal if something went wrong
-      res.sendStatus(500); // send 'Server Error' message to the client
+      console.log('POST \'/geocode\' error:', error); 
+      res.sendStatus(500); 
   })
 });
 
