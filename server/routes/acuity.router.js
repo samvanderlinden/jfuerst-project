@@ -1,43 +1,67 @@
 const express = require('express');
-const { rejectUnauthenticated } = require('../modules/authentication-middleware');
-const encryptLib = require('../modules/encryption');
-const Person = require('../models/Person');
-const userStrategy = require('../strategies/user.strategy');
+const Acuity = require('acuityscheduling');
+const Appointment = require('../models/Appointment');
+const Calendar = require('../models/Calendar');
+
+const acuity = Acuity.basic({
+  userId: process.env.ACUITY_USER_ID,
+  apiKey: process.env.ACUITY_API_KEY
+});
 
 const router = express.Router();
 
-// Handles Ajax request for user information if user is authenticated
-router.get('/', rejectUnauthenticated, (req, res) => {
-  // Send back user object from database
-  res.send(req.user);
+const filterCalendars = (unfilteredCalendars) => {
+  let filteredCalendars = [];
+  let ignoredCalendars = ['*members', '*placeHolder', 'zPhotog', 'zSched'];
+  unfilteredCalendars.forEach(calendar => {
+    if(!ignoredCalendars.some(ignoredString => calendar.name.includes(ignoredString))) {
+      filteredCalendars.push(calendar);
+    }
+  });
+  return filteredCalendars;
+}
+
+router.get('/appointments', (req, res) => {
+  let appointmentsOptions = {
+    qs: {
+      minDate: req.query.minDate,
+      maxDate: req.query.maxDate,
+    },
+  };
+  acuity.request('appointments', appointmentsOptions, function(error, response, appointments) {
+    if (error) return console.error(error);
+    (async () => {
+      try {
+        await Appointment.remove({});
+        await Appointment.create(appointments);
+        res.sendStatus(201);
+      } catch(error) {
+        throw error;
+      }
+    })().catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+    });
+  });
 });
 
-// Handles POST request with new user data
-// The only thing different from this and every other post we've seen
-// is that the password gets encrypted before being inserted
-router.post('/register', (req, res, next) => {
-  const username = req.body.username;
-  const password = encryptLib.encryptPassword(req.body.password);
-
-  const newPerson = new Person({ username, password });
-  newPerson.save()
-    .then(() => { res.sendStatus(201); })
-    .catch((err) => { next(err); });
-});
-
-// Handles login form authenticate/login POST
-// userStrategy.authenticate('local') is middleware that we run on this route
-// this middleware will run our POST if successful
-// this middleware will send a 404 if not successful
-router.post('/login', userStrategy.authenticate('local'), (req, res) => {
-  res.sendStatus(200);
-});
-
-// clear all server session information about this user
-router.get('/logout', (req, res) => {
-  // Use passport's built-in method to log out the user
-  req.logout();
-  res.sendStatus(200);
+router.get('/calendars', (req, res) => {
+  acuity.request('calendars', function(error, response, calendars) {
+    if (error) return console.error(error);
+    (async () => {
+      try {
+        await Calendar.remove({});
+        const filteredCalendars = await filterCalendars(calendars);
+        await Calendar.create(filteredCalendars);
+        res.sendStatus(201);
+      } catch(error) {
+        throw error;
+      }
+    })().catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+    });
+  });
 });
 
 module.exports = router;
