@@ -12,8 +12,9 @@ const router = express.Router();
 
 const filterCalendars = (unfilteredCalendars) => {
   let filteredCalendars = [];
+  let ignoredCalendars = ['*members', '*placeHolder', 'zPhotog', 'zSched'];
   unfilteredCalendars.forEach(calendar => {
-    if(!calendar.name.includes('zPhotog') && !calendar.name.includes('zSched')) {
+    if(!ignoredCalendars.some(ignoredString => calendar.name.includes(ignoredString))) {
       filteredCalendars.push(calendar);
     }
   });
