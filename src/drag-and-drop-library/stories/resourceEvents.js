@@ -1,5 +1,6 @@
 const moment = require('moment');
 
+// HARDCODED DATA TO BE REPLACED BY LIVE GETS FROM THIRD-PARTY SCHEDULING API
 const originalAcuityArray = [
 {
       id: 212214338,
@@ -2606,6 +2607,7 @@ const originalAcuityArray = [
     }
   ]
 
+// SAMPLE EVENTS FROM LIBRARY DEMO
 const sampleArray = [
   {
     'title': 'Mmmmmmmmmmmmmmmmmm',
@@ -2843,23 +2845,20 @@ const sampleArray = [
   }
   ];
 
+// EXTRACT CALENDAR FROM THIRD-PARTY SCHEDULING APPLICATION AS RESOURCE FOR THIS APPLICATION'S SCHEDULE DISPLAY
 const resourceExtractor = originalObject => {
   let extractedResource =originalObject.calendar;
   return extractedResource;
 }
-
 const resourceArray = originalAcuityArray.map(resourceExtractor);
-
 const uniqueResourcesArray = [...new Set(resourceArray)];
-
 const resourceList = uniqueResourcesArray.map(currentResource => {
   return {id: currentResource,
   title: currentResource}
 });
+// END EXTRACT CALENDAR FROM THIRD-PARTY-SCHEDULING APPLICAITON AS RESOURCE FOR THIS APPLICATION'S SCHEDULE DISPLAY
 
-console.log(resourceArray);
-console.log(uniqueResourcesArray);
-console.log(resourceList);
+
 
   const objectConverter = originalObject => {
     let finalObject = {
@@ -2906,71 +2905,49 @@ console.log(resourceList);
     };
     return finalObject;
 }
-
 const convertedArray = originalAcuityArray.map(objectConverter);
 
-convertedArray.push({
-  'id': '123456',
-  'title': 'Mmmmmmmmmmmmmmmmmm',
-  'isRecurrence': true,
-  'patientName': 'SSSSSSSSSSSSS',
-  'clinicianImage': '../src/img/doctor.png',
-  'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
-  'appointmentType': 'Regular appointment',
-  'appointmentTime': '8:00 PM - 10:30 PM',
-  'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
-  'coPay': '4000',
-  'soapNoteTitle': 'View Soap Note',
-  'setProfileTitle': 'setProfileTitleAccessor',
-  'staffs': [{
-      'staffName': 'Morgan',
-      'image': '../src/img/doctor.png',
-      'link': ''
-    },
-    {
-      'staffName': 'Jason',
-      'image': '../src/img/doctor.png',
-      'link': ''
-    },
-    {
-      'staffName': 'Charlee',
-      'image': '../src/img/doctor.png',
-      'link': ''
-    }
-  ],
-  'resourceId': 'sched01',
-  'start': new Date(2018, 5, 27, 20, 0, 0, 0),
-  'end': new Date(2018, 5, 27, 21, 0, 0, 0),
-  'isRecurrenceEdit': false,
-  'isEdit': true,
-  'isDelete': true,
-  'isDragable': true,
-});
-
-console.log(convertedArray);
-
-console.log(sampleArray);
+//HARDCODED EVENT FOR TESTING
+// convertedArray.push({
+//   'id': '123456',
+//   'title': 'Mmmmmmmmmmmmmmmmmm',
+//   'isRecurrence': true,
+//   'patientName': 'SSSSSSSSSSSSS',
+//   'clinicianImage': '../src/img/doctor.png',
+//   'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
+//   'appointmentType': 'Regular appointment',
+//   'appointmentTime': '8:00 PM - 10:30 PM',
+//   'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
+//   'coPay': '4000',
+//   'soapNoteTitle': 'View Soap Note',
+//   'setProfileTitle': 'setProfileTitleAccessor',
+//   'staffs': [{
+//       'staffName': 'Morgan',
+//       'image': '../src/img/doctor.png',
+//       'link': ''
+//     },
+//     {
+//       'staffName': 'Jason',
+//       'image': '../src/img/doctor.png',
+//       'link': ''
+//     },
+//     {
+//       'staffName': 'Charlee',
+//       'image': '../src/img/doctor.png',
+//       'link': ''
+//     }
+//   ],
+//   'resourceId': 'sched01',
+//   'start': new Date(2018, 5, 27, 20, 0, 0, 0),
+//   'end': new Date(2018, 5, 27, 21, 0, 0, 0),
+//   'isRecurrenceEdit': false,
+//   'isEdit': true,
+//   'isDelete': true,
+//   'isDragable': true,
+// });
 
 export default {
   events: convertedArray,
 
-  list: [{
-    id: 'sched01',
-    title: 'sched01'
-  }, {
-    id: 'sched02',
-    title: 'sched02'
-  }, {
-    id: 'sched03',
-    title: 'sched03'
-  }, {
-    id: 'Photog 12',
-    title: 'Photog 12'
-  }, {
-    id: 'Photog 13',
-    title: 'Photo 13'
-  }, {
-    id: 'Photog 13',
-    title: 'Photo 13'
-  }]
+  list: resourceList,
 }
