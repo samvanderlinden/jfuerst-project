@@ -13,7 +13,9 @@ import UserPage from './components/UserPage/UserPage';
 import InfoPage from './components/InfoPage/InfoPage';
 import scheduleView from './components/ScheduleView/ScheduleView';
 
-import './styles/main.css';
+import './calendar.css'
+
+// import './styles/main.css';
 
 const App = () => (
   <div>

@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000",
-  "files": [
-    "lib/"
-  ],
+  "style": "lib/css/react-big-calendar.css",
   "dependencies": {
     "acuityscheduling": "^0.1.7",
     "axios": "^0.17.1",
