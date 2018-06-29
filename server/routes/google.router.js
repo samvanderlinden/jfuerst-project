@@ -1,43 +1,80 @@
 const express = require('express');
-const { rejectUnauthenticated } = require('../modules/authentication-middleware');
-const encryptLib = require('../modules/encryption');
-const Person = require('../models/Person');
-const userStrategy = require('../strategies/user.strategy');
-
 const router = express.Router();
+const Appointment = require('../models/Appointment');
+const axios = require('axios');
 
-// Handles Ajax request for user information if user is authenticated
-router.get('/', rejectUnauthenticated, (req, res) => {
-  // Send back user object from database
-  res.send(req.user);
+
+//Google Distance Matrix API call - calculates drive time from point A to point B based on time and traffic
+router.get('/distance', (req, res) => {
+  axios({
+      method: 'GET',
+      url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial`,
+      params: {
+          origins: '44.9780806,-93.2634508', //lat and long separated by , with no spaces
+          destinations: '45.0626425,-93.20983', //lat and long separated by , with no spaces
+          departure_time: '1530826200',
+          travel_mode: 'pessimistic',
+          key: 'AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M',
+      }
+  })
+  .then((response) => {
+      res.send(response.data.rows)
+      console.log(response.data.rows)
+  })
+  .catch((error) => {
+      console.log('error with distance GET to API', error);
+  });
 });
 
-// Handles POST request with new user data
-// The only thing different from this and every other post we've seen
-// is that the password gets encrypted before being inserted
-router.post('/register', (req, res, next) => {
-  const username = req.body.username;
-  const password = encryptLib.encryptPassword(req.body.password);
 
-  const newPerson = new Person({ username, password });
-  newPerson.save()
-    .then(() => { res.sendStatus(201); })
-    .catch((err) => { next(err); });
+//Google Geocoding API - converts addresses to latitude and longitude
+router.get('/geocode', (req, res) => {
+  axios({
+      method: 'GET',
+      url: `https://maps.googleapis.com/maps/api/geocode/json?`,
+      params: {
+          address: '5942 2nd Street NE, Fridley, MN', //street # street name, city, state - no suites, floors, or buildings
+          key: 'AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M',
+      }
+  })
+  .then((response) => {
+      res.send(response.data.results)
+      console.log(response.data.results)
+  })
+  .catch((error) => {
+      console.log('error with geocode GET to API', error);
+  });
 });
 
-// Handles login form authenticate/login POST
-// userStrategy.authenticate('local') is middleware that we run on this route
-// this middleware will run our POST if successful
-// this middleware will send a 404 if not successful
-router.post('/login', userStrategy.authenticate('local'), (req, res) => {
-  res.sendStatus(200);
+//Post lat and lng to the database
+router.post('/geocode', (req, res) => {
+  const Appointment = req.body;
+  console.log('POST: /geocode');
+  Appointment.findByIdAndUpdate(req.body._id, req.body.lat, req.body.lng)
+  .then(() => {
+      res.sendStatus(200);
+  })
+  .catch((error) => {
+      console.log('POST \'/geocode\' error:', error); // log to the terminal if something went wrong
+      res.sendStatus(500); // send 'Server Error' message to the client
+  })
 });
 
-// clear all server session information about this user
-router.get('/logout', (req, res) => {
-  // Use passport's built-in method to log out the user
-  req.logout();
-  res.sendStatus(200);
-});
+//Get request to database for appointment info
+router.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+  console.log('GET /api/appointment');
+  Appointment.find({}).then((result) => {
+  res.send(result);
+  }).catch((error) => {
+  console.log('Error GET /api/appointment', error)
+  res.sendStatus(500);
+  });
+  } else {
+  res.sendStatus(403);
+  }
+  })
+  
+
 
 module.exports = router;
