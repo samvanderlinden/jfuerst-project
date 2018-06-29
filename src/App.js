@@ -9,14 +9,11 @@ import {
 import Header from './components/Header/Header';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
-import scheduleView from './components/ScheduleView/ScheduleView';
+import ScheduleView from './components/ScheduleView/ScheduleView';
 
-import Schedule from './components/Schedule/Schedule';
 import Map from './components/Map/Map';
 
 import './calendar.css'
-
-// import './styles/main.css';
 
 const App = () => (
   <div>
@@ -34,15 +31,11 @@ const App = () => (
         />
         <Route
           path="/schedule"
-          component={Schedule}
+          component={ScheduleView}
         />
         <Route
           path="/map"
           component={Map}
-        />
-        <Route
-          path="/schedule"
-          component={scheduleView}
         />
         {/* OTHERWISE no path */}
         <Route
