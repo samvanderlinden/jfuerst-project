@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AppointmentSchema = new Schema({
-  id: { type: Number, required: true, index:{ unique: true } },
+  id: { type: Number, index:{ unique: true } },
   firstName: { type: String },
   lastName: { type: String },
   phone: { type: String },
