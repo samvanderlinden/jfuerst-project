@@ -78,7 +78,6 @@ class Dnd extends Component {
         alert(`${event.title} was dropped onto ${event.start}`);
     }
 
-
     slotPropGetter(date) { // , start, end, isSelected
         // console.log('date.getDate()...', Object.prototype.toString.call(date))
         if (Object.prototype.toString.call(date) === '[object Date]') {
