@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 
@@ -38,7 +40,7 @@ class Nav extends Component {
     }
   }
 
-  
+
 
   toggleDrawer = (side, open) => () => {
     this.setState({
@@ -58,16 +60,23 @@ class Nav extends Component {
     const sideList = (
       <div className={classes.list}>
         <div className={classes.root}>
-          <List>           
-              <Link to="/schedule">Schedule</Link>           
+          <List component="nav">
+            <ListItem button component="a" href="#/schedule">
+              <ListItemText primary="Schedule" />
+            </ListItem>
           </List>
           <Divider />
-          <List>            
-              <Link to="/map">Map</Link>
+          <List component="nav">
+            <ListItem button component="a" href="#/map">
+              <ListItemText primary="Map" />
+            </ListItem>
           </List>
           <Divider />
-          <List>
-          <button onClick={this.logout}>Log Out</button>
+          <List component="nav">
+            <ListItem button component="a" onClick={this.logout}>
+
+              <ListItemText primary="Log Out" />
+            </ListItem>
           </List>
         </div>
       </div>
