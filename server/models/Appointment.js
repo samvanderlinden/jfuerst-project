@@ -34,7 +34,7 @@ const AppointmentSchema = new Schema({
   canClientCancel: { type: Boolean },
   canClientReschedule: { type: Boolean },
   lat: { type: String },
-  lon: { type: String }
+  lng: { type: String }
 });
 
 module.exports = mongoose.model('Appointment', AppointmentSchema);
