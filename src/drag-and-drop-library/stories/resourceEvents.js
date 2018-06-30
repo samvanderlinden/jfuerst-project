@@ -2898,6 +2898,7 @@ const resourceList = uniqueResourcesArray.map(currentResource => {
         // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
         'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
         // 'end': new Date(2018, 5, 27, 18, 0, 0, 0),
+        'duration': originalObject.duration,
         'isRecurrenceEdit': false,
         'isEdit': true,
         'isDelete': true,
