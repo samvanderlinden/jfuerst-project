@@ -14,7 +14,7 @@ class MapContainer extends Component {
                 lat: 44.986656,
                 lng: -93.258133,
             },
-            zoom: 11,
+            zoom: 12,
         };
     }
 
@@ -43,8 +43,10 @@ class MapContainer extends Component {
         ]
 
         let marker = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png',]
+        let counter = 0;
 
         let placeDisplayOnMarker = place.map(((location, i) => {
+            
             return (
                 <Marker key={i} position={{ lat: location.lat, lng: location.lng }} icon= {'1.png'}
                 />
@@ -68,8 +70,9 @@ class MapContainer extends Component {
 
         return (
 
-            <div style={{ height: '500px', width: '600px', position: 'absolute' }}>
-                <Map
+            // <div>
+             <div style={{ height: '600px', width: '1370px', position: 'relative' }}>
+                <Map className="map"
                     google={this.props.google}
                     zoom={this.state.zoom}
                     initialCenter={this.state.latLng}

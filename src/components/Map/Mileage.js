@@ -28,30 +28,32 @@ class Mileage extends Component {
 
             <div>
                 <table class="map-table mileage">
-                    <thead>
-                        <tr>
-                            <th>Photographer</th>
-                            <th>Total Mileage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Pa Yeng</td>
-                            <td>500</td>
-                        </tr>
-                        <tr>
-                            <td>Pa Yeng</td>
-                            <td>600</td>
-                        </tr>
-                        <tr>
-                            <td>Pa Yeng</td>
-                            <td>700</td>
-                        </tr>
-                    </tbody>
+                    <tr>
+                        <th>Photographer</th>
+                        <td>Photog 1</td>
+                        <td>Photog 2</td>
+                        <td>Photog 3</td>
+                        <td>Photog 4</td>
+                        <td>Photog 5</td>
+                        <td>Photog 6</td>
+                        <td>Photog 7</td>
+                        <td>Photog 8</td>
+                    </tr>
+                    <tr>
+                        <th>Total Mileage</th>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                        <td>100 Miles</td>
+                    </tr>
                 </table>
 
 
-            {/* <table id="mileage">
+                {/* <table id="mileage">
                 <thead>
                     <tr>
                         <th>Photographer</th>

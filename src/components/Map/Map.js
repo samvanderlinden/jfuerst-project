@@ -28,9 +28,11 @@ class Map extends Component {
     return (
       <div>
         <Nav />
-        <Mileage />
-        <Legend />
+    
+       
         <MapContainer/>
+        <Legend />
+        <Mileage />
  
       </div>
     );
