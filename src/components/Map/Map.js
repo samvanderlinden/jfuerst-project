@@ -4,6 +4,7 @@ import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 import MapContainer from './MapContainer';
+import Legend from './Legend';
 import Mileage from './Mileage';
 import map from './map.css'
 
@@ -18,32 +19,17 @@ class Map extends Component {
     });
   }
 
-  componentDidUpdate() {
-    if (!this.props.user.isLoading && this.props.user.userName === null) {
-      this.props.history.push('home');
-    }
-  }
 
-  logout = () => {
-    this.props.dispatch({
-      type: LOGIN_ACTIONS.LOGOUT
-    });
-  }
+
 
   render() {
 
-    const content = (
-      <div>
-        <h1 id="map">Map</h1>
-        <button onClick={this.logout}>Log Out</button>
-      </div>
-    );
 
     return (
       <div>
         <Nav />
-        {content}
         <Mileage />
+        <Legend />
         <MapContainer/>
  
       </div>

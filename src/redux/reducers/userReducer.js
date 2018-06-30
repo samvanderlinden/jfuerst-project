@@ -2,6 +2,10 @@ import { combineReducers } from 'redux';
 import { USER_ACTIONS } from '../actions/userActions';
 
 const userName = (state = null, action) => {
+
+
+
+
   switch (action.type) {
     case USER_ACTIONS.SET_USER:
       return action.user.username || state;
