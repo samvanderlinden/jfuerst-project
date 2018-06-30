@@ -31,14 +31,6 @@ class MapContainer extends Component {
             { lat: 44.9828, lng: -93.1539 },
             { lat: 44.8549, lng: -93.2422 },
             { lat: 44.9778, lng: -93.2650 },
-            { icon: '1.png' },
-            { icon: '2.png' },
-            { icon: '3.png' },
-            { icon: '4.png' },
-            { icon: '5.png' },
-            { icon: '6.png' },
-            { icon: '7.png' },
-            { icon: '8.png' },
 
         ]
 
@@ -67,6 +59,32 @@ class MapContainer extends Component {
         //     },
         // });
 
+/* reducer
+let imgMarker = [
+ 'asdfds',
+ 'asdfsad',
+]
+
+let counter = 0;
+
+for (let i = 0; i < clients; i++) {
+ if (clients[i].calander == 'phota1'){
+   clients[i].imgMarker = imgMarker[0];
+ }else if(clients[i].calander == 'phota2'){
+   clients[i].imgMarker = imgMarker[1];
+ }else if(clients[i].calander == 'phota3'){
+   clients[i].imgMarker = imgMarker[2];
+ }else if(clients[i].calander == 'phota4'){
+   clients[i].imgMarker = imgMarker[3];
+ }else {
+   clients[i].imgMarker = imgMarker[4];
+ }
+ 
+ // clients.markPath = imgMarker[counter];
+ // counter = (counter++) % imgMarker.length; //increment image counter and get reminder
+}
+*/
+
 
         return (
 
@@ -82,7 +100,7 @@ class MapContainer extends Component {
                     <Marker
                         position={{ lat: 45.1081, lng: -93.3761 }}
                         icon={{
-                            url: "1.png",
+                            url: "6.png",
                         }}
                     />
 
@@ -96,7 +114,7 @@ class MapContainer extends Component {
 
                     <Marker
                         icon={{
-                            url: "1.png",
+                            url: "8.png",
                         }}
                     />
                 </Map>
