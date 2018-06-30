@@ -23,6 +23,7 @@ const filterCalendars = (unfilteredCalendars) => {
 
 router.get('/appointments', (req, res) => {
   let appointmentsOptions = {
+    // QUERY MUST INCLUDE MIN AND MAX DATES. FORMAT DATES AS STRING: 'MM/DD/YY'
     qs: {
       minDate: req.query.minDate,
       maxDate: req.query.maxDate,

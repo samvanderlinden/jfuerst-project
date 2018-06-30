@@ -110,41 +110,59 @@ class Dnd extends Component {
 
         // FIND THE MOVED EVENT IN ITS ORDERED ARRAY
         console.log(event.id);
-        console.log(this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id));
-        // console.log(movedEvent);
-        // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
+        const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
+        if (!eventAfterMovedEvent) {
+            console.log('moved event is the last event in the schedule');
+            // RESENT EVENT END TIME
+            end = this.resetEventEndTime(start, event.duration);
+            console.log(`reset end time to ${end}`)
+            updatedEvent = { ...event, start, end, resourceId };
+            // END RESENT EVENT END TIME
 
-        // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
-        // const eventAfterMovedEvent = this.selectEventAfterMovedEventInItsOrder(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
+            // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+            nextEvents = [...events];
+            nextEvents.splice(idx, 1, updatedEvent);
+            // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
 
-        // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-        this.getDriveTime();
-        // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-        
-        // RESENT EVENT END TIME
-        end = moment(start).add(event.duration,'m').toDate();
-        console.log(`reset end time to ${end}`)
-        // END RESENT EVENT END TIME
+            this.setState({
+                events: nextEvents
+            })
+        } else {
+            console.log('next event is: ' + eventAfterMovedEvent.title);
+            // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
 
-        // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-        end = moment(end).add(this.props.currentDriveTime,'m').toDate();
-        console.log(`after drive time, end is ${end}`);
-        updatedEvent = { ...event, start, end, resourceId };
-        // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-        
-        // UPDATE EVENTS ARRAY WITH UPDATED EVENT
-        nextEvents = [...events];
-        nextEvents.splice(idx, 1, updatedEvent);
-        // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+            // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
+            // const eventAfterMovedEvent = this.selectEventAfterMovedEventInItsOrder(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
 
-        // DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
-        // END DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
+            // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+            this.getDriveTime(event.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
+            // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
 
-        //WHALEHUNTER: END WHALEHUNTER'S LINES
+            // RESENT EVENT END TIME
+            end = this.resetEventEndTime(start, event.duration);
+            console.log(`reset end time to ${end}`)
+            // END RESENT EVENT END TIME
 
-        this.setState({
-            events: nextEvents
-        })
+            // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+            end = moment(end).add(this.props.currentDriveTime, 'm').toDate();
+            console.log(`after drive time, end is ${end}`);
+            updatedEvent = { ...event, start, end, resourceId };
+            // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+
+            // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+            nextEvents = [...events];
+            nextEvents.splice(idx, 1, updatedEvent);
+            // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+            // DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
+            // END DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
+
+            //WHALEHUNTER: END WHALEHUNTER'S LINES
+
+            this.setState({
+                events: nextEvents
+            })
+        }
 
         alert(`${event.title} was dropped onto ${event.start}`);
     }
@@ -167,6 +185,10 @@ class Dnd extends Component {
             arrayOfArrays.push(newArray);
         }
         return arrayOfArrays;
+    }
+
+    resetEventEndTime = (start, duration) => {
+        return moment(start).add(duration, 'm').toDate();
     }
 
     // WHALEHUNTER: created this function
