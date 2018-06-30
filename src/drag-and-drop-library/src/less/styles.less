@@ -8,9 +8,10 @@ body{
 .rbc-calendar {
   box-sizing: border-box;
   height: 100%;
-  display: flex;
+  display: block;
   flex-direction: column;
   align-items: stretch;
+  overflow-x: scroll;
 }
 
 .rbc-calendar *,
@@ -53,6 +54,7 @@ body{
   font-weight: bold;
   font-size: 90%;
   min-height: 0;
+  min-width: 900px;
 
   > a {
     &, &:active, &:visited {

@@ -72,9 +72,8 @@ class Nav extends Component {
             </ListItem>
           </List>
           <Divider />
-          <List component="nav">
-            <ListItem button component="a" onClick={this.logout}>
-
+          <List component="nav">         
+            <ListItem className="logoutButton" button component="a" onClick={this.logout} id="logoutButton">
               <ListItemText primary="Log Out" />
             </ListItem>
           </List>
