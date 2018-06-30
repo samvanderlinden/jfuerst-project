@@ -1,3 +1,10 @@
+/*This is the start of adding new CSS*/
+#logoutButton {
+  position: fixed;
+  bottom: 0;
+}
+/*This is the end of adding new CSS*/
+
 .rbc-btn {
     color: inherit;
     font: inherit;
@@ -72,6 +79,7 @@
     font-weight: bold;
     font-size: 90%;
     min-height: 0;
+    min-width: 450px;
   }
   .rbc-header > a,
   .rbc-header > a:active,
@@ -722,6 +730,7 @@
   }
   .rbc-day-slot {
     position: relative;
+    min-width: 450px;
   }
   .rbc-day-slot .rbc-event {
     border: 1px solid #265985;
@@ -791,7 +800,7 @@
     -webkit-flex: 1;
         -ms-flex: 1;
             flex: 1;
-    width: 100%;
+    width: fit-content;
     border: 1px solid #DDD;
     min-height: 0;
   }
