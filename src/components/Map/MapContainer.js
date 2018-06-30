@@ -18,7 +18,7 @@ class MapContainer extends Component {
         };
     }
 
-    
+
 
 
     render() {
@@ -26,33 +26,33 @@ class MapContainer extends Component {
         console.log('----------state', this.state)
         console.log('google------', this.props.google)
 
-    
+
         let place = [
             { lat: 44.9828, lng: -93.1539 },
             { lat: 44.8549, lng: -93.2422 },
             { lat: 44.9778, lng: -93.2650 },
-            { icon: '1.png'},
-            { icon: '2.png'}, 
-            { icon: '3.png'}, 
-            { icon: '4.png'}, 
-            { icon: '5.png'}, 
-            { icon: '6.png'}, 
-            { icon: '7.png'}, 
-            { icon: '8.png'}, 
-      
+            { icon: '1.png' },
+            { icon: '2.png' },
+            { icon: '3.png' },
+            { icon: '4.png' },
+            { icon: '5.png' },
+            { icon: '6.png' },
+            { icon: '7.png' },
+            { icon: '8.png' },
+
         ]
 
         let marker = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png',]
         let counter = 0;
 
         let placeDisplayOnMarker = place.map(((location, i) => {
-            
+
             return (
-                <Marker key={i} position={{ lat: location.lat, lng: location.lng }} icon= {'1.png'}
+                <Marker key={i} position={{ lat: location.lat, lng: location.lng }} icon={'1.png'}
                 />
             );
         }))
-        
+
 
         // let oMarker = new google.maps.Marker({
         //     position: latLng,
@@ -71,7 +71,7 @@ class MapContainer extends Component {
         return (
 
             // <div>
-             <div style={{ height: '600px', width: '1370px', position: 'relative' }}>
+            <div style={{ height: '600px', width: '1370px', position: 'relative' }}>
                 <Map className="map"
                     google={this.props.google}
                     zoom={this.state.zoom}
@@ -80,14 +80,14 @@ class MapContainer extends Component {
                     {placeDisplayOnMarker}
 
                     <Marker
-                    position={{ lat: 45.1081, lng: -93.3761}}
+                        position={{ lat: 45.1081, lng: -93.3761 }}
                         icon={{
                             url: "1.png",
                         }}
                     />
 
                     <Marker
-                    position={{ lat: 46.1090, lng: -92.3761}}
+                        position={{ lat: 46.1090, lng: -92.3761 }}
                         icon={{
                             url: "2.png",
                             scale: 50,

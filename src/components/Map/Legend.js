@@ -12,7 +12,7 @@ class Legend extends Component {
 
         return (
 
-            <div class="legend"><h3>Legend</h3>
+            <div class="legend"><h1>Legend</h1>
                 <p> <img src="1.png"/> Photog 1 </p>
                 <p> <img src="2.png"/> Photog 2 </p>
                 <p> <img src="3.png"/> Photog 3 </p>

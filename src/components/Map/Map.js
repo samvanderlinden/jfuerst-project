@@ -19,21 +19,18 @@ class Map extends Component {
     });
   }
 
-
-
-
   render() {
 
 
     return (
       <div>
         <Nav />
-    
-       
-        <MapContainer/>
+
+
+        <MapContainer />
         <Legend />
         <Mileage />
- 
+
       </div>
     );
   }
