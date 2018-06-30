@@ -14,7 +14,7 @@ router.get('/distance', (req, res) => {
           destinations: '45.0626425,-93.20983', //lat and long separated by , with no spaces
           departure_time: '1530826200', //convert to Epoch time in seconds
           travel_mode: 'pessimistic',
-          key: 'AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M',
+          key: process.env.GOOGLE_API_KEY || NULL,
       }
   })
   .then((response) => {
@@ -34,7 +34,7 @@ router.get('/geocode', (req, res) => {
       url: `https://maps.googleapis.com/maps/api/geocode/json?`,
       params: {
           address: '5942 2nd Street NE, Fridley, MN', //street # street name, city, state - no suites, floors, or buildings
-          key: 'AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M',
+          key: process.env.GOOGLE_API_KEY || NULL,
       }
   })
   .then((response) => {
