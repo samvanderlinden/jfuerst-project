@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import cn from 'classnames';
+import moment from 'moment';
 
 // dnd library imports //
 import localizer from '../../drag-and-drop-library/src/localizers/globalize';
@@ -21,13 +22,14 @@ import resources from '../../drag-and-drop-library/stories/resourceEvents';
 import Nav from '../../components/Nav/Nav';
 
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
+import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 
 localizer(globalize);
 
 const mapStateToProps = state => ({
     user: state.user,
+    currentDriveTime: state.schedule.currentDriveTime,
 });
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar);
@@ -42,6 +44,19 @@ class Dnd extends Component {
         this.moveEvent = this.moveEvent.bind(this)
     }
 
+    // WHALEHUNTER: created this function
+    compareEventStartTimes = (eventA, eventB) => {
+        const startTimeA = eventA.start;
+        const startTimeB = eventB.start;
+        let comparison = 0;
+        if (startTimeA > startTimeB) {
+            comparison = 1;
+        } else if (startTimeA < startTimeB) {
+            comparison = -1;
+        }
+        return comparison;
+    }
+
     componentDidMount() {
         this.props.dispatch({
             type: USER_ACTIONS.FETCH_USER
@@ -53,6 +68,20 @@ class Dnd extends Component {
             this.props.history.push('home');
         }
     }
+
+
+    // DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
+    getDriveTime = (locationA, locationB) => {
+        const payload = {
+            locationA: locationA,
+            locationB: locationB,
+        }
+        this.props.dispatch({
+            type: SCHEDULE_ACTIONS.GET_DRIVE_TIME,
+            payload
+        })
+    }
+    // END DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
 
     logout = () => {
         this.props.dispatch({
@@ -66,30 +95,51 @@ class Dnd extends Component {
         const { events } = this.state;
         const idx = events.indexOf(event);
         const resourceId = rest.resource || event.resourceId;
-        const updatedEvent = { ...event, start, end, resourceId };
-        const nextEvents = [...events];
+        let updatedEvent = { ...event, start, end, resourceId };
+        let nextEvents = [...events];
         nextEvents.splice(idx, 1, updatedEvent);
 
         //WHALEHUNTER: START WHALEHUNTER'S LINES
         console.log(nextEvents);
-        // ORDER EVENTS BY TIME WITHIN AN ARRAY FOR EACH RESOURCE 
+
+        // ORDER EVENTS BY TIME WITHIN AN ARRAY FOR EACH RESOURCE
         // AND PUT THOSE ARRAYS OF EVENTS IN A PARENT ARRAY
         const arrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(resources.list, nextEvents);
         console.log(arrayOfResourcesWithOrderedArraysOfEvents);
+        // END ORDERING EVENTS
 
         // FIND THE MOVED EVENT IN ITS ORDERED ARRAY
         console.log(event.id);
         console.log(this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id));
         // console.log(movedEvent);
+        // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
 
         // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
         // const eventAfterMovedEvent = this.selectEventAfterMovedEventInItsOrder(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
 
         // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-        // const movedEventAddress = movedEvent.appointmentAddress;
-        // const eventAfterMovedEventAddress = eventAfterMovedEvent.appointmentAddress;
-        // console.log(`next calculate drive time between ${movedEventAddress} and ${eventAfterMovedEventAddress}`);
-        // const nextEventAfterMovedEvent = this.selectMovedEventInItsOrder();
+        this.getDriveTime();
+        // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+        
+        // RESENT EVENT END TIME
+        end = moment(start).add(event.duration,'m').toDate();
+        console.log(`reset end time to ${end}`)
+        // END RESENT EVENT END TIME
+
+        // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+        end = moment(end).add(this.props.currentDriveTime,'m').toDate();
+        console.log(`after drive time, end is ${end}`);
+        updatedEvent = { ...event, start, end, resourceId };
+        // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+        
+        // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+        nextEvents = [...events];
+        nextEvents.splice(idx, 1, updatedEvent);
+        // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+        // DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
+        // END DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
+
         //WHALEHUNTER: END WHALEHUNTER'S LINES
 
         this.setState({
@@ -97,21 +147,6 @@ class Dnd extends Component {
         })
 
         alert(`${event.title} was dropped onto ${event.start}`);
-    }
-
-    // WHALEHUNTER: created this function
-    selectEventAfterMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
-        let eventAfterMovedEvent = {};
-        for (let i = 0; i < arrayOfArrays.length; i++) {
-            let currentEventsArray = arrayOfArrays[i];
-            for (let j = 0; j < currentEventsArray.length; j++) {
-                let currentEvent = currentEventsArray[j]
-                if (currentEvent.id === movedEventId) {
-                    eventAfterMovedEvent = currentEventsArray[j + 1];
-                }
-            }
-        }
-        return eventAfterMovedEvent;
     }
 
     // WHALEHUNTER: created this function
@@ -134,22 +169,19 @@ class Dnd extends Component {
         return arrayOfArrays;
     }
 
-    // WHALEHUNTER: created this function 
-    compareEventStartTimes = (eventA, eventB) => {
-        const startTimeA = eventA.start;
-        const startTimeB = eventB.start;
-        let comparison = 0;
-        if (startTimeA > startTimeB) {
-            comparison = 1;
-        } else if (startTimeA < startTimeB) {
-            comparison = -1;
+    // WHALEHUNTER: created this function
+    selectEventAfterMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
+        let eventAfterMovedEvent = {};
+        for (let i = 0; i < arrayOfArrays.length; i++) {
+            let currentEventsArray = arrayOfArrays[i];
+            for (let j = 0; j < currentEventsArray.length; j++) {
+                let currentEvent = currentEventsArray[j]
+                if (currentEvent.id === movedEventId) {
+                    eventAfterMovedEvent = currentEventsArray[j + 1];
+                }
+            }
         }
-        return comparison;
-    }
-
-    // WHALEHUNTER: created this function 
-    getDriveTime = (locationA, locationB) => {
-        return Math.floor(Math.random() * 60) + 15;
+        return eventAfterMovedEvent;
     }
 
     slotPropGetter(date) { // , start, end, isSelected
