@@ -6,6 +6,7 @@ export function callGetDriveTime(locationsObject) {
         locationB: locationsObject.locationB,
     });
 
+    // TEMPORARY RANDOM NUMBER GENERATOR REPRESENTS MAPS API CALL FOR DRIVETIME
     return Math.floor(Math.random() * 60) + 15;
 
     //   return axios.get('api/routeHere', body)
