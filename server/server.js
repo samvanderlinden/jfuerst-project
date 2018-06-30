@@ -14,6 +14,7 @@ const passport = require('./strategies/user.strategy');
 // Route includes
 const userRouter = require('./routes/user.router');
 const acuityRouter = require('./routes/acuity.router');
+const databaseRouter = require('./routes/database.router');
 const googleRouter = require('./routes/google.router');
 
 // Body parser middleware
@@ -30,6 +31,7 @@ app.use(passport.session());
 /* Routes */
 app.use('/api/user', userRouter);
 app.use('/api/acuity', acuityRouter);
+app.use('/api/data', databaseRouter);
 app.use('/api/google', googleRouter);
 
 // Serve static files
