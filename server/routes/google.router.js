@@ -12,7 +12,7 @@ router.get('/distance', (req, res) => {
       params: {
           origins: '44.9780806,-93.2634508', //lat and long separated by , with no spaces
           destinations: '45.0626425,-93.20983', //lat and long separated by , with no spaces
-          departure_time: '1530826200',
+          departure_time: '1530826200', //convert to Epoch time in seconds
           travel_mode: 'pessimistic',
           key: 'AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M',
       }
@@ -60,14 +60,14 @@ router.post('/geocode', (req, res) => {
   })
 });
 
-//Get request to database for appointment info
+//Get request to database for appointment locations
 router.get('/', (req, res) => {
   if (req.isAuthenticated()) {
   console.log('GET /api/appointment');
-  Appointment.find({}).then((result) => {
+  Appointment.findById(req.body.id, req.body.location).then((result) => {
   res.send(result);
   }).catch((error) => {
-  console.log('Error GET /api/appointment', error)
+  console.log('Error GET /api/appointment locations', error)
   res.sendStatus(500);
   });
   } else {
