@@ -1,0 +1,3 @@
+export const SCHEDULE_ACTIONS = {
+    GET_DRIVE_TIME: 'GET_DRIVE_TIME',
+  };
