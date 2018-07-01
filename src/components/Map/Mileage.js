@@ -28,28 +28,47 @@ class Mileage extends Component {
 
             <div>
                 <table class="map-table mileage">
+                <thead>
                     <tr>
                         <th>Photographer</th>
-                        <td>Photog 1</td>
-                        <td>Photog 2</td>
-                        <td>Photog 3</td>
-                        <td>Photog 4</td>
-                        <td>Photog 5</td>
-                        <td>Photog 6</td>
-                        <td>Photog 7</td>
-                        <td>Photog 8</td>
-                    </tr>
-                    <tr>
                         <th>Total Mileage</th>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
-                        <td>100 Miles</td>
                     </tr>
+                </thead>
+
+                <tbody>
+                </tbody>  
+                    <tr>
+                    <td>Photog 1</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 2</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 3</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 4</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 5</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 6</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 7</td>
+                    <td>100 Miles</td>   
+                    </tr>  
+                    <tr>
+                    <td>Photog 8</td>
+                    <td>100 Miles</td>   
+                    </tr>  
                 </table>
 
 

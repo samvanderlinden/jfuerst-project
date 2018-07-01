@@ -75,7 +75,7 @@ for (let i = 0; i < clients; i++) {
         return (
 
             // <div>
-            <div style={{ height: '600px', width: '1370px', position: 'relative' }}>
+            <div style={{ height: '600px', width: '850px', position: 'absolute' }}>
                 <Map className="map"
                     google={this.props.google}
                     zoom={this.state.zoom}
