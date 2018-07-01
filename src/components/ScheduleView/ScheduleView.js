@@ -150,7 +150,7 @@ class Dnd extends Component {
     // WHALEHUNTER: manipulated this function
     moveEvent({ event, start, end, ...rest }) {
         const { events } = this.state;
-        const idx = events.indexOf(event);
+        let idx = events.indexOf(event);
         const resourceId = rest.resource || event.resourceId;
         let updatedEvent = { ...event, start, end, resourceId };
         let nextEvents = [...events];
@@ -167,6 +167,7 @@ class Dnd extends Component {
 
         // FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY (BEFORE IT WAS MOVED)
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
+        const eventBeforeMovedEvent = this.selectEventBeforeMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
         // END FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY (BEFORE IT WAS MOVED)
 
         // CHECK WHETHER EVENT AFTER THE MOVED EVENT IS UNDEFINED
@@ -180,13 +181,22 @@ class Dnd extends Component {
             // END RESENT EVENT END TIME
 
             // UPDATE EVENTS ARRAY WITH UPDATED EVENT
-            nextEvents = [...events];
             nextEvents.splice(idx, 1, updatedEvent);
             // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
 
-            this.setState({
-                events: nextEvents
-            })
+            // CASE: EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT
+            // THEN UPDATE SO THAT THE EVENT BEFORE THE MOVED EVENT NOW SHOWS DRIVE TIME TO EVENT AFTER THE MOVED EVENT
+            if (eventBeforeMovedEvent) {
+                console.log('there is an event before the moved event: ');
+                console.log(eventBeforeMovedEvent);
+                this.updateEventBeforeMovedEvent(event, eventBeforeMovedEvent, nextEvents);
+                // END CASE EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT
+            } else {
+                console.log('the moved event is the first in the schedule');
+                this.setState({
+                    events: nextEvents
+                })
+            }
             // END CASE: EVENT AFTER MOVED EVENT IS UNDEFINED
         } else if (eventAfterMovedEvent)
         // CASE: EVENT AFTER MOVED EVENT EXISTS
@@ -208,17 +218,56 @@ class Dnd extends Component {
             // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
 
             // UPDATE EVENTS ARRAY WITH UPDATED EVENT
-            nextEvents = [...events];
             nextEvents.splice(idx, 1, updatedEvent);
             // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
 
-            // DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
-            // END DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
-            this.setState({
-                events: nextEvents
-            })
+            // CASE: EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT
+            // THEN UPDATE SO THAT THE EVENT BEFORE THE MOVED EVENT NOW SHOWS DRIVE TIME TO EVENT AFTER THE MOVED EVENT
+            if (eventBeforeMovedEvent) {
+                console.log('there is an event before the moved event: ');
+                console.log(eventBeforeMovedEvent);
+                this.updateEventBeforeMovedEvent(event, eventBeforeMovedEvent, nextEvents);
+                // END CASE EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT
+            }
+            // END CASE: EVENT AFTER MOVED EVENT IS UNDEFINED
             // END CASE: EVENT AFTER MOVED EVENT EXISTS
+            else {
+                console.log('the moved event is the first in the schedule');
+                this.setState({
+                    events: nextEvents
+                })
+            }
         }
+        // END UPDATE MOVED EVENT'S PREVIOUS ARRAY SO THAT EVENT BEFORE NOW SHOWS DRIVE TIME TO EVENT AFTER
+    }
+
+    updateEventBeforeMovedEvent = (event, eventBeforeMovedEvent, events) => {
+        console.log('init updatEventBeforeMovedEvent:');
+        console.log(eventBeforeMovedEvent);
+        this.getDriveTime(event.appointmentAddress, eventBeforeMovedEvent.appointmentAddress);
+        console.log('drive time between eventBeforeMovedEvent and movedEvent is now: ' + this.props.currentDriveTime);
+        let idx = events.indexOf(eventBeforeMovedEvent);
+
+        // RESENT EVENTBEFOREMOVEDEVENT END TIME
+        let end = this.resetEventEndTime(eventBeforeMovedEvent.start, eventBeforeMovedEvent.duration);
+        console.log(`reset eventBeforeMovedEvent end time to ${end}`)
+        let updatedEvent = { ...eventBeforeMovedEvent, end };
+
+        // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+        console.log('adding drive time to end: ' + this.props.currentDriveTime);
+        end = moment(updatedEvent.end).add(this.props.currentDriveTime, 'minutes').toDate();
+        console.log(`after drive time, end of eventBeforeMovedEvent is now ${end}`);
+        updatedEvent = { ...updatedEvent, end };
+        // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+        console.log(updatedEvent);
+
+        // UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
+        events.splice(idx, 1, updatedEvent);
+        // END UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
+        console.log(events);
+        this.setState({
+            events: events
+        })
     }
 
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -256,6 +305,20 @@ class Dnd extends Component {
             }
         }
         return eventAfterMovedEvent;
+    }
+
+    selectEventBeforeMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
+        let eventBeforeMovedEvent = {};
+        for (let i = 0; i < arrayOfArrays.length; i++) {
+            let currentEventsArray = arrayOfArrays[i];
+            for (let j = 0; j < currentEventsArray.length; j++) {
+                let currentEvent = currentEventsArray[j]
+                if (currentEvent.id === movedEventId) {
+                    eventBeforeMovedEvent = currentEventsArray[j - 1];
+                }
+            }
+        }
+        return eventBeforeMovedEvent;
     }
 
     slotPropGetter(date) { // , start, end, isSelected
