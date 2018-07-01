@@ -3,8 +3,8 @@ table {
     background: #fff;
     width: 30%;
     position: absolute;
-    right: 80px; 
-    top: 390px;
+    right: 50px; 
+    top: 450px;
     opacity: .8;
 }
 
@@ -26,6 +26,7 @@ th{
     border: 3px solid #000;
     padding: 10px;
     margin: 10px;
+    left: 20px;
   }
 
   .title-legend {
@@ -38,9 +39,9 @@ th{
     padding: 10px;
     margin: 10px;
     border: 3px solid #000;
-    width: 28.3%;
-    top: 220px;
-    right: 70px; 
+    width: 28.5%;
+    top: 280px;
+    right: 40px; 
     font-size: 11px;
     position: absolute;
     opacity: .8;
