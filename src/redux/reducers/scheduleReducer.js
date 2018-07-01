@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 
-const currentDriveTime = (state = null, action) => {
+const currentDriveTime = (state = 0, action) => {
   switch (action.type) {
     case SCHEDULE_ACTIONS.SET_CURRENT_DRIVE_TIME:
       return action.payload || state;

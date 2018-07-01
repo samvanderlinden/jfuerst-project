@@ -61,6 +61,7 @@ class Dnd extends Component {
         this.props.dispatch({
             type: USER_ACTIONS.FETCH_USER
         });
+        this.getInitialDriveTimes();
     }
 
     componentDidUpdate() {
@@ -75,13 +76,63 @@ class Dnd extends Component {
         const payload = {
             locationA: locationA,
             locationB: locationB,
-        }
+        };
         this.props.dispatch({
             type: SCHEDULE_ACTIONS.GET_DRIVE_TIME,
             payload
-        })
+        });
     }
     // END DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
+
+    // GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
+    getInitialDriveTimes = () => {
+        console.log('init getInitialDriveTimes');
+        const {events} = this.state;
+        console.log(events);
+        let nextEvents;
+        let end;
+        let updatedEvent;
+        const arrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(resources.list, this.state.events);
+        console.log(arrayOfResourcesWithOrderedArraysOfEvents);
+        // loop through each resource array
+        for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
+            let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
+            // loop through event array
+            for (let j = 0; j < currentResourceEvents.length - 1; j++) {
+                const idx = events.indexOf(currentResourceEvents[j]);
+                let currentEvent = currentResourceEvents[j];
+                let nextEvent = currentResourceEvents[j + 1];
+                console.log('current event is:')
+                console.log(currentEvent);
+                console.log('next event is:')
+                console.log(nextEvent);
+                // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
+                this.getDriveTime(currentEvent.appointmentAddress, nextEvent.appointmentAddress);
+                console.log('confirming that scheduleReducer state has currentDriveTime of: ' + this.props.currentDriveTime);
+                // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+                end = moment(currentEvent.end).add(60, 'm').toDate();
+                console.log(`after drive time, currentEvent's end is ${end}`);
+                // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
+                updatedEvent = { ...currentEvent, end };
+                console.log('current event start is' + updatedEvent.start);
+                console.log('current event duration: '+ updatedEvent.duration);
+                console.log('currentDriveTime is ' + this.props.currentDriveTime);
+                console.log('confirming that end time is updated to: ' + updatedEvent.end);
+                console.log('updated event is: ');
+                console.log(updatedEvent);
+                // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
+                nextEvents = [...events];
+                nextEvents.splice(idx,1, updatedEvent);
+                console.log(nextEvents);
+                this.setState({
+                    events: nextEvents
+                })
+                console.log(this.state.events);
+            }
+
+        }
+    }
+    // END GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
 
     logout = () => {
         this.props.dispatch({
@@ -108,9 +159,12 @@ class Dnd extends Component {
         console.log(arrayOfResourcesWithOrderedArraysOfEvents);
         // END ORDERING EVENTS
 
-        // FIND THE MOVED EVENT IN ITS ORDERED ARRAY
-        console.log(event.id);
+        // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
+        // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
+
+        // CHECK WHETHER EVENT AFTER THE MOVED EVENT IS UNDEFINED
+        // CASE: EVENT AFTER MOVED EVENT IS UNDEFINED:
         if (!eventAfterMovedEvent) {
             console.log('moved event is the last event in the schedule');
             // RESENT EVENT END TIME
@@ -127,13 +181,11 @@ class Dnd extends Component {
             this.setState({
                 events: nextEvents
             })
-        } else {
+            // END CASE: EVENT AFTER MOVED EVENT IS UNDEFINED
+        } else
+        // CASE: EVENT AFTER MOVED EVENT EXISTS
+        {
             console.log('next event is: ' + eventAfterMovedEvent.title);
-            // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
-
-            // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
-            // const eventAfterMovedEvent = this.selectEventAfterMovedEventInItsOrder(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
-
             // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
             this.getDriveTime(event.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
             // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
@@ -156,18 +208,14 @@ class Dnd extends Component {
 
             // DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
             // END DISPATCH A CALL TO UPDATE THE MONGODB WITH MOVED EVENT
-
-            //WHALEHUNTER: END WHALEHUNTER'S LINES
-
             this.setState({
                 events: nextEvents
             })
+            // END CASE: EVENT AFTER MOVED EVENT EXISTS
         }
-
         alert(`${event.title} was dropped onto ${event.start}`);
     }
 
-    // WHALEHUNTER: created this function
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
         // create array to contain an array of events for each resource
         let arrayOfArrays = [];
@@ -191,7 +239,6 @@ class Dnd extends Component {
         return moment(start).add(duration, 'm').toDate();
     }
 
-    // WHALEHUNTER: created this function
     selectEventAfterMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
         let eventAfterMovedEvent = {};
         for (let i = 0; i < arrayOfArrays.length; i++) {
