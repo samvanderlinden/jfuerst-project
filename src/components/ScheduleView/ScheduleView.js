@@ -87,16 +87,19 @@ class Dnd extends Component {
     // GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
     getInitialDriveTimes = () => {
         console.log('init getInitialDriveTimes');
-        const {events} = this.state;
+        const events = this.state.events;
         console.log(events);
-        let nextEvents;
+        let nextEvents = this.state.events;
         let end;
         let updatedEvent;
         const arrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(resources.list, this.state.events);
+        console.log('the array of resources with arrays of events is:');
         console.log(arrayOfResourcesWithOrderedArraysOfEvents);
         // loop through each resource array
         for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
             let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
+            console.log('the current resource events array is: ');
+            console.log(currentResourceEvents);
             // loop through event array
             for (let j = 0; j < currentResourceEvents.length - 1; j++) {
                 const idx = events.indexOf(currentResourceEvents[j]);
@@ -104,6 +107,7 @@ class Dnd extends Component {
                 let nextEvent = currentResourceEvents[j + 1];
                 console.log('current event is:')
                 console.log(currentEvent);
+                console.log('Its index in events array is ' + idx);
                 console.log('next event is:')
                 console.log(nextEvent);
                 // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
@@ -115,22 +119,24 @@ class Dnd extends Component {
                 // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
                 updatedEvent = { ...currentEvent, end };
                 console.log('current event start is' + updatedEvent.start);
-                console.log('current event duration: '+ updatedEvent.duration);
+                console.log('current event duration: ' + updatedEvent.duration);
                 console.log('currentDriveTime is ' + this.props.currentDriveTime);
                 console.log('confirming that end time is updated to: ' + updatedEvent.end);
                 console.log('updated event is: ');
                 console.log(updatedEvent);
                 // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
-                nextEvents = [...events];
-                nextEvents.splice(idx,1, updatedEvent);
+                nextEvents.splice(idx, 1, updatedEvent);
+                console.log('updated nextEvents array:');
                 console.log(nextEvents);
+                console.log('init this.setState')
                 this.setState({
                     events: nextEvents
                 })
+                console.log('checking this.state.events. The array should match nextEvents array');
                 console.log(this.state.events);
             }
-
         }
+
     }
     // END GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
 
