@@ -45,20 +45,6 @@ class MapContainer extends Component {
             );
         }))
 
-
-        // let oMarker = new google.maps.Marker({
-        //     position: latLng,
-        //     sName: "Marker Name",
-        //     map: map,
-        //     icon: {
-        //         path: google.maps.SymbolPath.CIRCLE,
-        //         scale: 8.5,
-        //         fillColor: "#F00",
-        //         fillOpacity: 0.4,
-        //         strokeWeight: 0.4
-        //     },
-        // });
-
 /* reducer
 let imgMarker = [
  'asdfds',
