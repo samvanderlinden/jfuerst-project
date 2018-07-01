@@ -114,7 +114,7 @@ class Dnd extends Component {
                 this.getDriveTime(currentEvent.appointmentAddress, nextEvent.appointmentAddress);
                 console.log('confirming that scheduleReducer state has currentDriveTime of: ' + this.props.currentDriveTime);
                 // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-                end = moment(currentEvent.end).add(60, 'm').toDate();
+                end = moment(currentEvent.end).add(this.props.currentDriveTime, 'm').toDate();
                 console.log(`after drive time, currentEvent's end is ${end}`);
                 // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
                 updatedEvent = { ...currentEvent, end };
@@ -165,9 +165,9 @@ class Dnd extends Component {
         console.log(arrayOfResourcesWithOrderedArraysOfEvents);
         // END ORDERING EVENTS
 
-        // FIND THE EVENT AFTER THE MOVED EVENT IN ITS ORDERED ARRAY
+        // FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY (BEFORE IT WAS MOVED)
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
-        // END FIND THE MOVED EVENT IN ITS ORDERED ARRAY
+        // END FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY (BEFORE IT WAS MOVED)
 
         // CHECK WHETHER EVENT AFTER THE MOVED EVENT IS UNDEFINED
         // CASE: EVENT AFTER MOVED EVENT IS UNDEFINED:
@@ -188,7 +188,7 @@ class Dnd extends Component {
                 events: nextEvents
             })
             // END CASE: EVENT AFTER MOVED EVENT IS UNDEFINED
-        } else
+        } else if (eventAfterMovedEvent)
         // CASE: EVENT AFTER MOVED EVENT EXISTS
         {
             console.log('next event is: ' + eventAfterMovedEvent.title);
@@ -219,7 +219,6 @@ class Dnd extends Component {
             })
             // END CASE: EVENT AFTER MOVED EVENT EXISTS
         }
-        alert(`${event.title} was dropped onto ${event.start}`);
     }
 
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -290,14 +289,11 @@ class Dnd extends Component {
                     className='demo'
                     selectable
                     events={this.state.events}
-                    // events={resources.events}
                     resources={resources.list}
                     statusHeadings={[{ id: 1, title: 'connected' }, { id: 2, title: 'Confirmed' }]}
-                    // slotProp={this.slotPropGetter(date)}
-                    // slotPropGetter={(date) => this.slotPropGetter(date) }
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
-                    defaultView='resource' // set to 'resource' for default resource view
+                    defaultView='resource' // set to 'resource'
                     defaultDate={new Date()}
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(

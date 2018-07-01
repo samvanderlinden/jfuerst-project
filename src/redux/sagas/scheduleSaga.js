@@ -6,7 +6,7 @@ function* initiateGetDriveTime(locationsObject) {
     console.log('init initateGetDriveTime');
     try {
         const driveTime = yield callGetDriveTime(locationsObject);
-        yield console.log(driveTime);
+        yield console.log('response from server is drive time of: ' + driveTime + ' minutes');
         yield put({
             type: SCHEDULE_ACTIONS.SET_CURRENT_DRIVE_TIME,
             payload: driveTime,
