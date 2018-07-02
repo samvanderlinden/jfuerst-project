@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-class Map extends Component {
+class MapView extends Component {
 
   componentDidMount() {
     this.props.dispatch({
@@ -49,5 +49,5 @@ class Map extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Map);
+export default connect(mapStateToProps)(MapView);
 

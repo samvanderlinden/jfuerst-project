@@ -9,8 +9,6 @@ const mapStateToProps = state => ({
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-console.log('api', API_KEY, process.env.REACT_APP_API_KEY)
-
 class MapContainer extends Component {
     constructor(props) {
         super(props);
