@@ -26,6 +26,9 @@ router.get('/distance', (req, res) => {
       console.log('error with distance GET to API', error);
   });
 }
+else {
+  res.sendStatus(401);
+  }
 });
 
 
@@ -48,6 +51,9 @@ router.get('/geocode', (req, res) => {
       console.log('error with geocode GET to API', error);
   });
 }
+else {
+  res.sendStatus(401);
+  }
 });
 
 //Post lat and lng to the database
@@ -63,7 +69,11 @@ router.post('/geocode', (req, res) => {
       console.log('POST \'/geocode\' error:', error); 
       res.sendStatus(500); 
   })
+  
 }
+else {
+  res.sendStatus(401);
+  }
 });
 
 //Get request to database for appointment locations
@@ -77,7 +87,7 @@ router.get('/', (req, res) => {
   res.sendStatus(500);
   });
   } else {
-  res.sendStatus(403);
+  res.sendStatus(401);
   }
   })
   
