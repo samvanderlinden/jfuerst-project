@@ -1,5 +1,6 @@
 const express = require('express');
 const Acuity = require('acuityscheduling');
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const Appointment = require('../models/Appointment');
 const Calendar = require('../models/Calendar');
 
@@ -21,8 +22,7 @@ const filterCalendars = (unfilteredCalendars) => {
   return filteredCalendars;
 }
 
-router.get('/appointments', (req, res) => {
-  if (req.isAuthenticated) {
+router.get('/appointments', rejectUnauthenticated, (req, res) => {
     let appointmentsOptions = {
       // QUERY MUST INCLUDE MIN AND MAX DATES. FORMAT DATES AS STRING: 'MM/DD/YY'
       qs: {
@@ -30,7 +30,7 @@ router.get('/appointments', (req, res) => {
         maxDate: req.query.maxDate,
       },
     };
-    acuity.request('appointments', appointmentsOptions, function (error, response, appointments) {
+    acuity.request('appointments', appointmentsOptions, (error, response, appointments) => {
       if (error) return console.error(error);
       (async () => {
         try {
@@ -45,14 +45,10 @@ router.get('/appointments', (req, res) => {
         res.sendStatus(500);
       });
     });
-  } else {
-    res.sendStatus(401);
-  }
 });
 
-router.get('/calendars', (req, res) => {
-  if (req.isAuthenticated) {
-    acuity.request('calendars', function (error, response, calendars) {
+router.get('/calendars', rejectUnauthenticated, (req, res) => {
+    acuity.request('calendars', (error, response, calendars) => {
       if (error) return console.error(error);
       (async () => {
         try {
@@ -68,9 +64,6 @@ router.get('/calendars', (req, res) => {
         res.sendStatus(500);
       });
     });
-  } else {
-    res.sendStatus(401);
-  }
 });
 
 module.exports = router;
