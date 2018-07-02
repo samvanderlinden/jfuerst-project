@@ -24,6 +24,8 @@ class Mileage extends Component {
 
         let photogTotalMileage = this.props.totalMileage
 
+        
+
         return (
 
             <div>
@@ -70,6 +72,8 @@ class Mileage extends Component {
                     <td>100 Miles</td>   
                     </tr>  
                 </table>
+
+                
 
 
                 {/* <table id="mileage">

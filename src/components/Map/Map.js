@@ -30,6 +30,7 @@ class Map extends Component {
         <MapContainer />
         <Legend />
         <Mileage />
+        <img  className="logo" src="l.png"/> 
 
       </div>
     );
