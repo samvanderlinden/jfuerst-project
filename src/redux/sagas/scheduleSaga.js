@@ -1,6 +1,8 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
+import { callGetAppointmentsFromDatabase} from '../requests/scheduleRequests';
 import { callGetDriveTime } from '../requests/scheduleRequests';
+import { callPopulateDatabaseAppointmentsFromThirdPartyAPI} from '../requests/scheduleRequests';
 
 function* initiateGetDriveTime(locationsObject) {
     console.log('init initateGetDriveTime');
@@ -16,8 +18,24 @@ function* initiateGetDriveTime(locationsObject) {
     }
 }
 
+function * populateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
+    console.log('init populateDatabaseAppointmentsFromThirdPartyAPI');
+    try {
+        yield callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject);
+        const appointmentsFromDataBase = yield callGetAppointmentsFromDatabase();
+        yield put({
+            type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_FROM_DATABASE,
+            payload: appointmentsFromDataBase
+        }) 
+    } catch  (error) {
+        console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);
+    }
+}
+
+
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveTime);
+    yield takeLatest(SCHEDULE_ACTIONS.POPULATE_DATABASE_APPOINTMENTS_FROM_THIRDPARTY_API, populateDatabaseAppointmentsFromThirdPartyAPI)
 }
 
 export default scheduleSaga;

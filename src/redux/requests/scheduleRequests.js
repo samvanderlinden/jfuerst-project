@@ -15,3 +15,24 @@ export function callGetDriveTime(locationsObject) {
     //       throw error.response || error;
     //     });
 }
+
+export function callGetAppointmentsFromDatabase() {
+    return axios.get('/api/data/appointments')
+        .then(response => response.data)
+        .catch((error) => {
+            throw error.response || error;
+        });
+}
+
+
+export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
+    const params = {
+        minDate: dateObject.minDate,
+        maxDate: dateObject.maxDate
+    }
+    return axios.get('/api/acuity/appointments' , {params})
+        .then(response => response.data)
+        .catch((error) => {
+            throw error.response || error;
+        });
+}

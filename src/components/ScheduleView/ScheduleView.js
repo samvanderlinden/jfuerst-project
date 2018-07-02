@@ -61,6 +61,7 @@ class ScheduleView extends Component {
         this.props.dispatch({
             type: USER_ACTIONS.FETCH_USER
         });
+        this.getInitialAppointments();
         this.getInitialDriveTimes();
     }
 
@@ -82,6 +83,21 @@ class ScheduleView extends Component {
             payload
         });
     } // END DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
+
+    // GET INITIAL APPOINTMENTS
+    getInitialAppointments = () => {
+        const today = moment(new Date()).format('MM/DD/YY');
+        const dateObject = {
+            minDate: today,
+            maxDate: today
+        }
+        this.props.dispatch({
+            type: SCHEDULE_ACTIONS.POPULATE_DATABASE_APPOINTMENTS_FROM_THIRDPARTY_API,
+            payload: dateObject
+        })
+    }
+
+
 
     // GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
     getInitialDriveTimes = () => {
