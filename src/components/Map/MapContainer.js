@@ -86,12 +86,18 @@ for (let i = 0; i < clients; i++) {
                     <Marker
                         position={{ lat: 45.1081, lng: -93.3761 }}
                         icon={{
-                            url: "a.png",
+                            url: "3.png",
+                        }}
+                    />
+                    <Marker
+                        position={{ lat: 45.1081, lng: -93.4873 }}
+                        icon={{
+                            url: "5.png",
                         }}
                     />
 
                     <Marker
-                        position={{ lat: 46.1090, lng: -92.3761 }}
+                        position={{ lat: 45.3090, lng: -93.3761 }}
                         icon={{
                             url: "2.png",
                             scale: 50,

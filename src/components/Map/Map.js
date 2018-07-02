@@ -25,8 +25,6 @@ class Map extends Component {
     return (
       <div>
         <Nav />
-
-
         <MapContainer />
         <Legend />
         <Mileage />
