@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 
+
 const mapStateToProps = state => ({
     user: state.user,
 });
+
+const API_KEY = process.env.REACT_APP_API_KEY;
+
+console.log('api', API_KEY, process.env.REACT_APP_API_KEY)
 
 class MapContainer extends Component {
     constructor(props) {
@@ -18,22 +23,12 @@ class MapContainer extends Component {
         };
     }
 
-
-
-
     render() {
-        console.log('----------', this.props)
-        console.log('----------state', this.state)
-        console.log('google------', this.props.google)
-
-
         let place = [
             { lat: 44.9828, lng: -93.1539 },
             { lat: 44.8549, lng: -93.2422 },
             { lat: 44.9778, lng: -93.2650 },
-
         ]
-
         let marker = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png',]
         let counter = 0;
 
@@ -45,36 +40,35 @@ class MapContainer extends Component {
             );
         }))
 
-/* reducer
-let imgMarker = [
- 'asdfds',
- 'asdfsad',
-]
-
-let counter = 0;
-
-for (let i = 0; i < clients; i++) {
- if (clients[i].calander == 'phota1'){
-   clients[i].imgMarker = imgMarker[0];
- }else if(clients[i].calander == 'phota2'){
-   clients[i].imgMarker = imgMarker[1];
- }else if(clients[i].calander == 'phota3'){
-   clients[i].imgMarker = imgMarker[2];
- }else if(clients[i].calander == 'phota4'){
-   clients[i].imgMarker = imgMarker[3];
- }else {
-   clients[i].imgMarker = imgMarker[4];
- }
- 
- // clients.markPath = imgMarker[counter];
- // counter = (counter++) % imgMarker.length; //increment image counter and get reminder
-}
-*/
+        /* reducer
+        let imgMarker = [
+         'asdfds',
+         'asdfsad',
+        ]
+        
+        let counter = 0;
+        
+        for (let i = 0; i < clients; i++) {
+         if (clients[i].calander == 'phota1'){
+           clients[i].imgMarker = imgMarker[0];
+         }else if(clients[i].calander == 'phota2'){
+           clients[i].imgMarker = imgMarker[1];
+         }else if(clients[i].calander == 'phota3'){
+           clients[i].imgMarker = imgMarker[2];
+         }else if(clients[i].calander == 'phota4'){
+           clients[i].imgMarker = imgMarker[3];
+         }else {
+           clients[i].imgMarker = imgMarker[4];
+         }
+         
+         // clients.markPath = imgMarker[counter];
+         // counter = (counter++) % imgMarker.length; //increment image counter and get reminder
+        }
+        */
 
 
         return (
 
-            // <div>
             <div style={{ height: '600px', width: '850px', position: 'absolute' }}>
                 <Map className="map"
                     google={this.props.google}
@@ -86,7 +80,7 @@ for (let i = 0; i < clients; i++) {
                     <Marker
                         position={{ lat: 45.1081, lng: -93.3761 }}
                         icon={{
-                            url: "3.png",
+                            url: "5.png",
                         }}
                     />
                     <Marker
@@ -99,7 +93,7 @@ for (let i = 0; i < clients; i++) {
                     <Marker
                         position={{ lat: 45.3090, lng: -93.3761 }}
                         icon={{
-                            url: "2.png",
+                            url: "5.png",
                             scale: 50,
                         }}
                     />
@@ -111,14 +105,14 @@ for (let i = 0; i < clients; i++) {
                     />
                 </Map>
 
-                
+
             </div>
         )
     }
 }
 
 const connectToGoogleMaps = GoogleApiWrapper({
-    apiKey: ('AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M'),
+    apiKey: API_KEY,
 })(MapContainer)
 
 

@@ -13,18 +13,33 @@ const mapStateToProps = state => ({
 });
 
 class Map extends Component {
+
   componentDidMount() {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
     });
   }
 
-  render() {
+  componentDidUpdate() {
+    if (!this.props.user.isLoading && this.props.user.userName === null) {
+      this.props.history.push('home');
+    }
+  }
 
+  render() {
+    let content = null;
+
+    if (this.props.user.userName) {
+      content = (
+        <div>
+        </div>
+      );
+    }
 
     return (
       <div>
         <Nav />
+        {content }
         <MapContainer />
         <Legend />
         <Mileage />
