@@ -17,7 +17,7 @@ import './calendar.css'
 
 const App = () => (
   <div>
-    <Header title="JFuerst Real Estate Photography" />
+    {/* <Header className="header"/> */}
     <Router>
       <Switch>
         <Redirect exact from="/" to="/home" />
