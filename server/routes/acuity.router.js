@@ -14,7 +14,7 @@ const filterCalendars = (unfilteredCalendars) => {
   let filteredCalendars = [];
   let ignoredCalendars = ['*members', '*placeHolder', 'zPhotog', 'zSched'];
   unfilteredCalendars.forEach(calendar => {
-    if(!ignoredCalendars.some(ignoredString => calendar.name.includes(ignoredString))) {
+    if (!ignoredCalendars.some(ignoredString => calendar.name.includes(ignoredString))) {
       filteredCalendars.push(calendar);
     }
   });
@@ -22,47 +22,55 @@ const filterCalendars = (unfilteredCalendars) => {
 }
 
 router.get('/appointments', (req, res) => {
-  let appointmentsOptions = {
-    // QUERY MUST INCLUDE MIN AND MAX DATES. FORMAT DATES AS STRING: 'MM/DD/YY'
-    qs: {
-      minDate: req.query.minDate,
-      maxDate: req.query.maxDate,
-    },
-  };
-  acuity.request('appointments', appointmentsOptions, function(error, response, appointments) {
-    if (error) return console.error(error);
-    (async () => {
-      try {
-        await Appointment.remove({});
-        await Appointment.create(appointments);
-        res.sendStatus(201);
-      } catch(error) {
-        throw error;
-      }
-    })().catch(error => {
-      console.log(error);
-      res.sendStatus(500);
+  if (req.isAuthenticated) {
+    let appointmentsOptions = {
+      // QUERY MUST INCLUDE MIN AND MAX DATES. FORMAT DATES AS STRING: 'MM/DD/YY'
+      qs: {
+        minDate: req.query.minDate,
+        maxDate: req.query.maxDate,
+      },
+    };
+    acuity.request('appointments', appointmentsOptions, function (error, response, appointments) {
+      if (error) return console.error(error);
+      (async () => {
+        try {
+          await Appointment.remove({});
+          await Appointment.create(appointments);
+          res.sendStatus(201);
+        } catch (error) {
+          throw error;
+        }
+      })().catch(error => {
+        console.log(error);
+        res.sendStatus(500);
+      });
     });
-  });
+  } else {
+    res.sendStatus(401);
+  }
 });
 
 router.get('/calendars', (req, res) => {
-  acuity.request('calendars', function(error, response, calendars) {
-    if (error) return console.error(error);
-    (async () => {
-      try {
-        await Calendar.remove({});
-        const filteredCalendars = await filterCalendars(calendars);
-        await Calendar.create(filteredCalendars);
-        res.sendStatus(201);
-      } catch(error) {
-        throw error;
-      }
-    })().catch(error => {
-      console.log(error);
-      res.sendStatus(500);
+  if (req.isAuthenticated) {
+    acuity.request('calendars', function (error, response, calendars) {
+      if (error) return console.error(error);
+      (async () => {
+        try {
+          await Calendar.remove({});
+          const filteredCalendars = await filterCalendars(calendars);
+          await Calendar.create(filteredCalendars);
+          res.sendStatus(201);
+        } catch (error) {
+          throw error;
+        }
+      })().catch(error => {
+        console.log(error);
+        res.sendStatus(500);
+      });
     });
-  });
+  } else {
+    res.sendStatus(401);
+  }
 });
 
 module.exports = router;
