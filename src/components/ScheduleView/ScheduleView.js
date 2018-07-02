@@ -522,8 +522,18 @@ class ScheduleView extends Component {
 
         return (
             <div>
-                <Nav />
+                <div className="navbar">
+                    <Nav />
+                </div>
+                <div className="instructions">
+
+                    {/* <h1 className="lead">{title}</h1> */}
+
+                </div>
+
                 {content}
+
+
             </div>
         );
     }

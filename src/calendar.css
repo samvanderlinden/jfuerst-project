@@ -1,9 +1,31 @@
-/*This is the start of adding new CSS*/
+/*START OF NEW CSS FOR GROUP PROJECT*/
 #logoutButton {
   position: fixed;
   bottom: 0;
 }
-/*This is the end of adding new CSS*/
+
+.instructions {
+  background-image: url('./drag-and-drop-library/src/img/jFuerstLogo.png');
+  background-repeat: no-repeat;
+  padding: 20px;
+  margin-left: 80px;
+  height: 40px;
+}
+
+.navbar {
+  float: left;
+}
+
+form {
+  background-color: #dbd5d5;
+  width: 30%;
+  height: 250px;
+  margin: 20px auto;
+  padding: 25px;
+  border-radius: 2px;
+}
+
+/*END OF NEW CSS FOR GROUP PROJECT*/
 
 .rbc-btn {
     color: inherit;
@@ -403,6 +425,8 @@
     width: 100%;
     padding: 0 10px;
     text-align: center;
+    font-size: 2.5em;
+    font-family: 'Raleway', sans-serif;
   }
   .rbc-toolbar button {
     color: #373a3c;
