@@ -6,6 +6,7 @@ const axios = require('axios');
 
 //Google Distance Matrix API call - calculates drive time from point A to point B based on time and traffic
 router.get('/distance', (req, res) => {
+  if (req.isAuthenticated()) {
   axios({
       method: 'GET',
       url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial`,
@@ -24,11 +25,13 @@ router.get('/distance', (req, res) => {
   .catch((error) => {
       console.log('error with distance GET to API', error);
   });
+}
 });
 
 
 //Google Geocoding API - converts addresses to latitude and longitude
 router.get('/geocode', (req, res) => {
+  if (req.isAuthenticated()) {
   axios({
       method: 'GET',
       url: `https://maps.googleapis.com/maps/api/geocode/json?`,
@@ -44,10 +47,12 @@ router.get('/geocode', (req, res) => {
   .catch((error) => {
       console.log('error with geocode GET to API', error);
   });
+}
 });
 
 //Post lat and lng to the database
 router.post('/geocode', (req, res) => {
+  if (req.isAuthenticated()) {
   const Appointment = req.body;
   console.log('POST: /geocode');
   Appointment.findByIdAndUpdate(req.body._id, req.body.lat, req.body.lng)
@@ -58,6 +63,7 @@ router.post('/geocode', (req, res) => {
       console.log('POST \'/geocode\' error:', error); 
       res.sendStatus(500); 
   })
+}
 });
 
 //Get request to database for appointment locations
