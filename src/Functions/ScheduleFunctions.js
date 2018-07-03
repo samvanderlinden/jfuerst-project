@@ -104,8 +104,8 @@ export function convertAppointmentsFromDatabase(originalObject) {
                 'link': ''
             }
             ],
-            'resourceId': originalObject.calendarID,
-            'calendarID': originalObject.calendarID,
+            'resourceId': originalObject.calendar,
+            'calendarID': originalObject.calendar,
             'calendar': originalObject.calendar,
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
             // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
