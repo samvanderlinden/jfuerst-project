@@ -2871,7 +2871,7 @@ const resourceList = uniqueResourcesArray.map(currentResource => {
         'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
         'appointmentType': originalObject.type,
         // 'appointmentType': 'Regular appointment',
-        'appointmentTime': '8:00 PM - 10:30 PM',
+        'appointmentTime': originalObject.time,
         'appointmentAddress': originalObject.location,
         // 'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
         'coPay': '4000',
@@ -2903,7 +2903,30 @@ const resourceList = uniqueResourcesArray.map(currentResource => {
         'isEdit': true,
         'isDelete': true,
         'isDragable': true,
+        'email': originalObject.email,
+        'phone': originalObject.phone,
+        'date': originalObject.date,
+        'forms': originalObject.forms[1].values[2].value,
+        // 'shootConfirmed': 
+        'squareFoot': originalObject.forms[2].values[3].value,
+        'contactInfo': originalObject.forms[2].values[9].value,
+        'howToAccessHome': `${originalObject.forms[2].values[5].value}. 
+                            Combo/Code/Name of person present: 
+                            ${originalObject.forms[2].values[8].value}`,
+        'numberOfBedrooms': originalObject.forms[2].values[10].value,
+        'numberOfBathrooms': originalObject.forms[2].values[11].value,
+        'pets': originalObject.forms[2].values[6].value,
+        'fireplaceEnhancement': originalObject.forms[3].values[0].value,
+        'tvScreenEnhancement': originalObject.forms[3].values[1].value,
+        'chargedHomeEnhancements': originalObject.forms[4].values[0].value,
+        'chargedNeighborhoodEnhancements': originalObject.forms[4].values[1].value,
+        'condominiumComments': originalObject.forms[3].values[2].value,
+        //difference between propertyComments and notes?
+        'propertyComments':originalObject.forms[5].values[0].value,
+        'amountPaid': originalObject.paid,
+        // 'notes': originalObject.forms[5].values[0].value,
     };
+    console.log('originalObject', originalObject);
     return finalObject;
 }
 const convertedArray = originalAcuityArray.map(objectConverter);
