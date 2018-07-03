@@ -27,4 +27,18 @@ router.get('/calendars', rejectUnauthenticated, (req, res) => {
     })
 });
 
+// ID should be ID from mongo object, i.e. _id, not acuity appointment ID, id
+router.put('/appointment/:id', rejectUnauthenticated, (req, res) => {
+  const appointmentId = req.params.id;
+  const updatedValues = req.body;
+  Appointment.findByIdAndUpdate(appointmentId, updatedValues)
+    .then(response => {
+      res.sendStatus(201);
+    })
+    .catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+    })
+});
+
 module.exports = router;
