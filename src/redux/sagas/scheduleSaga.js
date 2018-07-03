@@ -4,6 +4,7 @@ import {
     convertAppointmentsFromDatabase,
     callGetAppointmentsFromDatabase,
     callGetDriveTime,
+    callGetInitialDriveTimes,
     callPopulateDatabaseAppointmentsFromThirdPartyAPI,
     extractResourcesFromAppointments
 } from '../requests/scheduleRequests';
@@ -35,9 +36,10 @@ function* getAppointmentsFromThirdPartyAPI(action) {
             type: SCHEDULE_ACTIONS.SET_RESOURCES,
             payload: resourceList,
         })
+        const appointmentsWithInitialDriveTimes = yield callGetInitialDriveTimes(convertedAppointmentsFromDataBase, resourceList);
         yield put({
             type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_FROM_DATABASE,
-            payload: convertedAppointmentsFromDataBase,
+            payload: appointmentsWithInitialDriveTimes,
         })
     } catch (error) {
         console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);

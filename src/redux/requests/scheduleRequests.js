@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+import {orderEventsByResourceAndTime} from '../../Functions/ScheduleFunctions';
 
 export function callGetDriveTime(locationsObject) {
     const body = ({
@@ -25,6 +26,55 @@ export function callGetAppointmentsFromDatabase() {
         });
 }
 
+export function callGetInitialDriveTimes(appointmentsArray, resourcesArray) {
+    console.log('init getInitialDriveTimes');
+    const events = appointmentsArray;
+    const resources = resourcesArray;
+    console.log(events);
+    const nextEvents = events;
+    let end;
+    let updatedEvent;
+    const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
+    console.log('the array of resources with arrays of events is:');
+    console.log(arrayOfResourcesWithOrderedArraysOfEvents);
+    // loop through each resource array
+    for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
+        let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
+        console.log('the current resource events array is: ');
+        console.log(currentResourceEvents);
+        // loop through event array
+        for (let j = 0; j < currentResourceEvents.length - 1; j++) {
+            const idx = events.indexOf(currentResourceEvents[j]);
+            let currentEvent = currentResourceEvents[j];
+            let nextEvent = currentResourceEvents[j + 1];
+            console.log('current event is: '+j+' of '+currentResourceEvents.length);
+            console.log(currentEvent);
+            console.log('Its index in events array is ' + idx);
+            console.log('next event is:')
+            console.log(nextEvent);
+            // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
+            let currentDriveTime = callGetDriveTime(currentEvent.appointmentAddress, nextEvent.appointmentAddress);
+            console.log('confirming that scheduleReducer state has currentDriveTime of: ' + currentDriveTime);
+            // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+            end = moment(currentEvent.end).add(currentDriveTime, 'm').toDate();
+            console.log(`after drive time, currentEvent's end is ${end}`);
+            // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
+            updatedEvent = { ...currentEvent, end };
+            console.log('current event start is' + updatedEvent.start);
+            console.log('current event duration: ' + updatedEvent.duration);
+            console.log('currentDriveTime is ' + currentDriveTime);
+            console.log('confirming that end time is updated to: ' + updatedEvent.end);
+            console.log('updated event is: ');
+            console.log(updatedEvent);
+            // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
+            nextEvents.splice(idx, 1, updatedEvent);
+            console.log('updated nextEvents array:');
+            console.log(nextEvents);
+            console.log('returning events array');
+        }
+    }  
+    return nextEvents;
+}
 
 export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
     const params = {

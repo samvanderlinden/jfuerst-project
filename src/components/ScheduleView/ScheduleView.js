@@ -64,6 +64,7 @@ class ScheduleView extends Component {
             type: USER_ACTIONS.FETCH_USER
         });
         this.getInitialAppointments();
+        this.getInitialDriveTimes();
     }
 
     componentDidUpdate() {
@@ -103,7 +104,7 @@ class ScheduleView extends Component {
     // GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
     getInitialDriveTimes = () => {
         console.log('init getInitialDriveTimes');
-        const events = this.state.events;
+        const events = this.props.currentAppointments;
         console.log(events);
         let nextEvents;
         let end;
@@ -150,6 +151,7 @@ class ScheduleView extends Component {
                 })
                 console.log('checking this.state.events. The array should match nextEvents array');
                 console.log(this.state.events);
+                this.updateScheduleReducerWithNewEvents(this.state.events);
             }
         }
 
