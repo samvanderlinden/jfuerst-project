@@ -9,6 +9,7 @@ import {
 } from '../requests/scheduleRequests';
 import {
     convertAppointmentsFromDatabase,
+    convertAppointmentForSendingToDatabase,
     extractResourcesFromCalendars,
     getInitialDriveTimes,
 } from '../../Functions/ScheduleFunctions';
@@ -47,6 +48,8 @@ function* getAppointmentsFromThirdPartyAPI(action) {
         console.log('converted resource list is:');
         console.log(convertedCalendarsFromDatabase);
         const convertedAppointmentsFromDataBase = yield convertAppointmentsFromDatabase(rawAppointmentsFromDataBase);
+        // END CONVERT DATA TO FORMAT USEABLE BY DRANG-AND-DORPCALENDAR LIBRARY
+        // UPDATE SCHEDULE REDUCER WITH CONVERTED DATA
         yield put({
             type: SCHEDULE_ACTIONS.SET_RESOURCES,
             payload: convertedCalendarsFromDatabase,
@@ -56,15 +59,25 @@ function* getAppointmentsFromThirdPartyAPI(action) {
             type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_FROM_DATABASE,
             payload: appointmentsWithInitialDriveTimes,
         })
+        // END UPDATE SCHEDULE REDUCER WITH CONVERTED DATA
     } catch (error) {
         console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);
     }
 }
 
+function* putAppointmentToDataBase(action) {
+    console.log('init putAppointmentsInDatabase');
+    const updatedAppointment = convertAppointmentForSendingToDatabase(action.payload);
+    console.log('sending updated appointment to database:');
+    console.log(updatedAppointment);
+    // yield callUpdateDatabaseWithUpdatedAppointment(updatedAppointment);
+}
+
 
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveTime);
-    yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI)
+    yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI);
+    yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE, putAppointmentToDataBase);
 }
 
 export default scheduleSaga;
