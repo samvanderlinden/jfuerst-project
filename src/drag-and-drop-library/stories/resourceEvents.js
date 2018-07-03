@@ -2859,7 +2859,6 @@ const resourceList = uniqueResourcesArray.map(currentResource => {
 // END EXTRACT CALENDAR FROM THIRD-PARTY-SCHEDULING APPLICAITON AS RESOURCE FOR THIS APPLICATION'S SCHEDULE DISPLAY
 
 
-
   const objectConverter = originalObject => {
     let finalObject = {
         'id': originalObject.id,
@@ -2949,6 +2948,6 @@ const convertedArray = originalAcuityArray.map(objectConverter);
 
 export default {
   events: convertedArray,
-
   list: resourceList,
 }
+

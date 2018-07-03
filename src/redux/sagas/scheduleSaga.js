@@ -1,8 +1,12 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
-import { callGetAppointmentsFromDatabase} from '../requests/scheduleRequests';
-import { callGetDriveTime } from '../requests/scheduleRequests';
-import { callPopulateDatabaseAppointmentsFromThirdPartyAPI} from '../requests/scheduleRequests';
+import {
+    convertAppointmentsFromDatabase,
+    callGetAppointmentsFromDatabase,
+    callGetDriveTime,
+    callPopulateDatabaseAppointmentsFromThirdPartyAPI,
+    extractResourcesFromAppointments
+} from '../requests/scheduleRequests';
 
 function* initiateGetDriveTime(locationsObject) {
     console.log('init initateGetDriveTime');
@@ -18,16 +22,24 @@ function* initiateGetDriveTime(locationsObject) {
     }
 }
 
-function * populateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
+function* getAppointmentsFromThirdPartyAPI(action) {
     console.log('init populateDatabaseAppointmentsFromThirdPartyAPI');
+    console.log(action.payload);
+    let dateObject = (action.payload)
     try {
         yield callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject);
-        const appointmentsFromDataBase = yield callGetAppointmentsFromDatabase();
+        const rawAppointmentsFromDataBase = yield callGetAppointmentsFromDatabase();
+        const resourceList = yield extractResourcesFromAppointments(rawAppointmentsFromDataBase);
+        const convertedAppointmentsFromDataBase = yield convertAppointmentsFromDatabase(rawAppointmentsFromDataBase);
+        yield put({
+            type: SCHEDULE_ACTIONS.SET_RESOURCES,
+            payload: resourceList,
+        })
         yield put({
             type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_FROM_DATABASE,
-            payload: appointmentsFromDataBase
-        }) 
-    } catch  (error) {
+            payload: convertedAppointmentsFromDataBase,
+        })
+    } catch (error) {
         console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);
     }
 }
@@ -35,7 +47,7 @@ function * populateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
 
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveTime);
-    yield takeLatest(SCHEDULE_ACTIONS.POPULATE_DATABASE_APPOINTMENTS_FROM_THIRDPARTY_API, populateDatabaseAppointmentsFromThirdPartyAPI)
+    yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI)
 }
 
 export default scheduleSaga;
