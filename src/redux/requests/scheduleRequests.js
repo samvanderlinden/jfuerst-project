@@ -25,6 +25,22 @@ export function callGetAppointmentsFromDatabase() {
         });
 }
 
+export function callGetCalendarsFromDatabase() {
+    return axios.get('/api/data/calendars')
+    .then(response => response.data)
+    .catch((error) => {
+        throw error.response || error;
+    });
+}
+
+export function callPopulateDatabaseCalendarsFromThirdPartyAPI() {
+    return axios.get('api/acuity/calendars')
+    .then(response => response.data)
+    .catch((error) => {
+        throw error.response || error;
+    });
+}
+
 export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
     const params = {
         minDate: dateObject.minDate,

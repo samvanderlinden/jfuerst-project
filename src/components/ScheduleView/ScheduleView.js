@@ -104,7 +104,8 @@ class ScheduleView extends Component {
         console.log(events === this.props.currentAppointments);
         let idx = events.indexOf(event);
         const resourceId = rest.resource || event.resourceId;
-        let updatedEvent = { ...event, start, end, resourceId };
+        const calendarID = event.calendarID;
+        let updatedEvent = { ...event, start, end, resourceId, calendarID };
         console.log(updatedEvent);
         console.log('event and updatedEvent have similar data?');
         console.log(updatedEvent === event);
@@ -167,7 +168,7 @@ class ScheduleView extends Component {
                 console.log('there is an event before the moved event: ');
                 console.log(eventBeforeMovedEvent);
                 // CASE: MOVED EVENT HAS A NEW PREVIOUS EVENT
-                if (eventBeforeMovedEvent != eventBeforeMovedEventInPreviousArray) {
+                if (eventBeforeMovedEvent !== eventBeforeMovedEventInPreviousArray) {
                     this.updateEventBeforeMovedEvent(event, eventBeforeMovedEvent, nextEvents);
                 } // END CASE: MOVED EVENT HAS A NEW PREVIOUS EVENT
                 else {
@@ -191,7 +192,7 @@ class ScheduleView extends Component {
             } // END CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
 
             // CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT BUT NOT AFTER THE MOVED EVENT
-            else if (eventBeforeMovedEventInPreviousArray && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent) {
+            else if (eventBeforeMovedEventInPreviousArray && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent) {
                 console.log('the moved event had an event before it but not after it in the previous array. Updating that event');
 
                 end = this.resetEventEndTime(eventBeforeMovedEventInPreviousArray.start, eventBeforeMovedEventInPreviousArray.duration);
@@ -214,7 +215,7 @@ class ScheduleView extends Component {
             console.log('next event is: ' + eventAfterMovedEvent.title);
 
             // CASE: MOVED EVENT IS FIRST AND EVENT ORDER CHANGED
-            if (!eventBeforeMovedEvent && eventAfterMovedEvent != eventAfterMovedEventInPreviousArray) {
+            if (!eventBeforeMovedEvent && eventAfterMovedEvent !== eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order changed.');
                 // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
                 this.getDriveTime(event.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
@@ -242,7 +243,7 @@ class ScheduleView extends Component {
             } // END CASE: MOVED EVENT IS FIRST AND EVENT ORDER CHANGED
 
             // CASE: MOVED EVENT IS FIRST AND EVENT ORDER DID NOT CHANGE
-            else if (!eventBeforeMovedEvent && eventAfterMovedEvent == eventAfterMovedEventInPreviousArray) {
+            else if (!eventBeforeMovedEvent && eventAfterMovedEvent === eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order did not change.');
                 this.setState({
                     events: nextEvents,
@@ -267,7 +268,7 @@ class ScheduleView extends Component {
             } // END CASE: MOVED EVENT IS NOT FIRST AND EVENT ORDER CHANGED
 
             // CASE: MOVED EVENT IS NOT FIRST AND EVENT ORDER DID NOT CHANGE:
-            else if (eventBeforeMovedEvent && eventAfterMovedEvent == eventAfterMovedEventInPreviousArray) {
+            else if (eventBeforeMovedEvent && eventAfterMovedEvent === eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is not first, and event order did not change.');
                 this.setState({
                     events: nextEvents,
@@ -277,15 +278,15 @@ class ScheduleView extends Component {
             // HANDLE MOVED EVENT'S PREVIOUS ARRAY:
             // CASE: CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
             if (eventBeforeMovedEventInPreviousArray && eventAfterMovedEventInPreviousArray
-                && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent
-                && eventAfterMovedEventInPreviousArray != eventAfterMovedEvent) {
+                && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent
+                && eventAfterMovedEventInPreviousArray !== eventAfterMovedEvent) {
                 console.log('the moved event had an event before and after it in the previous array. Updating the event before the moved event in previous array');
                 this.updateEventBeforeMovedEventInPreviousArray(eventBeforeMovedEventInPreviousArray, eventAfterMovedEventInPreviousArray, nextEvents);
             } // END CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
 
             // CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT BUT NOT AFTER THE MOVED EVENT
             else if (eventBeforeMovedEventInPreviousArray && !eventAfterMovedEventInPreviousArray
-                && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent) {
+                && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent) {
                 console.log('the moved event had an event before it but not after it in the previous array. Updating the event before the moved event in the previous array');
                 end = this.resetEventEndTime(eventBeforeMovedEventInPreviousArray.start, eventBeforeMovedEventInPreviousArray.duration);
                 console.log(`reset eventBeforeMovedEvent end time to ${end}`)
@@ -497,8 +498,8 @@ class ScheduleView extends Component {
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
-                    defaultDate={new Date()}
-                    // defaultDate={new Date(2018, 5, 22, 0, 0, 0, 0)}
+                    // defaultDate={new Date()}
+                    defaultDate={new Date(2018, 5, 22, 0, 0, 0, 0)}
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +

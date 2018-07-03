@@ -104,8 +104,9 @@ export function convertAppointmentsFromDatabase(originalObject) {
                 'link': ''
             }
             ],
-            'resourceId': originalObject.calendar,
+            'resourceId': originalObject.calendarID,
             'calendarID': originalObject.calendarID,
+            'calendar': originalObject.calendar,
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
             // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
             'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
@@ -401,7 +402,7 @@ export function convertAppointmentsFromCalendarForSendingToDatabase(updatedObjec
                 "category": "MSP FusionTech™ Virtual Tours (Photography)",
                 "duration": "60",
                 "calendar": updatedObject.resourceId,
-                "calendarID": updatedObject.calendarID,
+                "calendarID": updatedObject.resourceId,
                 "location": "2988 Victoria Street North, Roseville, MN, USA",
                 "notes": "Roseville\r\nS",
                 "timezone": "America/Chicago",
@@ -418,17 +419,17 @@ export function convertAppointmentsFromCalendarForSendingToDatabase(updatedObjec
 }
 
 // PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
-export function extractResourcesFromAppointments(originalObject) {
-    const resourceExtractor = originalObject => {
-        let extractedResource = originalObject.calendar;
-        return extractedResource;
-    }
-    const resourceArray = originalObject.map(resourceExtractor);
-    const uniqueResourcesArray = [...new Set(resourceArray)];
-    const resourceList = uniqueResourcesArray.map(currentResource => {
+export function extractResourcesFromCalendars(originalObject) {
+    // const resourceExtractor = originalObject => {
+    //     let extractedResource = originalObject.calendar;
+    //     return extractedResource;
+    // }
+    // const resourceArray = originalObject.map(resourceExtractor);
+    // const uniqueResourcesArray = [...new Set(resourceArray)];
+    const resourceList = originalObject.map(currentResource => {
         return {
-            id: currentResource,
-            title: currentResource
+            id: (currentResource.id).toString(),
+            title: currentResource.name,
         }
     });
     return resourceList;
@@ -436,8 +437,9 @@ export function extractResourcesFromAppointments(originalObject) {
 
 // ORDER ARRAY OF EVENTS BY TIME IN SUB-ARRAYS DEFINED BY EVENT RESOURCE
 export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {
-    console.log('init orderEventsByResourceAndTime, given resources and events:');
+    console.log('init orderEventsByResourceAndTime, given resources:');
     console.log(resourcesArray);
+    console.log('and events: ');
     console.log(eventsArray);
     // create array to contain an array of events for each resource
     let arrayOfArrays = [];
