@@ -76,6 +76,25 @@ class DaySlot extends React.Component {
     isVideoCallAccessor: accessor,
     isAppoinmentCancelledAccessor: accessor,
     practitionerNameAccessor: accessor,
+    phoneAccessor: accessor,
+    emailAccessor: accessor,
+    resourceIdAccessor: accessor,
+    durationAccessor: accessor,
+    dateAccessor: accessor,
+    formsAccessor: accessor,
+    numberOfBedroomsAccessor: accessor,
+    numberOfBathroomsAccessor: accessor,
+    fireplaceEnhancementAccessor: accessor,
+    tvScreenEnhancementAccessor: accessor,
+    condominiumCommentsAccessor: accessor,
+    propertyCommentsAccessor: accessor,
+    squareFootAccessor: accessor,
+    howToAccessHomeAccessor: accessor,
+    petsAccessor: accessor,
+    chargedHomeEnhancements: accessor,
+    chargedNeighborhoodEnhancements: accessor,
+    amountPaid: accessor,
+   
 
 
     allDayAccessor: accessor.isRequired,
@@ -217,6 +236,25 @@ class DaySlot extends React.Component {
       , isAppointmentRenderedAccessor
       , isVideoCallAccessor
       , isAppoinmentCancelledAccessor
+      , phoneAccessor
+      , emailAccessor
+      , resourceIdAccessor
+      , durationAccessor
+      , dateAccessor
+      , formsAccessor
+      , numberOfBathroomsAccessor
+      , numberOfBedroomsAccessor
+      , fireplaceEnhancementAccessor
+      , tvScreenEnhancementAccessor
+      , condominiumCommentsAccessor
+      , propertyCommentsAccessor
+      , squareFootAccessor
+      , howToAccessHomeAccessor
+      , petsAccessor
+      , chargedHomeEnhancementsAccessor
+      , chargedNeighborhoodEnhancementsAccessor
+      , amountPaidAccessor
+
       , practitionerNameAccessor } = this.props;
 
 
@@ -257,6 +295,24 @@ class DaySlot extends React.Component {
       let isVideoCall = get(event, isVideoCallAccessor);
       let isAppoinmentCancelled = get(event, isAppoinmentCancelledAccessor);
       let practitionerName = get(event, practitionerNameAccessor);
+      let phone = get(event, phoneAccessor);
+      let email = get(event, emailAccessor);
+      let resourceId = get(event, resourceIdAccessor);
+      let duration = get(event, durationAccessor);
+      let date = get(event, dateAccessor);
+      let forms = get(event, formsAccessor);
+      let numberOfBedrooms = get(event, numberOfBedroomsAccessor);
+      let numberOfBathrooms = get(event, numberOfBathroomsAccessor);
+      let fireplaceEnhancement = get(event, fireplaceEnhancementAccessor);
+      let tvScreenEnhancement = get(event, tvScreenEnhancementAccessor);
+      let condominiumComments = get(event, condominiumCommentsAccessor);
+      let propertyComments = get(event, propertyCommentsAccessor);
+      let squareFoot = get(event, squareFootAccessor);
+      let howToAccessHome = get(event, howToAccessHomeAccessor);
+      let pets = get(event, petsAccessor);
+      let chargedHomeEnhancements = get(event, chargedHomeEnhancementsAccessor);
+      let chargedNeighborhoodEnhancements = get(event, chargedNeighborhoodEnhancementsAccessor);
+      let amountPaid = get(event, amountPaidAccessor);
 
       let label = localizer.format({ start, end }, eventTimeRangeFormat, culture)
       let _isSelected = isSelected(event, selected)
@@ -299,10 +355,14 @@ class DaySlot extends React.Component {
               {isAppointmentRendered ? <i className="fa fa-check-circle-o pr5" aria-hidden="true"></i> : ''}
               {isVideoCall ? <i className="fa fa-video-camera pr5" aria-hidden="true"></i> : ''}
               {isAppoinmentCancelled ? <i className="fa fa-ban pr5" aria-hidden="true"></i> : ''}
-              { EventComponent
-                ? <EventComponent event={event} />
-                : title
-              } {label}
+              <p>{title} {label}</p>
+              <p>{appointmentType}</p>
+              <p>{appointmentAddress}</p>
+              <p>Square foot: {squareFoot} </p>
+              <p>Phone: {phone}</p>
+              <p>Email: {email}</p>
+              <button>More Details</button>
+            
             </div>
             <div className={viewClass}>
               <div className="topbar">
@@ -352,7 +412,7 @@ class DaySlot extends React.Component {
                   {isAppoinmentCancelled ? <i title={`${cancellationReason}`} className="fa fa-ban" aria-hidden="true"></i> : ''}
               </div>
 
-                  {staffs ? this.renderStaffs(staffs) :
+                  {/* {staffs ? this.renderStaffs(staffs) :
                     <div>
                       <div className="info-pic">
                         <img src={clinicianImage} width="80px" height="80px" onClick={(e) => this.hoverDialogActions(event, e, 'view_profile')} />
@@ -362,18 +422,37 @@ class DaySlot extends React.Component {
                         {/*
                         <a href="#" onClick={(e) => this.hoverDialogActions(event, e, 'view_profile')}>{setProfileTitle}</a>
                         */}
-                        <a href="#" onClick={(e) => this.hoverDialogActions(event, e, 'soap_note')}>{soapNoteTitle}</a>
-                      </div>
-                    </div>
-                  }
+                        {/* <a href="#" onClick={(e) => this.hoverDialogActions(event, e, 'soap_note')}>{soapNoteTitle}</a> */}
+                      {/* </div> */}
+                    {/* </div> */}
+                  {/* } */}
                   </div>
                   <div className="about-event">
                       <div className="info-p">
-                        <p><i className="fa fa-clock-o" aria-hidden="true"></i><span>{appointmentTime}</span></p>
-                        { practitionerName ? <p><i className="fa fa-user" aria-hidden="true"></i><span>{practitionerName}</span></p> : ''}
-                        <p><i className="fa fa-calendar-o" aria-hidden="true"></i><span>{appointmentType}</span></p>
-                        <p><i className="fa fa-map-marker" aria-hidden="true"></i><span>{appointmentAddress}</span></p>
-                        {/*<p>Co-Pay: <span><i className="fa fa-usd" aria-hidden="true"></i> {coPay ? coPay : '0.00'}</span></p>*/}
+                        <p>Contact info: {title}, {phone} </p>
+                        <p>{appointmentType}</p>
+                        <p>{label}</p>
+                        <p>Appointment date: {date} </p>
+                        <p>Shoot confirmed <input type="checkbox" checked /> </p>
+                        <p>Address: {appointmentAddress}</p>
+                        <p>Square foot: {squareFoot}</p>
+                        <p>How to access home: {howToAccessHome} </p>
+                        <p>{numberOfBathrooms} bathrooms</p>
+                        <p>{numberOfBedrooms} bedrooms </p>
+                        <p>Pets: {pets}</p>
+                        <p>Photographer: {resourceId}</p>
+                        <p>Fireplace Enhancement: {fireplaceEnhancement} </p>
+                        <p>TV Enhancement: {tvScreenEnhancement} </p>
+                        <p>Charged home enhancements: {chargedHomeEnhancements}</p>
+                        <p>Charged neighborhood enhancements: {chargedNeighborhoodEnhancements}</p>
+                        <p>Comments for condominium: {condominiumComments}</p>
+                        <p>Comments about property: {propertyComments}</p>
+                        <p>Ammount paid: {amountPaid}</p>
+                        <p>Phone: {phone} </p>
+                        <p>Email: {email}</p>
+                        
+
+                        
                       </div>
                   </div>
               </div>
