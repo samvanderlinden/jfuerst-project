@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import cn from 'classnames';
 import moment from 'moment';
 
 // dnd library imports //
@@ -25,6 +23,10 @@ import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
 import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 
+// FUNCTION IMPORTS
+import { orderEventsByResourceAndTime } from '../../Functions/ScheduleFunctions';
+// END FUNCTION IMPORTS
+
 localizer(globalize);
 
 const mapStateToProps = state => ({
@@ -46,25 +48,11 @@ class ScheduleView extends Component {
         this.moveEvent = this.moveEvent.bind(this)
     }
 
-    // COMPARE START TIMES OF EVENTS FOR SORTING WITHIN THEIR RESOURCE ARRAY
-    compareEventStartTimes = (eventA, eventB) => {
-        const startTimeA = eventA.start;
-        const startTimeB = eventB.start;
-        let comparison = 0;
-        if (startTimeA > startTimeB) {
-            comparison = 1;
-        } else if (startTimeA < startTimeB) {
-            comparison = -1;
-        }
-        return comparison;
-    } // END COMPARE START TIMES OF EVENTS FOR SORTING WITHIN THEIR RESOURCE ARRAY
-
     componentDidMount() {
         this.props.dispatch({
             type: USER_ACTIONS.FETCH_USER
         });
         this.getInitialAppointments();
-        this.getInitialDriveTimes();
     }
 
     componentDidUpdate() {
@@ -101,62 +89,6 @@ class ScheduleView extends Component {
         })
     }
 
-    // GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
-    getInitialDriveTimes = () => {
-        console.log('init getInitialDriveTimes');
-        const events = this.props.currentAppointments;
-        console.log(events);
-        let nextEvents;
-        let end;
-        let updatedEvent;
-        const arrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(this.props.resources, events);
-        console.log('the array of resources with arrays of events is:');
-        console.log(arrayOfResourcesWithOrderedArraysOfEvents);
-        // loop through each resource array
-        for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
-            let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
-            console.log('the current resource events array is: ');
-            console.log(currentResourceEvents);
-            // loop through event array
-            for (let j = 0; j < currentResourceEvents.length - 1; j++) {
-                const idx = events.indexOf(currentResourceEvents[j]);
-                let currentEvent = currentResourceEvents[j];
-                let nextEvent = currentResourceEvents[j + 1];
-                console.log('current event is:')
-                console.log(currentEvent);
-                console.log('Its index in events array is ' + idx);
-                console.log('next event is:')
-                console.log(nextEvent);
-                // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-                this.getDriveTime(currentEvent.appointmentAddress, nextEvent.appointmentAddress);
-                console.log('confirming that scheduleReducer state has currentDriveTime of: ' + this.props.currentDriveTime);
-                // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-                end = moment(currentEvent.end).add(this.props.currentDriveTime, 'm').toDate();
-                console.log(`after drive time, currentEvent's end is ${end}`);
-                // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
-                updatedEvent = { ...currentEvent, end };
-                console.log('current event start is' + updatedEvent.start);
-                console.log('current event duration: ' + updatedEvent.duration);
-                console.log('currentDriveTime is ' + this.props.currentDriveTime);
-                console.log('confirming that end time is updated to: ' + updatedEvent.end);
-                console.log('updated event is: ');
-                console.log(updatedEvent);
-                // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
-                nextEvents.splice(idx, 1, updatedEvent);
-                console.log('updated nextEvents array:');
-                console.log(nextEvents);
-                console.log('init this.setState')
-                this.setState({
-                    events: nextEvents
-                })
-                console.log('checking this.state.events. The array should match nextEvents array');
-                console.log(this.state.events);
-                this.updateScheduleReducerWithNewEvents(this.state.events);
-            }
-        }
-
-    } // END GET DRIVE TIMES WHEREVER AN EVENT FOLLOWS ANOTHER EVENT
-
     logout = () => {
         this.props.dispatch({
             type: LOGIN_ACTIONS.LOGOUT
@@ -192,10 +124,10 @@ class ScheduleView extends Component {
 
         // ORDER EVENTS BY TIME WITHIN AN ARRAY FOR EACH RESOURCE
         // AND PUT THOSE ARRAYS OF EVENTS IN A PARENT ARRAY
-        const previousArrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(this.props.resources, events);
+        const previousArrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(this.props.resources, events);
         console.log('previousArrayOfResourcesWithOrderedArraysOfEvents:');
         console.log(previousArrayOfResourcesWithOrderedArraysOfEvents);
-        const arrayOfResourcesWithOrderedArraysOfEvents = this.orderEventsByResourceAndTime(this.props.resources, nextEvents);
+        const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(this.props.resources, nextEvents);
         console.log('arrayOfResourcesWithOrderedArraysOfEvents');
         console.log(arrayOfResourcesWithOrderedArraysOfEvents);
         // END ORDERING EVENTS

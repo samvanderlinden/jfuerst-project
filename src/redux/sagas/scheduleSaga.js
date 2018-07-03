@@ -1,13 +1,15 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 import {
-    convertAppointmentsFromDatabase,
     callGetAppointmentsFromDatabase,
     callGetDriveTime,
-    callGetInitialDriveTimes,
     callPopulateDatabaseAppointmentsFromThirdPartyAPI,
-    extractResourcesFromAppointments
 } from '../requests/scheduleRequests';
+import {
+    convertAppointmentsFromDatabase,
+    extractResourcesFromAppointments,
+    getInitialDriveTimes,
+} from '../../Functions/ScheduleFunctions';
 
 function* initiateGetDriveTime(locationsObject) {
     console.log('init initateGetDriveTime');
@@ -36,7 +38,7 @@ function* getAppointmentsFromThirdPartyAPI(action) {
             type: SCHEDULE_ACTIONS.SET_RESOURCES,
             payload: resourceList,
         })
-        const appointmentsWithInitialDriveTimes = yield callGetInitialDriveTimes(convertedAppointmentsFromDataBase, resourceList);
+        const appointmentsWithInitialDriveTimes = yield getInitialDriveTimes(convertedAppointmentsFromDataBase, resourceList);
         yield put({
             type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_FROM_DATABASE,
             payload: appointmentsWithInitialDriveTimes,
