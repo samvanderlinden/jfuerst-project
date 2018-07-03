@@ -11,13 +11,13 @@ import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import ScheduleView from './components/ScheduleView/ScheduleView';
 
-import Map from './components/Map/Map';
+import MapView from './components/MapView/MapView';
 
 import './calendar.css'
 
 const App = () => (
   <div>
-    <Header title="JFuerst Real Estate Photography" />
+    {/* <Header className="header"/> */}
     <Router>
       <Switch>
         <Redirect exact from="/" to="/home" />
@@ -35,7 +35,7 @@ const App = () => (
         />
         <Route
           path="/map"
-          component={Map}
+          component={MapView}
         />
         {/* OTHERWISE no path */}
         <Route

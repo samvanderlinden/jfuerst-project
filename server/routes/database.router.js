@@ -1,11 +1,12 @@
 const express = require('express');
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const Appointment = require('../models/Appointment');
 const Calendar = require('../models/Calendar');
 
 const router = express.Router();
 
-router.get('/appointments', (req, res) => {
-  Appointment.find({})
+router.get('/appointments', rejectUnauthenticated, (req, res) => {
+    Appointment.find({})
     .then(response => {
       res.send(response);
     })
@@ -15,8 +16,8 @@ router.get('/appointments', (req, res) => {
     })
 });
 
-router.get('/calendars', (req, res) => {
-  Calendar.find({})
+router.get('/calendars', rejectUnauthenticated, (req, res) => {
+    Calendar.find({})
     .then(response => {
       res.send(response)
     })
@@ -26,6 +27,18 @@ router.get('/calendars', (req, res) => {
     })
 });
 
-
+// ID should be ID from mongo object, i.e. _id, not acuity appointment ID, id
+router.put('/appointment/:id', rejectUnauthenticated, (req, res) => {
+  const appointmentId = req.params.id;
+  const updatedValues = req.body;
+  Appointment.findByIdAndUpdate(appointmentId, updatedValues)
+    .then(response => {
+      res.sendStatus(201);
+    })
+    .catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+    })
+});
 
 module.exports = router;
