@@ -105,7 +105,7 @@ export function convertAppointmentsFromDatabase(originalObject) {
             }
             ],
             'resourceId': originalObject.calendar,
-            'calendarID': originalObject.calendar,
+            'calendarID': originalObject.calendarID,
             'calendar': originalObject.calendar,
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
             // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
@@ -428,8 +428,9 @@ export function extractResourcesFromCalendars(originalObject) {
     // const uniqueResourcesArray = [...new Set(resourceArray)];
     const resourceList = originalObject.map(currentResource => {
         return {
-            id: (currentResource.id).toString(),
+            id: currentResource.name,
             title: currentResource.name,
+            calendarID: currentResource.id,
         }
     });
     return resourceList;

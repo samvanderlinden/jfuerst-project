@@ -103,9 +103,13 @@ class ScheduleView extends Component {
         let events = [...this.props.currentAppointments];
         console.log(events === this.props.currentAppointments);
         let idx = events.indexOf(event);
-        const resourceId = rest.resource || event.resourceId;
-        const calendarID = event.calendarID;
-        let updatedEvent = { ...event, start, end, resourceId, calendarID };
+        console.log('new resource is:');
+        const newResource = this.props.resources.find(resource => resource.title === rest.resource);
+        console.log(newResource);
+        const resourceId = newResource.id;
+        const calendarID = newResource.calendarID;
+        const calendar = newResource.title
+        let updatedEvent = { ...event, start, end, resourceId, calendar, calendarID };
         console.log(updatedEvent);
         console.log('event and updatedEvent have similar data?');
         console.log(updatedEvent === event);
@@ -498,8 +502,8 @@ class ScheduleView extends Component {
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
-                    // defaultDate={new Date()}
-                    defaultDate={new Date(2018, 5, 22, 0, 0, 0, 0)}
+                    defaultDate={new Date()}
+                    // defaultDate={new Date(2018, 5, 22, 0, 0, 0, 0)}
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
