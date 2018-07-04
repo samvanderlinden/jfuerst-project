@@ -77,6 +77,8 @@ class ScheduleView extends Component {
     // GET INITIAL APPOINTMENTS
     getInitialAppointments = () => {
         const today = moment(new Date()).format('MM/DD/YY');
+        // const today = moment(new Date(2018, 6, 3, 0, 0, 0, 0)).format('MM/DD/YY');
+
         console.log('init getInitialAppointments');
         console.log('with today as: ' + today)
         const dateObject = {
@@ -103,15 +105,28 @@ class ScheduleView extends Component {
         let events = [...this.props.currentAppointments];
         console.log(events === this.props.currentAppointments);
         let idx = events.indexOf(event);
-        const resourceId = rest.resource || event.resourceId;
-        let updatedEvent = { ...event, start, end, resourceId };
+        // PARSE NEW RESOURCE TO LOCAL VARIABLES
+        console.log('new resource is:');
+        const newResource = this.props.resources.find(resource => resource.title === rest.resource);
+        console.log(newResource);
+        const resourceId = newResource.id;
+        const calendarID = newResource.calendarID;
+        const calendar = newResource.title
+        // END PARSE NEW RESOURCE TO LOCAL VARIABLES
+
+        // UPDATE MOVED EVENT
+        let updatedEvent = { ...event, start, end, resourceId, calendar, calendarID };
         console.log(updatedEvent);
         console.log('event and updatedEvent have similar data?');
         console.log(updatedEvent === event);
         console.log(idx);
         console.log(events[idx] === updatedEvent);
+        // END UPDATE MOVED EVENT
+
+        // INSERT UPDATED MOVED EVENT INTO EVENTS ARRAY
         let nextEvents = [...events];
         nextEvents.splice(idx, 1, updatedEvent);
+        // END INSERT UPDATED MOVED EVENT INTO EVENTS ARRAY
 
         console.log('this.props.currentAppointments:');
         console.log(this.props.currentAppointments);
@@ -146,20 +161,22 @@ class ScheduleView extends Component {
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
         // END FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY AFTER IT WAS MOVED
 
-        // CHECK WHETHER EVENT AFTER THE MOVED EVENT IS UNDEFINED
-
-        // CASE: EVENT AFTER MOVED EVENT IS UNDEFINED:
+        // CASE: MOVED EVENT IS LAST IN SCHEDULE:
         if (!eventAfterMovedEvent) {
             console.log('moved event is the last event in the schedule');
-            // RESENT EVENT END TIME
-            end = this.resetEventEndTime(start, event.duration);
+            // RESET EVENT END TIME
+            end = this.resetEventEndTime(start, updatedEvent.duration);
             console.log(`reset end time to ${end}`);
-            updatedEvent = { ...event, start, end, resourceId };
-            // END RESENT EVENT END TIME
+            updatedEvent = { ...updatedEvent, end };
+            // END RESET EVENT END TIME
 
             // UPDATE EVENTS ARRAY WITH UPDATED EVENT
             nextEvents.splice(idx, 1, updatedEvent);
             // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+            // UPDATE DATABASE WITH UPDATED EVENT
+            this.putUpdatedEventToDatabase(updatedEvent);
+            // END UPDATE DATABASE WITH UPDATED EVENT
 
             // CASE: MOVED EVENT'S NEW ARRAY HAS AN EVENT BEFORE THE MOVED EVENT
             // THEN UPDATE SO THAT THE EVENT BEFORE THE MOVED EVENT NOW SHOWS DRIVE TIME TO EVENT AFTER THE MOVED EVENT
@@ -167,8 +184,8 @@ class ScheduleView extends Component {
                 console.log('there is an event before the moved event: ');
                 console.log(eventBeforeMovedEvent);
                 // CASE: MOVED EVENT HAS A NEW PREVIOUS EVENT
-                if (eventBeforeMovedEvent != eventBeforeMovedEventInPreviousArray) {
-                    this.updateEventBeforeMovedEvent(event, eventBeforeMovedEvent, nextEvents);
+                if (eventBeforeMovedEvent !== eventBeforeMovedEventInPreviousArray) {
+                    this.updateEventBeforeMovedEvent(updatedEvent, eventBeforeMovedEvent, nextEvents);
                 } // END CASE: MOVED EVENT HAS A NEW PREVIOUS EVENT
                 else {
                     console.log('event order did not change');
@@ -191,16 +208,30 @@ class ScheduleView extends Component {
             } // END CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
 
             // CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT BUT NOT AFTER THE MOVED EVENT
-            else if (eventBeforeMovedEventInPreviousArray && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent) {
+            else if (eventBeforeMovedEventInPreviousArray && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent) {
                 console.log('the moved event had an event before it but not after it in the previous array. Updating that event');
 
+                // RESET END TIME
                 end = this.resetEventEndTime(eventBeforeMovedEventInPreviousArray.start, eventBeforeMovedEventInPreviousArray.duration);
                 console.log(`reset eventBeforeMovedEvent end time to ${end}`)
                 let updatedEvent = { ...eventBeforeMovedEventInPreviousArray, end };
+                // END RESET END TIME
+
                 console.log('eventBeforeMovedEventInPreviousArray end time reset. That event is now:');
                 console.log(updatedEvent);
+
+                // FIND UPDATED EVENT IN ARRAY OF EVENTS
                 idx = events.indexOf(eventBeforeMovedEventInPreviousArray);
+                // END FIND UPDATED EVENT IN ARRAY OF EVENTS
+
+                // UPDATE EVENTS ARRAY WITH UPDATED EVENT
                 nextEvents.splice(idx, 1, updatedEvent);
+                // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
+
                 this.setState({
                     events: nextEvents
                 });
@@ -214,22 +245,26 @@ class ScheduleView extends Component {
             console.log('next event is: ' + eventAfterMovedEvent.title);
 
             // CASE: MOVED EVENT IS FIRST AND EVENT ORDER CHANGED
-            if (!eventBeforeMovedEvent && eventAfterMovedEvent != eventAfterMovedEventInPreviousArray) {
+            if (!eventBeforeMovedEvent && eventAfterMovedEvent !== eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order changed.');
                 // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-                this.getDriveTime(event.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
+                this.getDriveTime(updatedEvent.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
                 // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
 
-                // RESENT EVENT END TIME
-                end = this.resetEventEndTime(start, event.duration);
+                // RESET EVENT END TIME
+                end = this.resetEventEndTime(start, updatedEvent.duration);
                 console.log(`reset end time to ${end}`)
-                // END RESENT EVENT END TIME
+                // END RESET EVENT END TIME
 
                 // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
                 end = moment(end).add(this.props.currentDriveTime, 'm').toDate();
                 console.log(`after drive time, end is ${end}`);
-                updatedEvent = { ...event, start, end, resourceId };
+                updatedEvent = { ...updatedEvent, end };
                 // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
 
                 // UPDATE EVENTS ARRAY WITH UPDATED EVENT
                 nextEvents.splice(idx, 1, updatedEvent);
@@ -238,12 +273,17 @@ class ScheduleView extends Component {
                 this.setState({
                     events: nextEvents,
                 })
-                
+
             } // END CASE: MOVED EVENT IS FIRST AND EVENT ORDER CHANGED
 
             // CASE: MOVED EVENT IS FIRST AND EVENT ORDER DID NOT CHANGE
-            else if (!eventBeforeMovedEvent && eventAfterMovedEvent == eventAfterMovedEventInPreviousArray) {
+            else if (!eventBeforeMovedEvent && eventAfterMovedEvent === eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order did not change.');
+
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
+
                 this.setState({
                     events: nextEvents,
                 })
@@ -264,11 +304,23 @@ class ScheduleView extends Component {
                 // UPDATE THE MOVED EVENT
                 this.updateMovedEventWithDriveTime(updatedEvent, eventAfterMovedEvent, nextEvents);
 
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
+
+                this.setState({
+                    events: nextEvents,
+                })
             } // END CASE: MOVED EVENT IS NOT FIRST AND EVENT ORDER CHANGED
 
             // CASE: MOVED EVENT IS NOT FIRST AND EVENT ORDER DID NOT CHANGE:
-            else if (eventBeforeMovedEvent && eventAfterMovedEvent == eventAfterMovedEventInPreviousArray) {
+            else if (eventBeforeMovedEvent && eventAfterMovedEvent === eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is not first, and event order did not change.');
+
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
+
                 this.setState({
                     events: nextEvents,
                 })
@@ -277,23 +329,42 @@ class ScheduleView extends Component {
             // HANDLE MOVED EVENT'S PREVIOUS ARRAY:
             // CASE: CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
             if (eventBeforeMovedEventInPreviousArray && eventAfterMovedEventInPreviousArray
-                && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent
-                && eventAfterMovedEventInPreviousArray != eventAfterMovedEvent) {
+                && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent
+                && eventAfterMovedEventInPreviousArray !== eventAfterMovedEvent) {
                 console.log('the moved event had an event before and after it in the previous array. Updating the event before the moved event in previous array');
                 this.updateEventBeforeMovedEventInPreviousArray(eventBeforeMovedEventInPreviousArray, eventAfterMovedEventInPreviousArray, nextEvents);
             } // END CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT AND AN EVENT AFTER THE MOVED EVENT
 
             // CASE: MOVED EVENT'S PREVIOUS ARRAY HAD AN EVENT BEFORE THE MOVED EVENT BUT NOT AFTER THE MOVED EVENT
             else if (eventBeforeMovedEventInPreviousArray && !eventAfterMovedEventInPreviousArray
-                && eventBeforeMovedEventInPreviousArray != eventBeforeMovedEvent) {
+                && eventBeforeMovedEventInPreviousArray !== eventBeforeMovedEvent) {
                 console.log('the moved event had an event before it but not after it in the previous array. Updating the event before the moved event in the previous array');
+
+                // RESET END TIME OF EVENTBEFOREMOVEDEVENTINPREVIOUSARRAY
                 end = this.resetEventEndTime(eventBeforeMovedEventInPreviousArray.start, eventBeforeMovedEventInPreviousArray.duration);
                 console.log(`reset eventBeforeMovedEvent end time to ${end}`)
+                // END RESET END TIME OF EVENTBEFOREMOVEDEVENTINPREVIOUSARRAY
+
+                // UPDATE EVENTBEFOREMOVEDEVENTINPREVIOUSARRAY WITH NEW END TIME
                 let updatedEvent = { ...eventBeforeMovedEventInPreviousArray, end };
+                // END UPDATE EVENTBEFOREMOVEDEVENTINPREVIOUSARRAY WITH NEW END TIME
+
                 console.log('eventBeforeMovedEventInPreviousArray end time reset. That event is now:');
                 console.log(updatedEvent);
+
+                // FIND UPDATED EVENT IN ARRAY OF EVENTS
                 idx = events.indexOf(eventBeforeMovedEventInPreviousArray);
+                // END FIND UPDATED EVENT IN ARRAY OF EVENTS
+
+                // UPDATE EVENTS ARRAY WITH UPDATED EVENT
                 nextEvents.splice(idx, 1, updatedEvent);
+                // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+
+                // UPDATE DATABASE WITH UPDATED EVENT
+                this.putUpdatedEventToDatabase(updatedEvent);
+                // END UPDATE DATABASE WITH UPDATED EVENT
+
                 this.setState({
                     events: nextEvents
                 });
@@ -334,6 +405,13 @@ class ScheduleView extends Component {
         return arrayOfArrays;
     } // END ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
 
+    putUpdatedEventToDatabase = (updatedEvent) => {
+        const payload = updatedEvent;
+        this.props.dispatch({
+            type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+            payload
+        });
+    }
 
     updateEventBeforeMovedEvent = (event, eventBeforeMovedEvent, events) => {
         console.log('init updatEventBeforeMovedEvent:');
@@ -342,7 +420,7 @@ class ScheduleView extends Component {
         console.log('drive time between eventBeforeMovedEvent and movedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(eventBeforeMovedEvent);
 
-        // RESENT EVENTBEFOREMOVEDEVENT END TIME
+        // RESET EVENTBEFOREMOVEDEVENT END TIME
         let end = this.resetEventEndTime(eventBeforeMovedEvent.start, eventBeforeMovedEvent.duration);
         console.log(`reset eventBeforeMovedEvent end time to ${end}`)
         let updatedEvent = { ...eventBeforeMovedEvent, end };
@@ -358,6 +436,11 @@ class ScheduleView extends Component {
         // UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
         events.splice(idx, 1, updatedEvent);
         // END UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
+
+        // UPDATE DATABASE WITH UPDATED EVENTBEFOREMOVEDEVENT
+        this.putUpdatedEventToDatabase(updatedEvent);
+        // END UPDATE DATABASE WITH UPDATED EVENTBEFOREMOVEDEVENT
+
         console.log(events);
         this.setState({
             events: events
@@ -371,7 +454,7 @@ class ScheduleView extends Component {
         console.log('drive time between eventBeforeMovedEvent and movedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(eventBeforeMovedEvent);
 
-        // RESENT EVENTBEFOREMOVEDEVENT END TIME
+        // RESET EVENTBEFOREMOVEDEVENT END TIME
         let end = this.resetEventEndTime(eventBeforeMovedEvent.start, eventBeforeMovedEvent.duration);
         console.log(`reset eventBeforeMovedEvent end time to ${end}`)
         let updatedEvent = { ...eventBeforeMovedEvent, end };
@@ -387,6 +470,10 @@ class ScheduleView extends Component {
         // UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
         events.splice(idx, 1, updatedEvent);
         // END UPDATE EVENTS ARRAY WITH UPDATED EVENTBEFOREMOVEDEVENT
+
+        // UPDATE DATABASE WITH UPDATED EVENTBEFOREMOVEDEVENT
+        this.putUpdatedEventToDatabase(updatedEvent);
+        // END UPDATE DATABASE WITH UPDATED EVENTBEFOREMOVEDEVENT
         console.log(events);
         this.setState({
             events: events
@@ -401,10 +488,10 @@ class ScheduleView extends Component {
         console.log('drive time between movedEvent and eventAfterMovedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(event);
 
-        // RESENT EVENT END TIME
+        // RESET EVENT END TIME
         let end = this.resetEventEndTime(event.start, event.duration);
         console.log(`reset end time to ${end}`)
-        // END RESENT EVENT END TIME
+        // END RESET EVENT END TIME
 
         // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
         end = moment(end).add(this.props.currentDriveTime, 'm').toDate();
@@ -498,7 +585,8 @@ class ScheduleView extends Component {
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
                     defaultDate={new Date()}
-                    // defaultDate={new Date(2018, 5, 22, 0, 0, 0, 0)}
+                    // defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
+
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +

@@ -1,3 +1,7 @@
+// do this stuff
+// add calendarId key to BigCalendar object when importing form acuity
+
+
 import moment from 'moment';
 import {callGetDriveTime} from '../redux/requests/scheduleRequests';
 
@@ -70,6 +74,7 @@ export function convertAppointmentsFromDatabase(originalObject) {
     const objectConverter = originalObject => {
         let finalObject = {
             'id': originalObject.id,
+            'databaseID': originalObject._id,
             'title': `${originalObject.firstName} ${originalObject.lastName}`,
             // 'title': 'Mmmmmmmmmmmmmmmmmm',
             'isRecurrence': false,
@@ -101,6 +106,8 @@ export function convertAppointmentsFromDatabase(originalObject) {
             }
             ],
             'resourceId': originalObject.calendar,
+            'calendarID': originalObject.calendarID,
+            'calendar': originalObject.calendar,
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
             // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
             'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
@@ -117,18 +124,27 @@ export function convertAppointmentsFromDatabase(originalObject) {
     return convertedArrayOfAppointments;
 } // END CONVERT JSON OBJECT FROM DATABASE TO OBJECT FOR DIGESTION BY CALENDAR LIBRARY
 
+export function convertAppointmentForSendingToDatabase(updatedObject) {
+        let finalObject = {
+                "databaseID": updatedObject.databaseID,
+                "updates": {
+                    "time": moment(updatedObject.start).format('h:mma'),
+                    "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
+                    "datetime": moment(updatedObject.start).toDate(),
+                    "calendar": updatedObject.calendar,
+                    "calendarID": updatedObject.calendarID,
+                }                
+        };
+    return finalObject;
+}
+
 // PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
-export function extractResourcesFromAppointments(originalObject) {
-    const resourceExtractor = originalObject => {
-        let extractedResource = originalObject.calendar;
-        return extractedResource;
-    }
-    const resourceArray = originalObject.map(resourceExtractor);
-    const uniqueResourcesArray = [...new Set(resourceArray)];
-    const resourceList = uniqueResourcesArray.map(currentResource => {
+export function extractResourcesFromCalendars(originalObject) {
+    const resourceList = originalObject.map(currentResource => {
         return {
-            id: currentResource,
-            title: currentResource
+            id: currentResource.name,
+            title: currentResource.name,
+            calendarID: currentResource.id,
         }
     });
     return resourceList;
@@ -136,8 +152,9 @@ export function extractResourcesFromAppointments(originalObject) {
 
 // ORDER ARRAY OF EVENTS BY TIME IN SUB-ARRAYS DEFINED BY EVENT RESOURCE
 export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {
-    console.log('init orderEventsByResourceAndTime, given resources and events:');
+    console.log('init orderEventsByResourceAndTime, given resources:');
     console.log(resourcesArray);
+    console.log('and events: ');
     console.log(eventsArray);
     // create array to contain an array of events for each resource
     let arrayOfArrays = [];
