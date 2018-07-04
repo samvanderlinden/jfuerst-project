@@ -76,8 +76,8 @@ class ScheduleView extends Component {
 
     // GET INITIAL APPOINTMENTS
     getInitialAppointments = () => {
-        // const today = moment(new Date()).format('MM/DD/YY');
-        const today = moment(new Date(2018, 6, 3, 0, 0, 0, 0)).format('MM/DD/YY');
+        const today = moment(new Date()).format('MM/DD/YY');
+        // const today = moment(new Date(2018, 6, 3, 0, 0, 0, 0)).format('MM/DD/YY');
 
         console.log('init getInitialAppointments');
         console.log('with today as: ' + today)
@@ -584,8 +584,8 @@ class ScheduleView extends Component {
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
-                    // defaultDate={new Date()}
-                    defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
+                    defaultDate={new Date()}
+                    // defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
 
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
