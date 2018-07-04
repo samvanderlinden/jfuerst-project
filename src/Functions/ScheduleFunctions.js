@@ -3,7 +3,13 @@
 
 
 import moment from 'moment';
+
 import { callGetDriveTime } from '../redux/requests/scheduleRequests';
+
+import { SCHEDULE_ACTIONS } from '../redux/actions/scheduleActions';
+
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
@@ -131,6 +137,25 @@ export function convertAppointmentsFromDatabase(originalObject) {
     return convertedArrayOfAppointments;
 } // END CONVERT JSON OBJECT FROM DATABASE TO OBJECT FOR DIGESTION BY CALENDAR LIBRARY
 
+// CONFIRM ACTION
+export function confirmAction(action, props) {
+    confirmAlert({
+        title: `${action.title}`,
+        message: `${action.message}`,
+        buttons: [
+            {
+                label: 'Yes',
+                onClick: () => executeSubmitChangesToThirdPartyAPI(props)
+            },
+            {
+                label: 'No',
+                onClick: () => alert('Aborted')
+            }
+        ]
+    })
+} // END CONFIRM ACTION
+
+// CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
 export function convertAppointmentForSendingToDatabase(updatedObject) {
     let finalObject = {
         "databaseID": updatedObject.databaseID,
@@ -143,7 +168,14 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
         }
     };
     return finalObject;
-}
+} // END CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
+
+// DISPATCH ACTION TO SUBMIT DATABASE APPOINTMENT DATA TO THIRD-PARTY SCHEDULING API
+export function executeSubmitChangesToThirdPartyAPI(props) {
+    props.dispatch({
+        type: SCHEDULE_ACTIONS.PUT_APPOINTMENTS_TO_THIRDPARTY_API
+    });
+} // DISPATCH ACTION TO SUBMIT DATABASE APPOINTMENT DATA TO THIRD-PARTY SCHEDULING API
 
 // PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
 export function extractResourcesFromCalendars(originalObject) {
@@ -156,6 +188,18 @@ export function extractResourcesFromCalendars(originalObject) {
     });
     return resourceList;
 } // END PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
+
+// HANDLE CLICK FOR SUBMITTING CHANGES TO THIRD-PARTY API
+export function handleClickSubmit(props) {
+    console.log('init handleClickSubmit');
+    const action = {
+        title: 'Submit changes',
+        message: `Are you sure you want to submit changes? 
+        \n This cannot be undone.`
+    }
+    confirmAction(action, props);
+}
+// END HANDLE CLICK FOR SUBMITTING CHANGES TO THIRD-PARTY API
 
 // ORDER ARRAY OF EVENTS BY TIME IN SUB-ARRAYS DEFINED BY EVENT RESOURCE
 export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {

@@ -68,3 +68,11 @@ export function callPutUpdatedAppointmentToDatabase(updatedAppointment) {
     });
 }
 
+export function callPutAppointmentsFromDatabaseToThirdPartyAPI() {
+    console.log('init putAppointmentsFromDatabaseToThirdPartyAPI')
+    return(axios.post('/api/acuity/appointments'))
+    .then(response => response.data)
+    .catch((error) => {
+        throw error.response || error;
+    });
+}

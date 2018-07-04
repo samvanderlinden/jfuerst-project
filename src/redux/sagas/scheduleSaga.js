@@ -6,6 +6,7 @@ import {
     callGetCalendarsFromDatabase,
     callPopulateDatabaseAppointmentsFromThirdPartyAPI,
     callPopulateDatabaseCalendarsFromThirdPartyAPI,
+    callPutAppointmentsFromDatabaseToThirdPartyAPI,
     callPutUpdatedAppointmentToDatabase,
 } from '../requests/scheduleRequests';
 import {
@@ -74,10 +75,22 @@ function* putAppointmentToDataBase(action) {
     yield callPutUpdatedAppointmentToDatabase(updatedAppointmentObject);
 }
 
+function* initiatePutAppointmentsToThirdPartyAPI(action) {
+    console.log('init putAppointmentsToThirdPartyAPI');
+    try {
+        const response = yield callPutAppointmentsFromDatabaseToThirdPartyAPI();
+        console.log(response);
+    } catch (error) {
+        console.log('UPDATE THIRD-PARTY API WITH APPOINTMENTS FAILED', error);
+    }
+
+}
+
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveTime);
     yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI);
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE, putAppointmentToDataBase);
+    yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENTS_TO_THIRDPARTY_API, initiatePutAppointmentsToThirdPartyAPI);
 }
 
 export default scheduleSaga;
