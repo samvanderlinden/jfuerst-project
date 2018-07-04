@@ -42,14 +42,26 @@ export function callPopulateDatabaseCalendarsFromThirdPartyAPI() {
 }
 
 export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
+    console.log('init CallPopulateDatabaseAppointmentsFromThirdPartyAPI with: ');
     const params = {
         minDate: dateObject.minDate,
         maxDate: dateObject.maxDate
     }
+    console.log(params);
     return axios.get('/api/acuity/appointments', {params})
         .then(response => response.data)
         .catch((error) => {
             throw error.response || error;
         });
+}
+
+export function callPutUpdatedAppointmentToDatabase(updatedAppointment) {
+    const params = updatedAppointment.databaseID;
+    const body = updatedAppointment.updates;
+    return axios.put(`/api/data/appointment/${params}`, body)
+    .then(response => response.data)
+    .catch((error) => {
+        throw error.response || error;
+    });
 }
 

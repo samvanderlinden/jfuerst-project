@@ -128,9 +128,9 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
         let finalObject = {
                 "databaseID": updatedObject.databaseID,
                 "updates": {
-                    "time": moment(updatedObject.start).format('H:mma'),
-                    "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('H:mma'),
-                    "datetime": moment(updatedObject.start).format('YYYY-MM-DDTHH:mm:ss:SSSZ'),
+                    "time": moment(updatedObject.start).format('h:mma'),
+                    "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
+                    "datetime": moment(updatedObject.start).toDate(),
                     "calendar": updatedObject.calendar,
                     "calendarID": updatedObject.calendarID,
                 }                

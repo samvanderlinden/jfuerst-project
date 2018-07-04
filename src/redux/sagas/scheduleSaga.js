@@ -6,6 +6,7 @@ import {
     callGetCalendarsFromDatabase,
     callPopulateDatabaseAppointmentsFromThirdPartyAPI,
     callPopulateDatabaseCalendarsFromThirdPartyAPI,
+    callPutUpdatedAppointmentToDatabase,
 } from '../requests/scheduleRequests';
 import {
     convertAppointmentsFromDatabase,
@@ -67,12 +68,11 @@ function* getAppointmentsFromThirdPartyAPI(action) {
 
 function* putAppointmentToDataBase(action) {
     console.log('init putAppointmentsInDatabase');
-    const updatedAppointment = convertAppointmentForSendingToDatabase(action.payload);
+    const updatedAppointmentObject = yield convertAppointmentForSendingToDatabase(action.payload);
     console.log('sending updated appointment to database:');
-    console.log(updatedAppointment);
-    // yield callUpdateDatabaseWithUpdatedAppointment(updatedAppointment);
+    console.log(updatedAppointmentObject);
+    yield callPutUpdatedAppointmentToDatabase(updatedAppointmentObject);
 }
-
 
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveTime);
