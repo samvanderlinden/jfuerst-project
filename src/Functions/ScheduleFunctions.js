@@ -3,7 +3,7 @@
 
 
 import moment from 'moment';
-import {callGetDriveTime} from '../redux/requests/scheduleRequests';
+import { callGetDriveTime } from '../redux/requests/scheduleRequests';
 
 // PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
@@ -13,6 +13,9 @@ export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
     console.log(events);
     const nextEvents = events;
     let end;
+    let currentEvent;
+    let locationsObject;
+    let nextEvent;
     let updatedEvent;
     const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
     console.log('the array of resources with arrays of events is:');
@@ -25,15 +28,19 @@ export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
         // loop through event array
         for (let j = 0; j < currentResourceEvents.length - 1; j++) {
             const idx = events.indexOf(currentResourceEvents[j]);
-            let currentEvent = currentResourceEvents[j];
-            let nextEvent = currentResourceEvents[j + 1];
-            console.log('current event is: '+j+' of '+currentResourceEvents.length);
+            currentEvent = currentResourceEvents[j];
+            nextEvent = currentResourceEvents[j + 1];
+            console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
             console.log(currentEvent);
             console.log('Its index in events array is ' + idx);
             console.log('next event is:')
             console.log(nextEvent);
+            locationsObject = {
+                origins: currentEvent,
+                destinations: nextEvent,
+            }
             // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-            let currentDriveTime = callGetDriveTime(currentEvent.appointmentAddress, nextEvent.appointmentAddress);
+            let currentDriveTime = callGetDriveTime(locationsObject);
             console.log('confirming that scheduleReducer state has currentDriveTime of: ' + currentDriveTime);
             // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
             end = moment(currentEvent.end).add(currentDriveTime, 'm').toDate();
@@ -52,12 +59,12 @@ export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
             console.log(nextEvents);
             console.log('returning events array');
         }
-    }  
+    }
     return nextEvents;
 } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
 // COMPARE START TIMES OF EVENTS FOR SORTING WITHIN THEIR RESOURCE ARRAY
-export function compareEventStartTimes (eventA, eventB) {
+export function compareEventStartTimes(eventA, eventB) {
     const startTimeA = eventA.start;
     const startTimeB = eventB.start;
     let comparison = 0;
@@ -76,47 +83,47 @@ export function convertAppointmentsFromDatabase(originalObject) {
             'id': originalObject.id,
             'databaseID': originalObject._id,
             'title': `${originalObject.firstName} ${originalObject.lastName}`,
-            // 'title': 'Mmmmmmmmmmmmmmmmmm',
-            'isRecurrence': false,
-            'patientName': 'SSSSSSSSSSSSS',
-            'clinicianImage': '../src/img/doctor.png',
-            'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
             'appointmentType': originalObject.type,
-            // 'appointmentType': 'Regular appointment',
-            'appointmentTime': '8:00 PM - 10:30 PM',
             'appointmentAddress': originalObject.location,
-            // 'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
-            'coPay': '4000',
-            'soapNoteTitle': 'View Soap Note',
-            'setProfileTitle': 'setProfileTitleAccessor',
-            'staffs': [{
-                'staffName': 'Morgan',
-                'image': '../src/img/doctor.png',
-                'link': ''
-            },
-            {
-                'staffName': 'Jason',
-                'image': '../src/img/doctor.png',
-                'link': ''
-            },
-            {
-                'staffName': 'Charlee',
-                'image': '../src/img/doctor.png',
-                'link': ''
-            }
-            ],
-            'resourceId': originalObject.calendar,
-            'calendarID': originalObject.calendarID,
+            'lat': originalObject.lat,
+            'lng': originalObject.lng,
             'calendar': originalObject.calendar,
-            'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
-            // 'start': new Date(2018, 5, 27, 15, 0, 0, 0),
-            'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
-            // 'end': new Date(2018, 5, 27, 18, 0, 0, 0),
+            'calendarID': originalObject.calendarID,
             'duration': originalObject.duration,
+            'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
+            'resourceId': originalObject.calendar,
+            'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
+            'isRecurrence': false,
             'isRecurrenceEdit': false,
             'isEdit': true,
             'isDelete': true,
             'isDragable': true,
+            // 'title': 'Mmmmmmmmmmmmmmmmmm',
+            // 'patientName': 'SSSSSSSSSSSSS',
+            // 'clinicianImage': '../src/img/doctor.png',
+            // 'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
+            // 'appointmentType': 'Regular appointment',
+            // 'appointmentTime': '8:00 PM - 10:30 PM',
+            // 'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
+            // 'coPay': '4000',
+            // 'soapNoteTitle': 'View Soap Note',
+            // 'setProfileTitle': 'setProfileTitleAccessor',
+            // 'staffs': [{
+            //     'staffName': 'Morgan',
+            //     'image': '../src/img/doctor.png',
+            //     'link': ''
+            // },
+            // {
+            //     'staffName': 'Jason',
+            //     'image': '../src/img/doctor.png',
+            //     'link': ''
+            // },
+            // {
+            //     'staffName': 'Charlee',
+            //     'image': '../src/img/doctor.png',
+            //     'link': ''
+            // }
+            // ],
         };
         return finalObject;
     }
@@ -125,16 +132,16 @@ export function convertAppointmentsFromDatabase(originalObject) {
 } // END CONVERT JSON OBJECT FROM DATABASE TO OBJECT FOR DIGESTION BY CALENDAR LIBRARY
 
 export function convertAppointmentForSendingToDatabase(updatedObject) {
-        let finalObject = {
-                "databaseID": updatedObject.databaseID,
-                "updates": {
-                    "time": moment(updatedObject.start).format('h:mma'),
-                    "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
-                    "datetime": moment(updatedObject.start).toDate(),
-                    "calendar": updatedObject.calendar,
-                    "calendarID": updatedObject.calendarID,
-                }                
-        };
+    let finalObject = {
+        "databaseID": updatedObject.databaseID,
+        "updates": {
+            "time": moment(updatedObject.start).format('h:mma'),
+            "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
+            "datetime": moment(updatedObject.start).toDate(),
+            "calendar": updatedObject.calendar,
+            "calendarID": updatedObject.calendarID,
+        }
+    };
     return finalObject;
 }
 

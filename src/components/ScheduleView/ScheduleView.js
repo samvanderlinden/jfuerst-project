@@ -62,11 +62,11 @@ class ScheduleView extends Component {
     }
 
     // DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
-    getDriveTime = (locationA, locationB) => {
+    getDriveTime = (currentEvent, nextEvent) => {
         console.log('init getDriveTime');
         const payload = {
-            locationA: locationA,
-            locationB: locationB,
+            origins: currentEvent,
+            destinations: nextEvent,
         };
         this.props.dispatch({
             type: SCHEDULE_ACTIONS.GET_DRIVE_TIME,
@@ -248,7 +248,7 @@ class ScheduleView extends Component {
             if (!eventBeforeMovedEvent && eventAfterMovedEvent !== eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order changed.');
                 // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-                this.getDriveTime(updatedEvent.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
+                this.getDriveTime(updatedEvent, eventAfterMovedEvent);
                 // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
 
                 // RESET EVENT END TIME
@@ -416,7 +416,7 @@ class ScheduleView extends Component {
     updateEventBeforeMovedEvent = (event, eventBeforeMovedEvent, events) => {
         console.log('init updatEventBeforeMovedEvent:');
         console.log(eventBeforeMovedEvent);
-        this.getDriveTime(eventBeforeMovedEvent.appointmentAddress, event.appointmentAddress);
+        this.getDriveTime(eventBeforeMovedEvent, event);
         console.log('drive time between eventBeforeMovedEvent and movedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(eventBeforeMovedEvent);
 
@@ -450,7 +450,7 @@ class ScheduleView extends Component {
     updateEventBeforeMovedEventInPreviousArray = (eventBeforeMovedEvent, eventAfterMovedEvent, events) => {
         console.log('init updatEventBeforeMovedEventInPreviousArray:');
         console.log(eventBeforeMovedEvent);
-        this.getDriveTime(eventBeforeMovedEvent.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
+        this.getDriveTime(eventBeforeMovedEvent, eventAfterMovedEvent);
         console.log('drive time between eventBeforeMovedEvent and movedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(eventBeforeMovedEvent);
 
@@ -483,7 +483,7 @@ class ScheduleView extends Component {
     updateMovedEventWithDriveTime = (event, eventAfterMovedEvent, events) => {
         console.log('init updateMovedEventWithDriveTime');
         // CALCULATE DRIVE TIMES BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-        this.getDriveTime(event.appointmentAddress, eventAfterMovedEvent.appointmentAddress);
+        this.getDriveTime(event, eventAfterMovedEvent);
         // END CALCULATE DRIVE TIMES BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
         console.log('drive time between movedEvent and eventAfterMovedEvent is now: ' + this.props.currentDriveTime);
         let idx = events.indexOf(event);
