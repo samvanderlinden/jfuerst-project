@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import message from './utils/messages';
@@ -41,9 +42,10 @@ class Toolbar extends Component {
   handleChangeFor = (propertyName) => event => {
       console.log(`init handleChangeFor ${[propertyName]}`);
       console.log('look at this:')
-      const formatThatWorks = new Date(2018, 6, 3, 0, 0, 0, 0);
-      console.log(formatThatWorks);
-      const newDate = new Date(event.target.value);
+      let newDate = new Date(event.target.value);
+      // FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN THE SELECTED DAY
+      newDate = moment(newDate).add(1, "day").toDate();
+      // END FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN SELECTED DAY
       this.setState({
         currentDate: newDate
       })

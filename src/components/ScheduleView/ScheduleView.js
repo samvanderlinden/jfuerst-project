@@ -589,8 +589,6 @@ class ScheduleView extends Component {
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
                     defaultDate={this.props.currentDate}
-                    // defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
-
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
