@@ -33,7 +33,7 @@ router.get('/geocode', (req, res) => {
       };
       for (let i = 0; i < appointmentsWithGeocodes.length; i++) {
         let appointmentToUpdate = appointmentsWithGeocodes[i];
-        await Appointment.update({_id: appointmentToUpdate._id}, appointmentToUpdate);
+        await Appointment.update({ _id: appointmentToUpdate._id }, appointmentToUpdate);
       }
       res.sendStatus(201);
     } catch (error) {
@@ -42,6 +42,29 @@ router.get('/geocode', (req, res) => {
   })().catch(error => {
     console.log(error);
     res.sendStatus(500);
+  });
+});
+
+router.get('/distance', (req, res) => {
+  let queryParams = req.query;
+  console.log(queryParams);
+  axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial`, {
+    params: {
+      origins: queryParams.origins, //lat and long separated by , with no spaces
+      destinations: queryParams.destinations, //lat and long separated by , with no spaces
+      departure_time: queryParams.departure_time, //convert to Epoch time in seconds
+      travel_mode: 'pessimistic',
+      key: process.env.GOOGLE_API_KEY || NULL,
+    }
+  }).then((response) => {
+    let results = response.data.rows[0].elements[0];
+    let travelInfo = {
+      distance: results.distance.value, // distance in meters
+      duration: results.duration_in_traffic.value, // travel time with traffic in seconds
+    };
+    res.send(travelInfo);
+  }).catch((error) => {
+    console.log('error with distance GET to API', error);
   });
 });
 
