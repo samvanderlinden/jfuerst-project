@@ -27,14 +27,20 @@ form {
   bottom: 0;
 }
 
-.navbar {
-  float: left;
-}
-
 .menuButton {
   top: -200px;
   right: -300px;
 }
+
+.navbar {
+  float: left;
+}
+
+.phoneNumber {
+  color: white;
+}
+
+
 
 /*END OF NEW CSS FOR GROUP PROJECT*/
 

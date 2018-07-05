@@ -418,7 +418,7 @@ class DaySlot extends React.Component {
               <p>{appointmentType}</p>
               <p>{appointmentAddress}</p>
               <p>Square foot: {squareFoot} </p>
-              <p>Phone: {phone}</p>
+              <p className="phoneNumber">Phone: <a href="tel:{phone}" className="phoneNumber">{phone}</a></p>
               <p>Email: {email}</p>
               
               <Button 
@@ -436,7 +436,7 @@ class DaySlot extends React.Component {
                 open={this.state.selectedItemId == idx}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}><b>Contact info: </b> {title}, {phone}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Contact info: </b> {title}, <a href="tel:{phone}">{phone}</a></MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Time of appointment: </b> {label}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Appointment date: </b> {date} </MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Appointment type: </b> {appointmentType}</MenuItem>
@@ -455,7 +455,7 @@ class DaySlot extends React.Component {
                 <MenuItem onClick={this.handleClose}><b>Comments for condominium:</b> {condominiumComments}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Comments about property:</b> {propertyComments}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Ammount paid:</b> {amountPaid}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Phone:</b> {phone} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Phone:</b> <a href="tel:{phone}">{phone}</a> </MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Email:</b> {email} </MenuItem>
               </Menu>
             </div>
