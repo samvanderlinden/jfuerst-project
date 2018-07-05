@@ -96,9 +96,6 @@ class Toolbar extends Component {
 
     const currentDateString = this.props.currentDate.toString();
 
-
-
-
     return (
       <div className='rbc-toolbar'>
         <span className='rbc-toolbar-label monthlabel'>
