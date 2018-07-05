@@ -59,37 +59,23 @@ class MapContainer extends Component {
 
     render() {
 
-        let appointments = this.props.reduxState.mapData.mapData;
-        let placeDisplayOnMarker = appointments.map(((appointment) => {
-            return (
-                <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={this.getMarker(appointment.calendar)} />
-            )
-        }));
-
-        // console.log('map data:', this.mapData);
-        // let place = [
-        //     // { lat: 44.9828, lng: -93.1539 },
-        // ]
-        // let marker = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png',]
-        // let counter = 0;
-
-        // let placeDisplayOnMarker = place.map(((location, i) => {
-
+        // let appointments = this.props.reduxState.mapData.mapData;
+        // let placeDisplayOnMarker = appointments.map(((appointment) => {
         //     return (
-        //         <Marker key={i} position={{ lat: location.lat, lng: location.lng }} icon={'1.png'}
-        //         />
-        //     );
-        // }))
+        //         <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={this.getMarker(appointment.calendar)} />
+        //     )
+        // }));
+
 
         return (
 
-            <div style={{ height: '600px', width: '800px', position: 'relative' }}>
-                <Map className="map"
+            <div className="mapContainer">
+                <Map
                     google={this.props.google}
                     zoom={this.state.zoom}
                     initialCenter={this.state.latLng}
                 >
-                    {placeDisplayOnMarker}
+                    {/* {placeDisplayOnMarker} */}
 
                 </Map>
 

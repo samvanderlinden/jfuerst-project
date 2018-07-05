@@ -50,9 +50,11 @@ class MapView extends Component {
       <div className="mapView">
         <Nav />
         {content }
-        <MapContainer mapData={this.props.reduxState.mapData}/>
-        {/* <Legend /> */}
-        <Mileage/>
+        <div className="wrapper">
+          <MapContainer mapData={this.props.reduxState.mapData}/>
+          {/* <Legend /> */}
+          <Mileage/>
+        </div>
 
       </div>
     );
