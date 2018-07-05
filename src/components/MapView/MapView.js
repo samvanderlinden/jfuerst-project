@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { MAP_ACTIONS } from '../../redux/actions/mapActions';
-import MapContainer from './MapContainer';
-import Mileage from './Mileage';
+import MapContainer from './MapContainer/MapContainer';
+import Mileage from './Mileage/Mileage';
 import map from './map.css'
 
 const mapStateToProps = state => ({
