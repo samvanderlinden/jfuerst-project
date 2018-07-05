@@ -57,9 +57,40 @@ class MapContainer extends Component {
         }
     }
 
+    
+
+
+
+
     render() {
 
+        // // EXTRACT CALENDAR FROM THIRD-PARTY SCHEDULING APPLICATION AS RESOURCE FOR THIS APPLICATION'S SCHEDULE DISPLAY
+        // const resourceExtractor = originalObject => {
+        //     let extractedResource = originalObject.calendar;
+        //     return extractedResource;
+        // }
+        // const resourceArray = originalAcuityArray.map(resourceExtractor);
+        // const uniqueResourcesArray = [...new Set(resourceArray)];
+        // const resourceList = uniqueResourcesArray.map(currentResource => {
+        //     return {
+        //         id: currentResource,
+        //         title: currentResource
+        //     }
+        // });
+        // // END EXTRACT CALENDAR FROM THIRD-PARTY-SCHEDULING APPLICAITON AS RESOURCE FOR THIS APPLICATION'S SCHEDULE DISPLAY
+
+
+
         let appointments = this.props.reduxState.mapData.mapData;
+
+        let photogs = appointments.map(((photog) => {
+            return photog.calendar
+        }));
+
+
+
+        console.log('ttttttttt', photogs);
+
         let placeDisplayOnMarker = appointments.map(((appointment) => {
             return (
                 <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={this.getMarker(appointment.calendar)} />
