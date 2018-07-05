@@ -86,50 +86,46 @@ export function compareEventStartTimes(eventA, eventB) {
 export function convertAppointmentsFromDatabase(originalObject) {
     const objectConverter = originalObject => {
         let finalObject = {
-            'id': originalObject.id,
-            'databaseID': originalObject._id,
-            'title': `${originalObject.firstName} ${originalObject.lastName}`,
-            'appointmentType': originalObject.type,
+            'amountPaid': originalObject.paid,
             'appointmentAddress': originalObject.location,
-            'lat': originalObject.lat,
-            'lng': originalObject.lng,
+            'appointmentTime': originalObject.time,
+            'appointmentType': originalObject.type,
             'calendar': originalObject.calendar,
             'calendarID': originalObject.calendarID,
+            'chargedHomeEnhancements': originalObject.forms[4].values[0].value,
+            'chargedNeighborhoodEnhancements': originalObject.forms[4].values[1].value,
+            'Combo/Code/Name of person present': `${originalObject.forms[2].values[8].value}`,
+            'condominiumComments': originalObject.forms[3].values[2].value,
+            'contactInfo': originalObject.forms[2].values[9].value,
+            'databaseID': originalObject._id,
+            'date': originalObject.date,
             'duration': originalObject.duration,
             'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
-            'resourceId': originalObject.calendar,
-            'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
+            'email': originalObject.email,
+            'fireplaceEnhancement': originalObject.forms[3].values[0].value,
+            'howToAccessHome': `${originalObject.forms[2].values[5].value}`, 
+            'lat': originalObject.lat,
+            'lng': originalObject.lng,
+            'phone': originalObject.phone,
+            // 'notes': originalObject.forms[5].values[0].value,
+            'numberOfBedrooms': originalObject.forms[2].values[10].value,
+            'numberOfBathrooms': originalObject.forms[2].values[11].value,
+            'pets': originalObject.forms[2].values[6].value,
+            'propertyComments':originalObject.forms[5].values[0].value,
+            'forms': originalObject.forms[1].values[2].value,
+            'id': originalObject.id,
             'isRecurrence': false,
             'isRecurrenceEdit': false,
             'isEdit': true,
             'isDelete': true,
             'isDragable': true,
-            // 'title': 'Mmmmmmmmmmmmmmmmmm',
-            // 'patientName': 'SSSSSSSSSSSSS',
-            // 'clinicianImage': '../src/img/doctor.png',
-            // 'clinicianName': 'Dr Emmaaaaaaaaa Anderson',
-            // 'appointmentType': 'Regular appointment',
-            // 'appointmentTime': '8:00 PM - 10:30 PM',
-            // 'appointmentAddress': 'ROOM NO 228-230, FIRST FLOOR, DISTRICT ADMINISTRATIVE COMPLEX, SECTOR 76, Sahibzada Ajit Singh Nagar, Chandigarh, 160055',
-            // 'coPay': '4000',
-            // 'soapNoteTitle': 'View Soap Note',
-            // 'setProfileTitle': 'setProfileTitleAccessor',
-            // 'staffs': [{
-            //     'staffName': 'Morgan',
-            //     'image': '../src/img/doctor.png',
-            //     'link': ''
-            // },
-            // {
-            //     'staffName': 'Jason',
-            //     'image': '../src/img/doctor.png',
-            //     'link': ''
-            // },
-            // {
-            //     'staffName': 'Charlee',
-            //     'image': '../src/img/doctor.png',
-            //     'link': ''
-            // }
-            // ],
+            'resourceId': originalObject.calendar,
+            // 'shootConfirmed': 
+            'squareFoot': originalObject.forms[2].values[3].value,
+            'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
+            'title': `${originalObject.firstName} ${originalObject.lastName}`,
+            'tvScreenEnhancement': originalObject.forms[3].values[1].value,
+            //difference between propertyComments and notes?
         };
         return finalObject;
     }
