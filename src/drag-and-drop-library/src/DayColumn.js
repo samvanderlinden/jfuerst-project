@@ -3,33 +3,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
-
 import Selection, { getBoundsForNode, isEvent } from './Selection';
 import dates from './utils/dates';
 import { isSelected } from './utils/selection';
 import localizer from './localizer'
-
 import { notify } from './utils/helpers';
 import { accessor, elementType, dateFormat } from './utils/propTypes';
 import { accessor as get } from './utils/accessors';
 import getStyledEvents, { positionFromDate, startsBefore } from './utils/dayViewLayout'
-
 import TimeColumn from './TimeColumn';
 import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
-
-
 
 function snapToSlot(date, step) {
   var roundTo = 1000 * 60 * step;
   return new Date(Math.floor(date.getTime() / roundTo) * roundTo)
 }
-
-
 
 function startsAfter(date, max) {
   return dates.gt(dates.merge(max, date), max, 'minutes')
@@ -55,7 +46,6 @@ class DaySlot extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.renderStaffs = this.renderStaffs.bind(this);
     this.state = {
       left: false,
       open: false,
@@ -75,15 +65,6 @@ class DaySlot extends React.Component {
     this.setState({ anchorEl: null, selectedItemId: -1 });
   };
   // END FUNCTIONS FOR MENU
-
-  // START FUNCTIONS FOR DRAWER
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open,
-    });
-  };
-  // END FUNCTIONS FOR DRAWER
-
 
   render() {
     const { anchorElement, popperOpen } = this.state;
@@ -182,9 +163,6 @@ class DaySlot extends React.Component {
     eventWrapperComponent: elementType.isRequired,
     resource: PropTypes.string,
   };
-
-  // static defaultProps = { dragThroughEvents: true };
-  // state = { selecting: false };
 
   componentDidMount() {
     this.props.selectable
@@ -420,7 +398,7 @@ class DaySlot extends React.Component {
               <p>Square foot: {squareFoot} </p>
               <p className="phoneNumber">Phone: <a href="tel:{phone}" className="phoneNumber">{phone}</a></p>
               <p>Email: {email}</p>
-              
+              <div >
               <Button 
                 className="menuButton"
                 aria-owns={anchorEl ? 'simple-menu' + idx : null}
@@ -430,6 +408,7 @@ class DaySlot extends React.Component {
               >
                 <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
                 </Button>
+                </div>
               <Menu
                 id={'simple-menu' + idx}
                 anchorEl={anchorEl}

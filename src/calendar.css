@@ -1,9 +1,4 @@
 /*START OF NEW CSS FOR GROUP PROJECT*/
-.drawer {
-  width: 300px;
-  font-size: 3em;
-}
-
 form {
   background-color: #dbd5d5;
   width: 30%;
@@ -20,7 +15,6 @@ form {
   margin-left: 80px;
   height: 40px;
 }
-
 
 #logoutButton {
   position: fixed;
@@ -39,9 +33,6 @@ form {
 .phoneNumber {
   color: white;
 }
-
-
-
 /*END OF NEW CSS FOR GROUP PROJECT*/
 
 .rbc-btn {
@@ -100,7 +91,6 @@ form {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .rbc-rtl {
     direction: rtl;
