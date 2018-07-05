@@ -60,18 +60,20 @@ class DaySlot extends React.Component {
       left: false,
       open: false,
       anchorEl: null,
+      selectedItemId: -1
     }
   }
 
   // START FUNCTIONS FOR MENU
   handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+    let idx = event.currentTarget.getAttribute('data-idx');
+    console.log('ID OF THE ITEM', idx);
+    this.setState({ anchorEl: event.currentTarget, selectedItemId: idx });
   };
 
   handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: null, selectedItemId: -1 });
   };
-
   // END FUNCTIONS FOR MENU
 
   // START FUNCTIONS FOR DRAWER
@@ -395,7 +397,7 @@ class DaySlot extends React.Component {
 
       return (
         <EventWrapper event={event} key={'evt_' + idx}>
-      
+
           <div
             style={{
               ...xStyle,
@@ -411,69 +413,52 @@ class DaySlot extends React.Component {
             })}
           >
             <div className='rbc-event-label rbc-event-content textoverflow'>
-              <p><b>Photographer:</b> {resourceId}</p>
+              <p><b>Photographer:</b> {resourceId}</p> 
               <p>{title} {label}</p>
               <p>{appointmentType}</p>
               <p>{appointmentAddress}</p>
               <p>Square foot: {squareFoot} </p>
               <p>Phone: {phone}</p>
               <p>Email: {email}</p>
+              
+              <Button 
+                className="menuButton"
+                aria-owns={anchorEl ? 'simple-menu' + idx : null}
+                aria-haspopup="true"
+                data-idx={idx}
+                onClick={this.handleClick}
+              >
+                <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                </Button>
+              <Menu
+                id={'simple-menu' + idx}
+                anchorEl={anchorEl}
+                open={this.state.selectedItemId == idx}
+                onClose={this.handleClose}
+              >
+                <MenuItem onClick={this.handleClose}><b>Contact info:</b> {title}, {phone}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Time of appointment:</b> {label}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment date:</b> {date} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment type:</b> {appointmentType}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Shoot confirmed</b> <input type="checkbox" defaultChecked /> </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Address:</b> {appointmentAddress}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Square foot:</b> {squareFoot}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>How to access home:</b> {howToAccessHome} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bathrooms</b> {numberOfBathrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bedrooms</b> {numberOfBedrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Pets:</b> {pets}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Photographer:</b> {resourceId}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Fireplace Enhancement:</b> {fireplaceEnhancement}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>TV Enhancement:</b> {tvScreenEnhancement}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Charged home enhancements:</b> {chargedHomeEnhancements}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Charged neighborhood enhancements:</b> {chargedNeighborhoodEnhancements}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Comments for condominium:</b> {condominiumComments}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Comments about property:</b> {propertyComments}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Ammount paid:</b> {amountPaid}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Phone:</b> {phone} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Email:</b> {email} </MenuItem>
+              </Menu>
 
-              <Button variant="contained" onClick={this.toggleDrawer('left', true)}>More Details Drawer</Button>
-              {/* <Button onClick={this.handleClickOpen}> Open Menu</Button> */}
-              <Button
-          aria-owns={anchorEl ? 'simple-menu' : null}
-          aria-haspopup="true"
-          onClick={this.handleClick}
-        >
-          Open Menu
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-        >
-          <MenuItem onClick={this.handleClose}>{title}, {phone}</MenuItem>
-          <MenuItem onClick={this.handleClose}>{email}</MenuItem>
-          <MenuItem onClick={this.handleClose}>{squareFoot}</MenuItem>
-        </Menu>
-
-
-              <div className={classes.list}>
-                <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
-                  <div
-                    tabIndex={0}
-                    role="button"
-                    onClick={this.toggleDrawer('left', false)}
-                    onKeyDown={this.toggleDrawer('left', false)}
-                  >
-                  <div>
-                    <p><b>Contact info:</b> {title}, {phone} </p>
-                    <p><b>Appointment type:</b>{appointmentType}</p>
-                    <p><b>Time of appointment:</b> {label}</p>
-                    <p><b>Appointment date:</b> {date} </p>
-                    <p><b>Shoot confirmed</b> <input type="checkbox" defaultChecked /> </p>
-                    <p><b>Address:</b> {appointmentAddress}</p>
-                    <p><b>Square foot:</b> {squareFoot}</p>
-                    <p><b>How to access home:</b> {howToAccessHome} </p>
-                    <p><b>Number of bathrooms</b> {numberOfBathrooms}</p>
-                    <p><b>Number of bedrooms</b> {numberOfBedrooms} </p>
-                    <p><b>Pets:</b> {pets}</p>
-                    <p><b>Photographer:</b> {resourceId}</p>
-                    <p><b>Fireplace Enhancement:</b> {fireplaceEnhancement} </p>
-                    <p><b>TV Enhancement:</b> {tvScreenEnhancement} </p>
-                    <p><b>Charged home enhancements:</b> {chargedHomeEnhancements}</p>
-                    <p><b>Charged neighborhood enhancements:</b> {chargedNeighborhoodEnhancements}</p>
-                    <p><b>Comments for condominium:</b> {condominiumComments}</p>
-                    <p><b>Comments about property:</b> {propertyComments}</p>
-                    <p><b>Ammount paid:</b> {amountPaid}</p>
-                    <p><b>Phone:</b> {phone} </p>
-                    <p><b>Email:</b> {email} </p>
-                    </div>
-                  </div>
-                </Drawer>
-              </div>
             </div>
             <div className={viewClass}>
               <div className="topbar">
