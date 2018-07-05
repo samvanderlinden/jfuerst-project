@@ -90,11 +90,34 @@ function* initiatePutAppointmentsToThirdPartyAPI(action) {
 
 }
 
+function* updateCurrentDate(action) {
+    console.log('init updateCurrentDate');
+    const newDate = action.payload;
+    const dateObject = {
+        minDate: action.payload,
+        maxDate: action.payload
+    }
+    try {
+        yield put({
+            type: SCHEDULE_ACTIONS.SET_CURRENT_DATE,
+            payload: newDate,
+        })
+        yield put({
+            type: SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API,
+            payload: dateObject
+        }) 
+    } catch (error) {
+            console.log('UPDATE CURRENT DATE FAILED', error);
+        }
+}
+
 function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveData);
     yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI);
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE, putAppointmentToDataBase);
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENTS_TO_THIRDPARTY_API, initiatePutAppointmentsToThirdPartyAPI);
+    yield takeLatest(SCHEDULE_ACTIONS.UPDATE_CURRENT_DATE, updateCurrentDate);
+
 }
 
 export default scheduleSaga;

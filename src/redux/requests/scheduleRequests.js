@@ -9,13 +9,13 @@ export function callGetDriveData(locationsObject) {
     });
 
     // TEMPORARY RANDOM NUMBER GENERATOR REPRESENTS MAPS API CALL FOR DRIVETIME
-    // return Math.floor(Math.random() * 60) + 15;
+    return Math.floor(Math.random() * 60) + 15;
 
-      return axios.get('api/google/distance', {params})
-        .then(response => response.data)
-        .catch((error) => {
-          throw error.response || error;
-        });
+    //   return axios.get('api/google/distance', {params})
+    //     .then(response => response.data)
+    //     .catch((error) => {
+    //       throw error.response || error;
+    //     });
 }
 
 export function callGetAppointmentsFromDatabase() {
@@ -45,8 +45,8 @@ export function callPopulateDatabaseCalendarsFromThirdPartyAPI() {
 export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
     console.log('init CallPopulateDatabaseAppointmentsFromThirdPartyAPI with: ');
     const params = {
-        minDate: dateObject.minDate,
-        maxDate: dateObject.maxDate
+        minDate: moment(dateObject.minDate).format('MM/DD/YY'),
+        maxDate: moment(dateObject.maxDate).format('MM/DD/YY')
     }
     console.log(params);
     return axios.get('/api/acuity/appointments', {params})

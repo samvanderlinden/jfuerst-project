@@ -1,21 +1,32 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import message from './utils/messages';
 import { navigate } from './utils/constants';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
-import { handleClickSubmit } from '../../Functions/ScheduleFunctions';
+import { handleClickChangeDate, handleClickSubmit } from '../../Functions/ScheduleFunctions';
 
 const mapStateToProps = state => ({
   currentAppointments: state.schedule.currentAppointments,
+  currentDate: state.schedule.currentDate,
   currentDriveTime: state.schedule.currentDriveTime,
   resources: state.schedule.resources,
   user: state.user,
 });
 
+
 class Toolbar extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentDate: new Date()
+    }
+  }
+
   static propTypes = {
     view: PropTypes.string.isRequired,
     views: PropTypes.arrayOf(
@@ -27,50 +38,20 @@ class Toolbar extends Component {
     onViewChange: PropTypes.func.isRequired,
   }
 
-  render() {
-    let { messages, label } = this.props;
+  // HANDLE INPUT CHANGE
+  handleChangeFor = (propertyName) => event => {
+      console.log(`init handleChangeFor ${[propertyName]}`);
+      console.log('look at this:')
+      let newDate = new Date(event.target.value);
+      // FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN THE SELECTED DAY
+      newDate = moment(newDate).add(1, "day").toDate();
+      // END FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN SELECTED DAY
+      this.setState({
+        currentDate: newDate
+      })
+    }
+  // END HANDLE INPUT CHANGE
 
-    messages = message(messages)
-
-    return (
-      <div className='rbc-toolbar'>
-        <span className='rbc-toolbar-label monthlabel'>
-          {label}
-        </span>
-        
-        <span>
-
-          <Button
-            onClick={() => { handleClickSubmit(this.props) }}
-            variant="contained"
-            color="primary"
-          >
-            Submit changes to Third-Party Scheduling Application
-          </Button>
-
-          {/* <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
-            <i className="fa fa-angle-left" aria-hidden="true"></i>
-          </button>
-          <button type='button' onClick={this.navigate.bind(null, navigate.NEXT)}>
-              <i className="fa fa-angle-right" aria-hidden="true"></i>
-          </button> */}
-        </span>
-        {/*<span className='rbc-btn-group todaybtn'>*/}
-        {/* <span className='rbc-btn-group monthweekbtn'>
-          <button
-            type='button'
-            onClick={this.navigate.bind(null, navigate.TODAY)}
-          >
-            {messages.today}
-          </button>
-        {
-          this.viewNamesGroup(messages)
-        }
-        </span> */}
-
-      </div>
-    );
-  }
 
   navigate = (action) => {
     this.props.onNavigate(action)
@@ -107,6 +88,71 @@ class Toolbar extends Component {
       )
     }
   }
+
+  render() {
+    let { messages, label } = this.props;
+
+    messages = message(messages)
+
+    const currentDateString = this.props.currentDate.toString();
+
+    return (
+      <div className='rbc-toolbar'>
+        <span className='rbc-toolbar-label monthlabel'>
+          {label}
+        </span>
+        <span>
+          <input
+            id="date"
+            label="Schedule Date"
+            type="date"
+            onChange={this.handleChangeFor('currentDate')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <Button
+            onClick={() => { handleClickChangeDate(this.state.currentDate, this.props) }}
+            variant="contained"
+            color="primary"
+          >
+            Change Date
+        </Button>
+        </span>
+        <span>
+
+          <Button
+            onClick={() => { handleClickSubmit(this.props) }}
+            variant="contained"
+            color="primary"
+          >
+            Submit changes to Third-Party Scheduling Application
+        </Button>
+
+          {/* <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
+          <i className="fa fa-angle-left" aria-hidden="true"></i>
+        </button>
+        <button type='button' onClick={this.navigate.bind(null, navigate.NEXT)}>
+            <i className="fa fa-angle-right" aria-hidden="true"></i>
+        </button> */}
+        </span>
+        {/*<span className='rbc-btn-group todaybtn'>*/}
+        {/* <span className='rbc-btn-group monthweekbtn'>
+        <button
+          type='button'
+          onClick={this.navigate.bind(null, navigate.TODAY)}
+        >
+          {messages.today}
+        </button>
+      {
+        this.viewNamesGroup(messages)
+      }
+      </span> */}
+
+      </div>
+    );
+  }
+
 }
 
 export default connect(mapStateToProps)(Toolbar);

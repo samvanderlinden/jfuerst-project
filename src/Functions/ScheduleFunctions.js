@@ -71,6 +71,14 @@ export function getInitialDriveData(appointmentsArray, resourcesArray) {
     return nextEvents;
 } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
+export function searchArray(propertyName, array, desiredValuesIndex) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].name === propertyName) {
+            return array[i].values[desiredValuesIndex].value
+        }
+    }
+}
+
 // COMPARE START TIMES OF EVENTS FOR SORTING WITHIN THEIR RESOURCE ARRAY
 export function compareEventStartTimes(eventA, eventB) {
     const startTimeA = eventA.start;
@@ -87,34 +95,43 @@ export function compareEventStartTimes(eventA, eventB) {
 // CONVERT JSON OBJECT FROM DATABASE TO OBJECT FOR DIGESTION BY CALENDAR LIBRARY
 export function convertAppointmentsFromDatabase(originalObject) {
     const objectConverter = originalObject => {
+        console.log(originalObject);
         let finalObject = {
-            'amountPaid': originalObject.paid,
+            'amountPaid': originalObject.amountPaid,
             'appointmentAddress': originalObject.location,
             'appointmentTime': originalObject.time,
             'appointmentType': originalObject.type,
             'calendar': originalObject.calendar,
             'calendarID': originalObject.calendarID,
-            'chargedHomeEnhancements': originalObject.forms[4].values[0].value,
-            'chargedNeighborhoodEnhancements': originalObject.forms[4].values[1].value,
-            'Combo/Code/Name of person present': `${originalObject.forms[2].values[8].value}`,
-            'condominiumComments': originalObject.forms[3].values[2].value,
-            'contactInfo': originalObject.forms[2].values[9].value,
+            'chargedHomeEnhancements': searchArray('Step 3: Add-ons',originalObject.forms, 0),
+            'chargedNeighborhoodEnhancements': searchArray('Step 3: Add-ons', originalObject.forms, 1),
+            'Combo/Code/Name of person present': searchArray('Step 1: Details',originalObject.forms,8),
+
+            'condominiumComments': searchArray('Step 2: Freebies',originalObject.forms,2),
+
+            'contactInfo': searchArray('Step 1: Details', originalObject.forms,9),
             'databaseID': originalObject._id,
             'date': originalObject.date,
             'duration': originalObject.duration,
             'end': moment(originalObject.datetime).add(Number(originalObject.duration), 'm').toDate(),
             'email': originalObject.email,
-            'fireplaceEnhancement': originalObject.forms[3].values[0].value,
-            'howToAccessHome': `${originalObject.forms[2].values[5].value}`, 
+            'fireplaceEnhancement': searchArray('Step 2: Freebies',originalObject.forms,0),
+            'howToAccessHome': searchArray('Step 1: Details', originalObject.forms,5),
             'lat': originalObject.lat,
             'lng': originalObject.lng,
             'phone': originalObject.phone,
-            // 'notes': originalObject.forms[5].values[0].value,
-            'numberOfBedrooms': originalObject.forms[2].values[10].value,
-            'numberOfBathrooms': originalObject.forms[2].values[11].value,
-            'pets': originalObject.forms[2].values[6].value,
-            'propertyComments':originalObject.forms[5].values[0].value,
-            'forms': originalObject.forms[1].values[2].value,
+
+            'notes': searchArray('Step 4: Notes',originalObject.forms,0,),
+
+            'numberOfBedrooms': searchArray('Step 1: Details', originalObject.forms, 10),
+
+            'numberOfBathrooms': searchArray('Step 1: Details', originalObject.forms,11),
+            'pets': searchArray('Step 1: Details',originalObject.forms,6),
+
+            'propertyComments':searchArray('Step 4: Notes',originalObject.forms,0,),
+
+            'forms': searchArray('5 Simple Steps to Awesome!',originalObject.forms,2),
+            
             'id': originalObject.id,
             'isRecurrence': false,
             'isRecurrenceEdit': false,
@@ -123,10 +140,12 @@ export function convertAppointmentsFromDatabase(originalObject) {
             'isDragable': true,
             'resourceId': originalObject.calendar,
             // 'shootConfirmed': 
-            'squareFoot': originalObject.forms[2].values[3].value,
+
+            'squareFoot': searchArray('Step 1: Details',originalObject.forms,3),
+
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
             'title': `${originalObject.firstName} ${originalObject.lastName}`,
-            'tvScreenEnhancement': originalObject.forms[3].values[1].value,
+            'tvScreenEnhancement': searchArray('Step 2: Freebies',originalObject.forms,1),
             //difference between propertyComments and notes?
         };
         return finalObject;
@@ -186,6 +205,17 @@ export function extractResourcesFromCalendars(originalObject) {
     });
     return resourceList;
 } // END PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
+
+// HANDLE CLICK CHANGE DATE
+export function handleClickChangeDate(newDate, props) {
+    console.log(newDate);
+    props.dispatch({
+        type: SCHEDULE_ACTIONS.UPDATE_CURRENT_DATE,
+        payload: newDate
+    })
+}
+// END HANDLE CLICK CHANGE DATE
+
 
 // HANDLE CLICK FOR SUBMITTING CHANGES TO THIRD-PARTY API
 export function handleClickSubmit(props) {
