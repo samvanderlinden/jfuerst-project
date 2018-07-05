@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import uncontrollable from 'uncontrollable';
 import cn from 'classnames';
 import {
@@ -23,6 +24,14 @@ import omit from 'lodash/omit';
 import defaults from 'lodash/defaults';
 import transform from 'lodash/transform';
 import mapValues from 'lodash/mapValues';
+
+const mapStateToProps = state => ({
+  currentAppointments: state.schedule.currentAppointments,
+  currentDate: state.schedule.currentDate,
+  currentDriveTime: state.schedule.currentDriveTime,
+  resources: state.schedule.resources,
+  user: state.user,
+});
 
 function viewNames(_views){
   return !Array.isArray(_views) ? Object.keys(_views) : _views
@@ -659,7 +668,7 @@ class Calendar extends React.Component {
      >
        {toolbar &&
          <ToolbarToRender
-           date={current}
+           date={this.props.currentDate}
            view={view}
            views={names}
            label={viewLabel(current, view, formats, culture)}
@@ -676,7 +685,7 @@ class Calendar extends React.Component {
          culture={culture}
          formats={undefined}
          events={events}
-         date={current}
+         date={this.props.currentDate}
          view={view}
          components={viewComponents}
          getDrilldownView={this.getDrilldownView}
@@ -725,8 +734,8 @@ class Calendar extends React.Component {
  };
 }
 
-export default uncontrollable(Calendar, {
+export default connect(mapStateToProps)(uncontrollable(Calendar, {
   view: 'onView',
   date: 'onNavigate',
   selected: 'onSelectEvent'
-})
+}));
