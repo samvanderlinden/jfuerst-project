@@ -1,13 +1,11 @@
 import axios from 'axios';
 import moment from 'moment';
 
-export function callGetDriveTime(locationsObject) {
+export function callGetDriveData(locationsObject) {
     const params = ({
         origins: `${locationsObject.origins.lat},${locationsObject.origins.lng}`,
         destinations: `${locationsObject.destinations.lat},${locationsObject.destinations.lon}`,
         departure_time: moment(locationsObject.origins.end).unix(),
-        travel_mode: 'pessimistic',
-        key: process.env.GOOGLE_API_KEY || null,
     });
 
     // TEMPORARY RANDOM NUMBER GENERATOR REPRESENTS MAPS API CALL FOR DRIVETIME
@@ -56,6 +54,15 @@ export function callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject) {
         .catch((error) => {
             throw error.response || error;
         });
+}
+
+export function callPopulateDatabaseAppointmentsWithGeoCoordinates() {
+    console.log('init callPopulateDatabaseAppointmentsWithGeoCoordinates');
+    return axios.get('/api/google/geocode',)
+    .then(response => response.data)
+    .catch((error) => {
+        throw error.response || error;
+    });
 }
 
 export function callPutUpdatedAppointmentToDatabase(updatedAppointment) {

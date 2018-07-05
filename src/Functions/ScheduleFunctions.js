@@ -4,7 +4,7 @@
 
 import moment from 'moment';
 
-import { callGetDriveTime } from '../redux/requests/scheduleRequests';
+import { callGetDriveData } from '../redux/requests/scheduleRequests';
 
 import { SCHEDULE_ACTIONS } from '../redux/actions/scheduleActions';
 
@@ -12,7 +12,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
-export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
+export function getInitialDriveData(appointmentsArray, resourcesArray) {
     console.log('init getInitialDriveTimes');
     const events = appointmentsArray;
     const resources = resourcesArray;
@@ -46,8 +46,10 @@ export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
                 destinations: nextEvent,
             }
             // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-            let currentDriveTime = callGetDriveTime(locationsObject);
-            console.log('confirming that scheduleReducer state has currentDriveTime of: ' + currentDriveTime);
+            let currentDriveData = callGetDriveData(locationsObject);
+            console.log('confirming that scheduleReducer state has currentDriveData:');
+            console.log(currentDriveData);
+            let currentDriveTime = currentDriveData.duration/60;
             // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
             end = moment(currentEvent.end).add(currentDriveTime, 'm').toDate();
             console.log(`after drive time, currentEvent's end is ${end}`);

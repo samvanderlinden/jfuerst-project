@@ -66,11 +66,12 @@ class ScheduleView extends Component {
 
     // DISPATCH ACTION TO GET DRIVE TIME BETWEEN DROPPED LOCATION AND NEXT LOCATION
     getDriveTime = (currentEvent, nextEvent) => {
-        console.log('init getDriveTime');
+        console.log('init getDriveTime with payload:');
         const payload = {
             origins: currentEvent,
             destinations: nextEvent,
         };
+        console.log(payload);
         this.props.dispatch({
             type: SCHEDULE_ACTIONS.GET_DRIVE_TIME,
             payload
