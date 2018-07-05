@@ -4,7 +4,6 @@ import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { MAP_ACTIONS } from '../../redux/actions/mapActions';
 import MapContainer from './MapContainer';
-import Legend from './Legend';
 import Mileage from './Mileage';
 import map from './map.css'
 
@@ -19,7 +18,7 @@ class MapView extends Component {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
     });
-        this.props.dispatch({
+    this.props.dispatch({
       type: MAP_ACTIONS.GET_DATA
     });
   }
@@ -31,8 +30,6 @@ class MapView extends Component {
 
   }
 
-
-
   render() {
     let content = null;
 
@@ -42,18 +39,14 @@ class MapView extends Component {
         </div>
       );
     }
-    console.log('map view----------:', this.props.reduxState);
 
     return (
-
-
       <div className="mapView">
         <Nav />
-        {content }
+        {content}
         <div className="wrapper">
-          <MapContainer mapData={this.props.reduxState.mapData}/>
-          {/* <Legend /> */}
-          <Mileage/>
+          <MapContainer />
+          <Mileage />
         </div>
 
       </div>

@@ -22,9 +22,10 @@ class MapContainer extends Component {
         };
     }
 
+    //loop through marker and assigning to a photog
     getMarker = (photog) => {
         const markerImg = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png',]
-        if (photog == 'photog 1') {
+        if (photog.toLowerCase() == 'photog 1') {
             return markerImg[0];
         } else if (photog == 'photog 2') {
             return markerImg[1];
@@ -66,7 +67,6 @@ class MapContainer extends Component {
         //     )
         // }));
 
-
         return (
 
             <div className="mapContainer">
@@ -78,8 +78,6 @@ class MapContainer extends Component {
                     {/* {placeDisplayOnMarker} */}
 
                 </Map>
-
-
             </div>
         )
     }
@@ -89,6 +87,5 @@ const connectToGoogleMaps = GoogleApiWrapper({
     // apiKey: API_KEY,
     apiKey: ('AIzaSyAfrUvtgh7j4JKGW6bkFPspZ4ZZ8uqlE-M')
 })(MapContainer)
-
 
 export default connect(mapStateToProps)(connectToGoogleMaps)

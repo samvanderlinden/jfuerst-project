@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
 import { MAP_ACTIONS } from '../actions/mapActions';
 
-
-
 const mapData = (state= [], action) => {
     switch (action.type) {
         case MAP_ACTIONS.SET_DATA:
@@ -15,6 +13,5 @@ const mapData = (state= [], action) => {
 };
 
 export default combineReducers({
-    // travelDistance,
     mapData,
   });

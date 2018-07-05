@@ -7,23 +7,15 @@ const mapStateToProps = state => ({
     reduxState: state,
 });
 
-
-
-
 class Mileage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            mileage: {
-
-            },
-
-        };
     }
 
+    //loop through marker and assigning to a photog
     getMarker = (photog) => {
         const markerImg = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png',]
-        if (photog == 'photog 1') {
+        if (photog.toLowerCase() == 'photog 1') {
             return markerImg[0];
         } else if (photog == 'photog 2') {
             return markerImg[1];
@@ -56,21 +48,15 @@ class Mileage extends Component {
         }
     }
 
-
     render() {
-
-
-
         let appointments = this.props.reduxState.mapData.mapData;
         let photogs = appointments.map(((appointment) => {
             return <tr><td><img src={this.getMarker(appointment.calendar)} />{appointment.calendar}</td><td>{appointment.travel_distance} miles</td></tr>
-
         }));
-        console.log('111111', photogs)
+
         return (
 
             <div className="mileage-table">
-
                 <table className="map-table mileage">
                     <thead>
                         <tr>
@@ -86,6 +72,5 @@ class Mileage extends Component {
         )
     }
 }
-
 
 export default connect(mapStateToProps)(Mileage)

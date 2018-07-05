@@ -3,10 +3,8 @@ import { MAP_ACTIONS } from '../actions/mapActions';
 import { getData } from '../requests/mapRequests';
 
 function* fetchData() {
-    console.log('getLatLng');
     try {
         const mapData = yield getData();
-        // console.log('map saga', mapData)
         yield put({
             type: MAP_ACTIONS.SET_DATA,
             payload: mapData,

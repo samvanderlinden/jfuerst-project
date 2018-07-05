@@ -5,21 +5,9 @@ export function getData() {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       };
-    
       return axios.get('api/data/appointments', config)
         .then(response => response.data)
         .catch((error) => { throw error; });
 }
-
-// export function getTravelDistance() {
-//     const config = {
-//         headers: { 'Content-Type': 'application/json' },
-//         withCredentials: true,
-//       };
-    
-//       return axios.get('api/data/appointments', config)
-//         .then(response => response.data)
-//         .catch((error) => { throw error; });
-// }
 
 
