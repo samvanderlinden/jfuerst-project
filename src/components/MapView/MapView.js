@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-import { LOGIN_ACTIONS } from '../../redux/actions/loginActions';
+import { MAP_ACTIONS } from '../../redux/actions/mapActions';
 import MapContainer from './MapContainer';
 import Legend from './Legend';
 import Mileage from './Mileage';
@@ -10,6 +10,7 @@ import map from './map.css'
 
 const mapStateToProps = state => ({
   user: state.user,
+  reduxState: state
 });
 
 class MapView extends Component {
@@ -18,13 +19,19 @@ class MapView extends Component {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
     });
+        this.props.dispatch({
+      type: MAP_ACTIONS.GET_DATA
+    });
   }
 
   componentDidUpdate() {
     if (!this.props.user.isLoading && this.props.user.userName === null) {
       this.props.history.push('home');
     }
+
   }
+
+
 
   render() {
     let content = null;
@@ -35,14 +42,17 @@ class MapView extends Component {
         </div>
       );
     }
+    console.log('map view----------:', this.props.reduxState);
 
     return (
-      <div>
+
+
+      <div className="mapView">
         <Nav />
         {content }
-        <MapContainer />
-        <Legend />
-        <Mileage />
+        <MapContainer mapData={this.props.reduxState.mapData}/>
+        {/* <Legend /> */}
+        <Mileage/>
 
       </div>
     );
