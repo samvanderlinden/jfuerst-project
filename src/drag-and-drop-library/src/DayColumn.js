@@ -1,21 +1,23 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
-
 import Selection, { getBoundsForNode, isEvent } from './Selection';
 import dates from './utils/dates';
 import { isSelected } from './utils/selection';
 import localizer from './localizer'
-
 import { notify } from './utils/helpers';
 import { accessor, elementType, dateFormat } from './utils/propTypes';
 import { accessor as get } from './utils/accessors';
 import getStyledEvents, { positionFromDate, startsBefore } from './utils/dayViewLayout'
+import TimeColumn from './TimeColumn';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import TimeColumn from './TimeColumn'
-
-function snapToSlot(date, step){
+function snapToSlot(date, step) {
   var roundTo = 1000 * 60 * step;
   return new Date(Math.floor(date.getTime() / roundTo) * roundTo)
 }
@@ -24,14 +26,54 @@ function startsAfter(date, max) {
   return dates.gt(dates.merge(max, date), max, 'minutes')
 }
 
+const styles = () => ({
+  list: {
+    width: 335,
+  },
+  fullList: {
+    width: 'auto',
+  },
+  root: {
+    width: '100%',
+  },
+});
+
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
 class DaySlot extends React.Component {
 
   constructor(props) {
     super(props);
-    this.renderStaffs = this.renderStaffs.bind(this);
+    this.state = {
+      left: false,
+      open: false,
+      anchorEl: null,
+      selectedItemId: -1
+    }
+  }
+
+  // START FUNCTIONS FOR MENU
+  handleClick = event => {
+    let idx = event.currentTarget.getAttribute('data-idx');
+    console.log('ID OF THE ITEM', idx);
+    this.setState({ anchorEl: event.currentTarget, selectedItemId: idx });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null, selectedItemId: -1 });
+  };
+  // END FUNCTIONS FOR MENU
+
+  render() {
+    const { anchorElement, popperOpen } = this.state;
+    const open = !!anchorElement;
+
   }
 
   renderStaffs(staffs) {
+
     if (staffs) {
       return staffs.map((obj, index) => {
         return (
@@ -94,7 +136,7 @@ class DaySlot extends React.Component {
     chargedHomeEnhancements: accessor,
     chargedNeighborhoodEnhancements: accessor,
     amountPaid: accessor,
-   
+
 
 
     allDayAccessor: accessor.isRequired,
@@ -122,12 +164,9 @@ class DaySlot extends React.Component {
     resource: PropTypes.string,
   };
 
-  static defaultProps = { dragThroughEvents: true };
-  state = { selecting: false };
-
   componentDidMount() {
     this.props.selectable
-    && this._selectable()
+      && this._selectable()
   }
 
   componentWillUnmount() {
@@ -166,14 +205,14 @@ class DaySlot extends React.Component {
     let len = lastNodeOfWeek.length;
 
     // @Week add class to last column - for sat
-    let lastelement = len < 1 ? '' : lastNodeOfWeek[len-1];
-    if(lastelement.classList !== undefined) {
+    let lastelement = len < 1 ? '' : lastNodeOfWeek[len - 1];
+    if (lastelement.classList !== undefined) {
       lastelement.classList.add('custom-class-sat')
     }
 
     // @Week add class to last column - for friday
-    let secondLastElement = len < 2 ? '' : lastNodeOfWeek[len-2];
-    if(secondLastElement.classList !== undefined) {
+    let secondLastElement = len < 2 ? '' : lastNodeOfWeek[len - 2];
+    if (secondLastElement.classList !== undefined) {
       secondLastElement.classList.add('custom-class-sat')
     }
 
@@ -193,9 +232,9 @@ class DaySlot extends React.Component {
 
         {selecting &&
           <div className='rbc-slot-selection' style={style}>
-              <span>
-              { localizer.format(selectDates, selectRangeFormat, culture) }
-              </span>
+            <span>
+              {localizer.format(selectDates, selectRangeFormat, culture)}
+            </span>
           </div>
         }
       </TimeColumn>
@@ -203,8 +242,10 @@ class DaySlot extends React.Component {
   }
 
   renderEvents = () => {
+    const { classes } = this.props;
+    const { anchorEl } = this.state;
     let {
-        events
+      events
       , min
       , max
       , culture
@@ -334,6 +375,7 @@ class DaySlot extends React.Component {
 
       return (
         <EventWrapper event={event} key={'evt_' + idx}>
+
           <div
             style={{
               ...xStyle,
@@ -342,8 +384,6 @@ class DaySlot extends React.Component {
               [isRtl ? 'right' : 'left']: `${Math.max(0, xOffset)}%`,
               width: `${width}%`
             }}
-            // title={label + ': ' + title }
-            //onClick={(e) => this._select(event, e)}
             className={cn(`rbc-event ${dayClass}`, className, {
               'rbc-selected': _isSelected,
               'rbc-event-continues-earlier': continuesPrior,
@@ -351,113 +391,54 @@ class DaySlot extends React.Component {
             })}
           >
             <div className='rbc-event-label rbc-event-content textoverflow'>
-              {isRecurrence ? <i className="fa fa-repeat pr5" aria-hidden="true"></i> : ''}
-              {isAppointmentRendered ? <i className="fa fa-check-circle-o pr5" aria-hidden="true"></i> : ''}
-              {isVideoCall ? <i className="fa fa-video-camera pr5" aria-hidden="true"></i> : ''}
-              {isAppoinmentCancelled ? <i className="fa fa-ban pr5" aria-hidden="true"></i> : ''}
+              <p><b>Photographer:</b> {resourceId}</p> 
               <p>{title} {label}</p>
               <p>{appointmentType}</p>
               <p>{appointmentAddress}</p>
               <p>Square foot: {squareFoot} </p>
-              <p>Phone: {phone}</p>
+              <p className="phoneNumber">Phone: <a href="tel:{phone}" className="phoneNumber">{phone}</a></p>
               <p>Email: {email}</p>
-              <button>More Details</button>
-            
-            </div>
-            <div className={viewClass}>
-              <div className="topbar">
-                <div className="info-title">Appointment info</div>
-                <div className="icons">
-                    <ul>
-                    {isRecurrenceEdit ?
-                      <li>
-                        <a title="Edit recurrence" className="edit" href="#" onClick={(e) => this.hoverDialogActions(event, e, 'edit_recurrence')}>
-                          <i className="fa fa-repeat" aria-hidden="true"></i>
-                        </a>
-                      </li>:''}
-                      {isCancel ?
-                      <li>
-                        <a title="Cancel" className="edit" href="#" onClick={(e) => this.hoverDialogActions(event, e, 'cancel')}>
-                          <i className="fa fa-ban" aria-hidden="true"></i>
-                        </a>
-                      </li>
-                      : isUnCancel ?
-                      <li>
-                      <a title="Undo Cancel" className="edit" href="#" onClick={(e) => this.hoverDialogActions(event, e, 'uncancel')}>
-                        <i className="fa fa-undo" aria-hidden="true"></i>
-                      </a>
-                    </li>
-                    : ''}
-                      {isEdit ?
-                      <li>
-                        <a title="Edit" className="edit" href="#" onClick={(e) => this.hoverDialogActions(event, e, 'edit')}>
-                          <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </a>
-                      </li>:''}
-                      {isDelete ?
-                      <li>
-                        <a title="Delete" className="trash" href="#" onClick={(e) => this.hoverDialogActions(event, e, 'delete')}>
-                          <i className="fa fa-trash-o" aria-hidden="true"></i>
-                        </a>
-                      </li>:''}
-                    </ul>
+              <div >
+              <Button 
+                className="menuButton"
+                aria-owns={anchorEl ? 'simple-menu' + idx : null}
+                aria-haspopup="true"
+                data-idx={idx}
+                onClick={this.handleClick}
+              >
+                <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                </Button>
                 </div>
-              </div>
-              <div className="info-content">
-                  <div className="personal-info">
-                  <div className="boxicon">
-                  {isRecurrence ? <i title="Recurrence Appointment" className="fa fa-repeat" aria-hidden="true"></i> : ''}
-                  {isAppointmentRendered ? <i title="Rendered Appointment" className="fa fa-check-circle-o" aria-hidden="true"></i> : ''}
-                  {isVideoCall ? <i title="Video Call in Appointment" className="fa fa-video-camera" aria-hidden="true"></i> : ''}
-                  {isAppoinmentCancelled ? <i title={`${cancellationReason}`} className="fa fa-ban" aria-hidden="true"></i> : ''}
-              </div>
-
-                  {/* {staffs ? this.renderStaffs(staffs) :
-                    <div>
-                      <div className="info-pic">
-                        <img src={clinicianImage} width="80px" height="80px" onClick={(e) => this.hoverDialogActions(event, e, 'view_profile')} />
-                      </div>
-                      <div className="info-p">
-                        <div className="name" onClick={(e) => this.hoverDialogActions(event, e, 'view_profile')}>{clinicianName}</div>
-                        {/*
-                        <a href="#" onClick={(e) => this.hoverDialogActions(event, e, 'view_profile')}>{setProfileTitle}</a>
-                        */}
-                        {/* <a href="#" onClick={(e) => this.hoverDialogActions(event, e, 'soap_note')}>{soapNoteTitle}</a> */}
-                      {/* </div> */}
-                    {/* </div> */}
-                  {/* } */}
-                  </div>
-                  <div className="about-event">
-                      <div className="info-p">
-                        <p>Contact info: {title}, {phone} </p>
-                        <p>{appointmentType}</p>
-                        <p>{label}</p>
-                        <p>Appointment date: {date} </p>
-                        <p>Shoot confirmed <input type="checkbox" checked /> </p>
-                        <p>Address: {appointmentAddress}</p>
-                        <p>Square foot: {squareFoot}</p>
-                        <p>How to access home: {howToAccessHome} </p>
-                        <p>{numberOfBathrooms} bathrooms</p>
-                        <p>{numberOfBedrooms} bedrooms </p>
-                        <p>Pets: {pets}</p>
-                        <p>Photographer: {resourceId}</p>
-                        <p>Fireplace Enhancement: {fireplaceEnhancement} </p>
-                        <p>TV Enhancement: {tvScreenEnhancement} </p>
-                        <p>Charged home enhancements: {chargedHomeEnhancements}</p>
-                        <p>Charged neighborhood enhancements: {chargedNeighborhoodEnhancements}</p>
-                        <p>Comments for condominium: {condominiumComments}</p>
-                        <p>Comments about property: {propertyComments}</p>
-                        <p>Ammount paid: {amountPaid}</p>
-                        <p>Phone: {phone} </p>
-                        <p>Email: {email}</p>
-                        
-
-                        
-                      </div>
-                  </div>
-              </div>
+              <Menu
+                id={'simple-menu' + idx}
+                anchorEl={anchorEl}
+                open={this.state.selectedItemId == idx}
+                onClose={this.handleClose}
+              >
+                <MenuItem onClick={this.handleClose}><b>Contact info: </b> {title}, <a href="tel:{phone}">{phone}</a></MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Time of appointment: </b> {label}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment date: </b> {date} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment type: </b> {appointmentType}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Shoot confirmed </b> <input type="checkbox" defaultChecked /> </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Address: </b> {appointmentAddress}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Square foot: </b> {squareFoot}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>How to access home: </b> {howToAccessHome} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bathrooms: </b> {numberOfBathrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bedrooms: </b> {numberOfBedrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Pets:</b> {pets}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Photographer:</b> {resourceId}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Fireplace Enhancement:</b> {fireplaceEnhancement}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>TV Enhancement:</b> {tvScreenEnhancement}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Charged home enhancements:</b> {chargedHomeEnhancements}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Charged neighborhood enhancements:</b> {chargedNeighborhoodEnhancements}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Comments for condominium:</b> {condominiumComments}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Comments about property:</b> {propertyComments}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Ammount paid:</b> {amountPaid}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Phone:</b> <a href="tel:{phone}">{phone}</a> </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Email:</b> {email} </MenuItem>
+              </Menu>
             </div>
-            </div>
+          </div>
         </EventWrapper>
       )
     })
@@ -475,7 +456,7 @@ class DaySlot extends React.Component {
 
   _selectable = () => {
     let node = findDOMNode(this);
-    let selector = this._selector = new Selection(()=> findDOMNode(this))
+    let selector = this._selector = new Selection(() => findDOMNode(this))
 
     let maybeSelect = (box) => {
       let onSelecting = this.props.onSelecting
@@ -486,7 +467,7 @@ class DaySlot extends React.Component {
       if (onSelecting) {
         if (
           (dates.eq(current.startDate, start, 'minutes') &&
-          dates.eq(current.endDate, end, 'minutes')) ||
+            dates.eq(current.endDate, end, 'minutes')) ||
           onSelecting({ start, end }) === false
         )
           return
@@ -590,7 +571,7 @@ class DaySlot extends React.Component {
 
 
 
-function minToDate(min, date){
+function minToDate(min, date) {
   var dt = new Date(date)
     , totalMins = dates.diff(dates.startOf(date, 'day'), date, 'minutes');
 
@@ -600,4 +581,8 @@ function minToDate(min, date){
   return dates.milliseconds(dt, 0)
 }
 
-export default DaySlot;
+DaySlot.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(DaySlot));
