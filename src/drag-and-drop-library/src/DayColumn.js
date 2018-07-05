@@ -436,16 +436,16 @@ class DaySlot extends React.Component {
                 open={this.state.selectedItemId == idx}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}><b>Contact info:</b> {title}, {phone}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Time of appointment:</b> {label}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Appointment date:</b> {date} </MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Appointment type:</b> {appointmentType}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Shoot confirmed</b> <input type="checkbox" defaultChecked /> </MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Address:</b> {appointmentAddress}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Square foot:</b> {squareFoot}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>How to access home:</b> {howToAccessHome} </MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Number of bathrooms</b> {numberOfBathrooms}</MenuItem>
-                <MenuItem onClick={this.handleClose}><b>Number of bedrooms</b> {numberOfBedrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Contact info: </b> {title}, {phone}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Time of appointment: </b> {label}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment date: </b> {date} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Appointment type: </b> {appointmentType}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Shoot confirmed </b> <input type="checkbox" defaultChecked /> </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Address: </b> {appointmentAddress}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Square foot: </b> {squareFoot}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>How to access home: </b> {howToAccessHome} </MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bathrooms: </b> {numberOfBathrooms}</MenuItem>
+                <MenuItem onClick={this.handleClose}><b>Number of bedrooms: </b> {numberOfBedrooms}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Pets:</b> {pets}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Photographer:</b> {resourceId}</MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Fireplace Enhancement:</b> {fireplaceEnhancement}</MenuItem>
@@ -458,39 +458,6 @@ class DaySlot extends React.Component {
                 <MenuItem onClick={this.handleClose}><b>Phone:</b> {phone} </MenuItem>
                 <MenuItem onClick={this.handleClose}><b>Email:</b> {email} </MenuItem>
               </Menu>
-
-            </div>
-            <div className={viewClass}>
-              <div className="topbar">
-                <div className="info-title">Appointment info</div>
-              </div>
-              <div className="info-content">
-                <div className="about-event">
-                  <div className="info-p">
-                    <p><b>Contact info:</b> {title}, {phone} </p>
-                    <p><b>Appointment type:</b>{appointmentType}</p>
-                    <p><b>Time of appointment:</b> {label}</p>
-                    <p><b>Appointment date:</b> {date} </p>
-                    <p><b>Shoot confirmed</b> <input type="checkbox" defaultChecked /> </p>
-                    <p><b>Address:</b> {appointmentAddress}</p>
-                    <p><b>Square foot:</b> {squareFoot}</p>
-                    <p><b>How to access home:</b> {howToAccessHome} </p>
-                    <p><b>Number of bathrooms</b> {numberOfBathrooms}</p>
-                    <p><b>Number of bedrooms</b> {numberOfBedrooms} </p>
-                    <p><b>Pets:</b> {pets}</p>
-                    <p><b>Photographer:</b> {resourceId}</p>
-                    <p><b>Fireplace Enhancement:</b> {fireplaceEnhancement} </p>
-                    <p><b>TV Enhancement:</b> {tvScreenEnhancement} </p>
-                    <p><b>Charged home enhancements:</b> {chargedHomeEnhancements}</p>
-                    <p><b>Charged neighborhood enhancements:</b> {chargedNeighborhoodEnhancements}</p>
-                    <p><b>Comments for condominium:</b> {condominiumComments}</p>
-                    <p><b>Comments about property:</b> {propertyComments}</p>
-                    <p><b>Ammount paid:</b> {amountPaid}</p>
-                    <p><b>Phone:</b> {phone} </p>
-                    <p><b>Email:</b> {email}</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </EventWrapper>
