@@ -34,6 +34,7 @@ localizer(globalize);
 
 const mapStateToProps = state => ({
     currentAppointments: state.schedule.currentAppointments,
+    currentDate: state.schedule.currentDate,
     currentDriveTime: state.schedule.currentDriveTime,
     resources: state.schedule.resources,
     user: state.user,
@@ -79,20 +80,20 @@ class ScheduleView extends Component {
 
     // GET INITIAL APPOINTMENTS
     getInitialAppointments = () => {
-        const today = moment(new Date()).format('MM/DD/YY');
+        const date = this.props.currentDate;
         // const today = moment(new Date(2018, 6, 3, 0, 0, 0, 0)).format('MM/DD/YY');
 
         console.log('init getInitialAppointments');
-        console.log('with today as: ' + today)
+        console.log('with today as: ' + date)
         const dateObject = {
-            minDate: today,
-            maxDate: today
+            minDate: date,
+            maxDate: date
         }
         this.props.dispatch({
             type: SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API,
             payload: dateObject
         })
-    }
+    }  
 
     logout = () => {
         this.props.dispatch({
@@ -587,9 +588,7 @@ class ScheduleView extends Component {
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
-                    defaultDate={new Date()}
-                    // defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
-
+                    defaultDate={this.props.currentDate}
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
