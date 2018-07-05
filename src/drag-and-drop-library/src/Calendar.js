@@ -671,7 +671,7 @@ class Calendar extends React.Component {
            date={this.props.currentDate}
            view={view}
            views={names}
-           label={viewLabel(current, view, formats, culture)}
+           label={viewLabel(this.props.currentDate, view, formats, culture)}
            onViewChange={this.handleViewChange}
            onNavigate={this.handleNavigate}
            customNavigate={this.customNavigate}
