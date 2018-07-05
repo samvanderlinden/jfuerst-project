@@ -34,6 +34,7 @@ localizer(globalize);
 
 const mapStateToProps = state => ({
     currentAppointments: state.schedule.currentAppointments,
+    currentDate: state.schedule.currentDate,
     currentDriveTime: state.schedule.currentDriveTime,
     resources: state.schedule.resources,
     user: state.user,
@@ -587,9 +588,7 @@ class ScheduleView extends Component {
                     usersAvailability={this.state.usersAvailability}
                     onEventDrop={this.moveEvent}
                     defaultView='resource' // set to 'resource'
-                    defaultDate={new Date()}
-                    // defaultDate={new Date(2018, 6, 3, 0, 0, 0, 0)}
-
+                    defaultDate={this.props.currentDate}
                     onSelectEvent={event => console.log(event)}
                 // onSelectSlot={(slotInfo) => alert(
                 //     `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +

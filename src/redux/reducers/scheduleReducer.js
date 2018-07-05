@@ -1,6 +1,16 @@
 import { combineReducers } from 'redux';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 
+const currentDate = (state = new Date(), action) => {
+  switch (action.type) {
+    case SCHEDULE_ACTIONS.SET_CURRENT_DATE:
+      return action.payload;
+    default:
+      console.log('currentDate reducer is returning default case.');
+      return state;
+  }
+}
+
 const currentDriveTime = (state = 35, action) => {
   switch (action.type) {
     case SCHEDULE_ACTIONS.SET_CURRENT_DRIVE_TIME:
@@ -40,6 +50,7 @@ const resources = (state = [], action) => {
 
 
 export default combineReducers({
+  currentDate,
   currentDriveTime,
   currentAppointments,
   resources

@@ -5,17 +5,20 @@ import cn from 'classnames';
 import message from './utils/messages';
 import { navigate } from './utils/constants';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
-import { handleClickSubmit } from '../../Functions/ScheduleFunctions';
+import { handleChangeFor, handleClickSubmit } from '../../Functions/ScheduleFunctions';
 
 const mapStateToProps = state => ({
   currentAppointments: state.schedule.currentAppointments,
+  currentDate: state.schedule.currentDate,
   currentDriveTime: state.schedule.currentDriveTime,
   resources: state.schedule.resources,
   user: state.user,
 });
 
 class Toolbar extends Component {
+
   static propTypes = {
     view: PropTypes.string.isRequired,
     views: PropTypes.arrayOf(
@@ -32,12 +35,24 @@ class Toolbar extends Component {
 
     messages = message(messages)
 
+    const currentDateString = this.props.currentDate.toString();
+
     return (
       <div className='rbc-toolbar'>
         <span className='rbc-toolbar-label monthlabel'>
-          {label}
+         {label}
         </span>
-        
+        <span>
+          <input
+            id="date"
+            label="Schedule Date"
+            type="date"
+            onChange={handleChangeFor('currentDate', this.props)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </span>
         <span>
 
           <Button

@@ -189,6 +189,25 @@ export function extractResourcesFromCalendars(originalObject) {
     return resourceList;
 } // END PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
 
+
+// HANDLE INPUT CHANGE
+export function handleChangeFor(propertyName, props) {
+    return function (event) {
+        console.log(`init handleChangeFor ${[propertyName]}`);
+        console.log('look at this:')
+        const formatThatWorks = new Date(2018, 6, 3, 0, 0, 0, 0);
+        console.log(formatThatWorks);
+        const newDate = new Date(event.target.value);
+        console.log(newDate);
+        props.dispatch({
+            type: SCHEDULE_ACTIONS.UPDATE_CURRENT_DATE,
+            payload: newDate
+        })
+    }
+}
+// END HANDLE INPUT CHANGE
+
+
 // HANDLE CLICK FOR SUBMITTING CHANGES TO THIRD-PARTY API
 export function handleClickSubmit(props) {
     console.log('init handleClickSubmit');
