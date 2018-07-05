@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
-
 const mapStateToProps = state => ({
     user: state.user,
     reduxState: state,

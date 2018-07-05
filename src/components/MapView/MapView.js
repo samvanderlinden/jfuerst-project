@@ -27,7 +27,6 @@ class MapView extends Component {
     if (!this.props.user.isLoading && this.props.user.userName === null) {
       this.props.history.push('home');
     }
-
   }
 
   render() {
