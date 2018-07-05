@@ -13,9 +13,7 @@ class Mileage extends Component {
 
     render() {
 
-        // console.log('-------cool', this.getMarker());
         let appointments = this.props.reduxState.mapData.mapData;
-
         let photogs = appointments.map(((appointment, i) => {
             return <tr><td><img src={(i ++) + '.png' } />{appointment.calendar}</td><td>{appointment.travel_distance} miles</td></tr>
         }));

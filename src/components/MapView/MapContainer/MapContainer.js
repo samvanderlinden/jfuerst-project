@@ -24,12 +24,6 @@ class MapContainer extends Component {
     render() {
 
         let appointments = this.props.reduxState.mapData.mapData;
-        let photogs = appointments.map(((photog) => {
-            return photog.calendar
-        }));
-
-        console.log('ttttttttt', photogs);
-
         let placeDisplayOnMarker = appointments.map(((appointment, i) => {
             return (
                 <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={(i ++) + '.png' } />
@@ -45,7 +39,6 @@ class MapContainer extends Component {
                     initialCenter={this.state.latLng}
                 >
                     {placeDisplayOnMarker}
-
                 </Map>
             </div>
         )
