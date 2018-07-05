@@ -8,7 +8,6 @@ const router = express.Router();
 router.get('/appointments', rejectUnauthenticated, (req, res) => {
     Appointment.find({})
     .then(response => {
-      console.log('appointment:', response);
       res.send(response);
     })
     .catch(error => {

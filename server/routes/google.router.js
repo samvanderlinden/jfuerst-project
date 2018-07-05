@@ -31,6 +31,7 @@ else {
   }
 });
 
+
 //Google Geocoding API - converts addresses to latitude and longitude
 router.get('/geocode', (req, res) => {
   if (req.isAuthenticated()) {
@@ -43,8 +44,8 @@ router.get('/geocode', (req, res) => {
       }
   })
   .then((response) => {
-    console.log('',response.data.results)
       res.send(response.data.results)
+      console.log(response.data.results)
   })
   .catch((error) => {
       console.log('error with geocode GET to API', error);

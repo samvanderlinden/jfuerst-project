@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 
 const mapStateToProps = state => ({
@@ -60,12 +60,12 @@ class MapContainer extends Component {
 
     render() {
 
-        // let appointments = this.props.reduxState.mapData.mapData;
-        // let placeDisplayOnMarker = appointments.map(((appointment) => {
-        //     return (
-        //         <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={this.getMarker(appointment.calendar)} />
-        //     )
-        // }));
+        let appointments = this.props.reduxState.mapData.mapData;
+        let placeDisplayOnMarker = appointments.map(((appointment) => {
+            return (
+                <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={this.getMarker(appointment.calendar)} />
+            )
+        }));
 
         return (
 
@@ -75,7 +75,7 @@ class MapContainer extends Component {
                     zoom={this.state.zoom}
                     initialCenter={this.state.latLng}
                 >
-                    {/* {placeDisplayOnMarker} */}
+                    {placeDisplayOnMarker}
 
                 </Map>
             </div>
