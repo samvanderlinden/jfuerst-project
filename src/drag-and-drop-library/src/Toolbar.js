@@ -1,10 +1,21 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import cn from 'classnames';
 import message from './utils/messages';
 import { navigate } from './utils/constants';
+import Button from '@material-ui/core/Button';
 
-class Toolbar extends React.Component {
+import { handleClickSubmit } from '../../Functions/ScheduleFunctions';
+
+const mapStateToProps = state => ({
+  currentAppointments: state.schedule.currentAppointments,
+  currentDriveTime: state.schedule.currentDriveTime,
+  resources: state.schedule.resources,
+  user: state.user,
+});
+
+class Toolbar extends Component {
   static propTypes = {
     view: PropTypes.string.isRequired,
     views: PropTypes.arrayOf(
@@ -23,17 +34,27 @@ class Toolbar extends React.Component {
 
     return (
       <div className='rbc-toolbar'>
-      <span className='rbc-toolbar-label monthlabel'>
-        { label }
-      </span>
-      <span className="next_pri-btn">
-          <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
+        <span className='rbc-toolbar-label monthlabel'>
+          {label}
+        </span>
+        
+        <span>
+
+          <Button
+            onClick={() => { handleClickSubmit(this.props) }}
+            variant="contained"
+            color="primary"
+          >
+            Submit changes to Third-Party Scheduling Application
+          </Button>
+
+          {/* <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
             <i className="fa fa-angle-left" aria-hidden="true"></i>
           </button>
           <button type='button' onClick={this.navigate.bind(null, navigate.NEXT)}>
               <i className="fa fa-angle-right" aria-hidden="true"></i>
-          </button>
-      </span>
+          </button> */}
+        </span>
         {/*<span className='rbc-btn-group todaybtn'>*/}
         {/* <span className='rbc-btn-group monthweekbtn'>
           <button
@@ -46,7 +67,7 @@ class Toolbar extends React.Component {
           this.viewNamesGroup(messages)
         }
         </span> */}
-        
+
       </div>
     );
   }
@@ -63,8 +84,8 @@ class Toolbar extends React.Component {
     let viewNames = this.props.views
     const view = this.props.view
     let width = window.innerWidth
-                || document.documentElement.clientWidth
-                || document.body.clientWidth;
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
 
     let viewType = (width < 768) ? 'day' : 'month';
 
@@ -76,7 +97,7 @@ class Toolbar extends React.Component {
       return (
         viewNames.map(name =>
           <button type='button' key={name}
-            className={cn({'rbc-active': view === name})}
+            className={cn({ 'rbc-active': view === name })}
             id={view}
             onClick={this.view.bind(null, name)}
           >
@@ -88,4 +109,4 @@ class Toolbar extends React.Component {
   }
 }
 
-export default Toolbar;
+export default connect(mapStateToProps)(Toolbar);
