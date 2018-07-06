@@ -1,11 +1,10 @@
 import { put, takeEvery } from 'redux-saga/effects';
 import { MAP_ACTIONS } from '../actions/mapActions';
-import { getData, getGeoCoordinates } from '../requests/mapRequests';
+import { getData } from '../requests/mapRequests';
 
 function* fetchData() {
     try {
         const mapData = yield getData()
-        const geocode = yield getGeoCoordinates();
         yield put({
             type: MAP_ACTIONS.SET_DATA,
             payload: mapData,
