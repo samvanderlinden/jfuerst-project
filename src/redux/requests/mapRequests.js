@@ -20,4 +20,13 @@ export function getGeoCoordinates() {
   });
 }
 
+// export function getTravelDistance() {
+//   console.log(' getTravelDistance');
+//   return axios.get('/api/google/distance',)
+//   .then(response => response.data)
+//   .catch((error) => {
+//       throw error.response || error;
+//   });
+// }
+
 
