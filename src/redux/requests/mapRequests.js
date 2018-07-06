@@ -11,3 +11,13 @@ export function getData() {
 }
 
 
+export function getGeoCoordinates() {
+  console.log(' getGeoCoordinates');
+  return axios.get('/api/google/geocode',)
+  .then(response => response.data)
+  .catch((error) => {
+      throw error.response || error;
+  });
+}
+
+
