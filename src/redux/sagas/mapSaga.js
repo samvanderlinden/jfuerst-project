@@ -9,6 +9,10 @@ function* fetchData() {
             type: MAP_ACTIONS.SET_DATA,
             payload: mapData,
         });
+        yield put({
+            type: MAP_ACTIONS.SET_MILES_VIEW_DATA,
+            payload: mapData,
+        });
     } catch (error) {
         console.log('GET getLatLng error', error);
     }

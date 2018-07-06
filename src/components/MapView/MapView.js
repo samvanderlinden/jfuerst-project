@@ -14,6 +14,18 @@ const mapStateToProps = state => ({
 
 class MapView extends Component {
 
+  constructor(props) {
+    super(props);
+    // this.state = {
+    //   mapData: this.props.reduxState.mapData.mapData,
+    //   marker: [
+    //     'marker1',
+    //     'marker2'
+    //   ],
+    //   photogs: [],// inside array is an object = {photog == name, marker == marker};
+    // }
+}
+
   componentDidMount() {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
@@ -29,8 +41,36 @@ class MapView extends Component {
     }
   }
 
+  // setPhotogMarker = () =>{
+  //   console.log('map state data 12312312312312312',this.state.mapData);
+  //   let counter = 0;
+  //   for(let i = 0; i < this.state.mapData.length; i++){
+  //     if(this.checkIfPhotogDontExist(this.props.reduxState.mapData.mapData[i].calendar)){
+
+  //       this.setState({
+  //           photogs: [...this.state.photogs, {
+  //           photog: this.state.mapData[i].calendar,
+  //           marker: this.state.marker[counter],
+  //         }]
+  //       })
+
+  //       counter++;
+  //     }
+  //   }
+  // }
+
+  // //check if the photog already exist in photogs state array.
+  // checkIfPhotogDontExist(photog){
+  //   for(let i = 0; i < this.state.photogs.length; i ++){
+  //     if(photog == this.state.photogs[i].photog){
+  //       return false;
+  //     }
+  //   }return true;
+  // }
+
   render() {
     let content = null;
+
 
     if (this.props.user.userName) {
       content = (
@@ -39,13 +79,16 @@ class MapView extends Component {
       );
     }
 
+    // this.setPhotogMarker();
+
+    // console.log('-----------photog state:--------------------', this.state.photogs);
     return (
       <div className="mapView">
         <Nav />
         {content}
         <div className="wrapper">
           <MapContainer />
-          <Mileage />
+          <Mileage/>
         </div>
 
       </div>
