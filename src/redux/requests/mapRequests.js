@@ -12,11 +12,15 @@ export function getData() {
 
 
 export function getGeoCoordinates() {
+  const config = {
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true,
+  };
   console.log(' getGeoCoordinates');
-  return axios.get('/api/google/geocode',)
+  return axios.get('/api/google/geocode', config)
   .then(response => response.data)
   .catch((error) => {
-      throw error.response || error;
+    throw error;
   });
 }
 
@@ -25,7 +29,7 @@ export function getGeoCoordinates() {
 //   return axios.get('/api/google/distance',)
 //   .then(response => response.data)
 //   .catch((error) => {
-//       throw error.response || error;
+//     throw error;
 //   });
 // }
 
