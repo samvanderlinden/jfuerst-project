@@ -1,4 +1,5 @@
 import { put, takeLatest } from 'redux-saga/effects';
+import moment from 'moment';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 import {
     callGetAppointmentsFromDatabase,
@@ -14,18 +15,21 @@ import {
     convertAppointmentsFromDatabase,
     convertAppointmentForSendingToDatabase,
     extractResourcesFromCalendars,
-    getInitialDriveData,
+    orderEventsByResourceAndTime,
+    resetEventEndTime,
+    updateOriginsEventWithDriveData,
+    updateScheduleReducerWithNewEvents,
 } from '../../Functions/ScheduleFunctions';
 
-function* initiateGetDriveData(action) {
+function* initiateGetDriveData(locationsObject) {
     console.log('init initiateGetDriveData with locationsObject:');
-    console.log(action.payload)
+    console.log(locationsObject)
     try {
-        const driveData = yield callGetDriveData(action.payload);
+        const driveData = yield callGetDriveData(locationsObject);
         yield console.log('response from server is drive data:');
         yield console.log(driveData)
         yield put({
-            type: SCHEDULE_ACTIONS.SET_CURRENT_DRIVE_TIME,
+            type: SCHEDULE_ACTIONS.SET_CURRENT_DRIVE_DATA,
             payload: driveData,
         });
     } catch (error) {
@@ -71,6 +75,56 @@ function* getAppointmentsFromThirdPartyAPI(action) {
     }
 }
 
+function* getInitialDriveData(appointmentsArray, resourcesArray) {
+    console.log('init getInitialDriveTimes');
+    const events = appointmentsArray;
+    const resources = resourcesArray;
+    console.log(events);
+    const nextEvents = events;
+    let currentEvent;
+    let locationsObject;
+    let nextEvent;
+    let updatedEvent;
+    const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
+    console.log('the array of resources with arrays of events is:');
+    console.log(arrayOfResourcesWithOrderedArraysOfEvents);
+    // loop through each resource array
+    for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
+        let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
+        console.log('the current resource events array is: ');
+        console.log(currentResourceEvents);
+        // loop through event array
+        for (let j = 0; j < currentResourceEvents.length - 1; j++) {
+            const idx = events.indexOf(currentResourceEvents[j]);
+            currentEvent = currentResourceEvents[j];
+            // CASE: CURRENT EVENT IS IN THE PAST
+            if (currentEvent.end < new Date()) {
+                console.log('current event ends in the past. Drive data cannot be fetched');
+            } else {
+                nextEvent = currentResourceEvents[j + 1];
+                console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
+                console.log(currentEvent);
+                console.log('Its index in events array is ' + idx);
+                console.log('next event is:')
+                console.log(nextEvent);
+                locationsObject = {
+                    origins: currentEvent,
+                    destinations: nextEvent,
+                }
+                // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
+                let currentDriveData = yield callGetDriveData(locationsObject);
+                updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, currentEvent)
+                nextEvents.splice(idx, 1, updatedEvent);
+                console.log('updated nextEvents array:');
+                console.log(nextEvents);
+                console.log('returning events array');
+            }
+        }
+    }
+    return nextEvents;
+} // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
+
+
 function* putAppointmentToDataBase(action) {
     console.log('init putAppointmentsInDatabase');
     const updatedAppointmentObject = yield convertAppointmentForSendingToDatabase(action.payload);
@@ -79,7 +133,7 @@ function* putAppointmentToDataBase(action) {
     yield callPutUpdatedAppointmentToDatabase(updatedAppointmentObject);
 }
 
-function* initiatePutAppointmentsToThirdPartyAPI(action) {
+function* initiatePutAppointmentsToThirdPartyAPI() {
     console.log('init putAppointmentsToThirdPartyAPI');
     try {
         const response = yield callPutAppointmentsFromDatabaseToThirdPartyAPI();
@@ -105,18 +159,70 @@ function* updateCurrentDate(action) {
         yield put({
             type: SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API,
             payload: dateObject
-        }) 
+        })
     } catch (error) {
-            console.log('UPDATE CURRENT DATE FAILED', error);
-        }
+        console.log('UPDATE CURRENT DATE FAILED', error);
+    }
+}
+
+function* updateEventDriveDataUponEventMove(action) {
+    console.log('init saga updateMovedEventWithDriveTime');
+    const eventToUpdate = action.payload.originEvent;
+    const eventAfterMovedEvent = action.payload.destinationEvent;
+    const events = action.payload.events;
+    let idx = events.indexOf(eventToUpdate);
+
+    const locationsObject = {
+        origins: eventToUpdate,
+        destinations: eventAfterMovedEvent,
+    };
+
+    try {
+        // CALCULATE DRIVE DATA BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+        const currentDriveData = yield callGetDriveData(locationsObject);
+        // END CALCULATE DRIVE DATA BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+
+        // RESET EVENT END TIME
+        const end = yield resetEventEndTime(eventToUpdate.start, eventToUpdate.duration);
+        yield console.log(`reset end time to ${end}`)
+        let updatedEvent = { ...eventToUpdate, end};
+        // END RESET EVENT END TIME
+
+        // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+        yield console.log('updating event with currentDriveData');
+        updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, updatedEvent)
+        // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+
+        // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+        yield events.splice(idx, 1, updatedEvent);
+        // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+
+        yield console.log(updatedEvent);
+        yield console.log('setting appointments to reducer from scheduleSaga');
+        yield put({
+            type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_AFTER_DRAG_AND_DROP,
+            payload: events
+        })
+        yield console.log('putting appointment to database from scheduleSaga:');
+        yield put({
+            type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+            payload: updatedEvent
+        })
+
+    } catch (error) {
+        console.log('UPDATE UPON EVENT MOVE FAILED', error);
+    }
+
+
 }
 
 function* scheduleSaga() {
-    yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_TIME, initiateGetDriveData);
+    yield takeLatest(SCHEDULE_ACTIONS.GET_DRIVE_DATA, initiateGetDriveData);
     yield takeLatest(SCHEDULE_ACTIONS.GET_APPOINTMENTS_FROM_THIRDPARTY_API, getAppointmentsFromThirdPartyAPI);
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE, putAppointmentToDataBase);
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENTS_TO_THIRDPARTY_API, initiatePutAppointmentsToThirdPartyAPI);
     yield takeLatest(SCHEDULE_ACTIONS.UPDATE_CURRENT_DATE, updateCurrentDate);
+    yield takeLatest(SCHEDULE_ACTIONS.UPDATE_EVENT_UPON_MOVE, updateEventDriveDataUponEventMove);
 
 }
 

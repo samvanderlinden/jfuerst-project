@@ -4,18 +4,18 @@ import moment from 'moment';
 export function callGetDriveData(locationsObject) {
     const params = ({
         origins: `${locationsObject.origins.lat},${locationsObject.origins.lng}`,
-        destinations: `${locationsObject.destinations.lat},${locationsObject.destinations.lon}`,
+        destinations: `${locationsObject.destinations.lat},${locationsObject.destinations.lng}`,
         departure_time: moment(locationsObject.origins.end).unix(),
     });
 
     // TEMPORARY RANDOM NUMBER GENERATOR REPRESENTS MAPS API CALL FOR DRIVETIME
-    return Math.floor(Math.random() * 60) + 15;
+    // return Math.floor(Math.random() * 60) + 15;
 
-    //   return axios.get('api/google/distance', {params})
-    //     .then(response => response.data)
-    //     .catch((error) => {
-    //       throw error.response || error;
-    //     });
+      return axios.get('api/google/distance', {params})
+        .then(response => response.data)
+        .catch((error) => {
+          throw error.response || error;
+        });
 }
 
 export function callGetAppointmentsFromDatabase() {
