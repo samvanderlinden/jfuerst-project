@@ -17,7 +17,7 @@ class Mileage extends Component {
 
         let milesViewData = this.props.reduxState.mapData.milesViewData;
         let photogs = milesViewData.map(((mapData, i) => {
-            return <tr><td><img src={mapData.marker} />{mapData.photog}</td><td>{mapData.miles} miles</td></tr>
+            return <tr key={i}><td><img src={mapData.marker} />{mapData.photog}</td><td>{mapData.miles} miles</td></tr>
         }));
 
         return (
