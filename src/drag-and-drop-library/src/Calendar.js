@@ -694,6 +694,8 @@ class Calendar extends React.Component {
          onSelectEvent={this.handleSelectEvent}
          onSelectSlot={this.handleSelectSlot}
          onShowMore={this._showMore}
+         min={new Date(2017, 10, 0, 8, 0, 0)}
+        max={new Date(2017, 10, 0, 23, 0, 0)}
        />
      </div>
    );
