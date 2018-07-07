@@ -15,7 +15,7 @@ body {
 form {
   background-color: white;
   width: 30%;
-  height: 250px;
+  height: 350px;
   margin: 20px auto;
   padding: 25px;
   border-radius: 2px;
@@ -67,18 +67,15 @@ label {
   bottom: 0;
 }
 
-
 .menuButton {
   top: -200px;
   right: -300px;
 }
 
-.MuiInput-input-78 {
+input {
   width: 372px;
   margin: 0 auto;
 }
-
-
 
 .navbar {
   float: left;
