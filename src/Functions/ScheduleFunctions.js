@@ -1,75 +1,9 @@
-// do this stuff
-// add calendarId key to BigCalendar object when importing form acuity
-
-
 import moment from 'moment';
-
-import { callGetDriveData } from '../redux/requests/scheduleRequests';
 
 import { SCHEDULE_ACTIONS } from '../redux/actions/scheduleActions';
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-// PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
-// export function getInitialDriveData(appointmentsArray, resourcesArray) {
-//     console.log('init getInitialDriveTimes');
-//     const events = appointmentsArray;
-//     const resources = resourcesArray;
-//     console.log(events);
-//     const nextEvents = events;
-//     let end;
-//     let currentEvent;
-//     let locationsObject;
-//     let nextEvent;
-//     let updatedEvent;
-//     const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
-//     console.log('the array of resources with arrays of events is:');
-//     console.log(arrayOfResourcesWithOrderedArraysOfEvents);
-//     // loop through each resource array
-//     for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
-//         let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
-//         console.log('the current resource events array is: ');
-//         console.log(currentResourceEvents);
-//         // loop through event array
-//         for (let j = 0; j < currentResourceEvents.length - 1; j++) {
-//             const idx = events.indexOf(currentResourceEvents[j]);
-//             currentEvent = currentResourceEvents[j];
-//             nextEvent = currentResourceEvents[j + 1];
-//             console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
-//             console.log(currentEvent);
-//             console.log('Its index in events array is ' + idx);
-//             console.log('next event is:')
-//             console.log(nextEvent);
-//             locationsObject = {
-//                 origins: currentEvent,
-//                 destinations: nextEvent,
-//             }
-//             // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-//             let currentDriveData = callGetDriveData(locationsObject);
-//             console.log('confirming that scheduleReducer state has currentDriveData:');
-//             console.log(currentDriveData);
-//             let currentDriveTime = currentDriveData.duration/60;
-//             // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-//             end = moment(currentEvent.end).add(currentDriveTime, 'm').toDate();
-//             console.log(`after drive time, currentEvent's end is ${end}`);
-//             // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
-//             updatedEvent = { ...currentEvent, end };
-//             console.log('current event start is' + updatedEvent.start);
-//             console.log('current event duration: ' + updatedEvent.duration);
-//             console.log('currentDriveTime is ' + currentDriveTime);
-//             console.log('confirming that end time is updated to: ' + updatedEvent.end);
-//             console.log('updated event is: ');
-//             console.log(updatedEvent);
-//             // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
-//             nextEvents.splice(idx, 1, updatedEvent);
-//             console.log('updated nextEvents array:');
-//             console.log(nextEvents);
-//             console.log('returning events array');
-//         }
-//     }
-//     return nextEvents;
-// } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
 export function searchArray(propertyName, array, desiredValuesIndex) {
     for (let i = 0; i < array.length; i++) {

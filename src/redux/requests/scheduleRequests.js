@@ -7,7 +7,7 @@ export function callGetDriveData(locationsObject) {
         destinations: `${locationsObject.destinations.lat},${locationsObject.destinations.lng}`,
         departure_time: moment(locationsObject.origins.end).unix(),
     });
-
+    console.log(locationsObject);
     // TEMPORARY RANDOM NUMBER GENERATOR REPRESENTS MAPS API CALL FOR DRIVETIME
     // return Math.floor(Math.random() * 60) + 15;
 

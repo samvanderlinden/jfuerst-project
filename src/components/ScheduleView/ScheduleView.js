@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import moment from 'moment';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // dnd library imports //
@@ -29,10 +27,6 @@ import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 // FUNCTION IMPORTS
 import {
     orderEventsByResourceAndTime,
-    putUpdatedEventToDatabase,
-    resetEventEndTime,
-    updateOriginsEventWithDriveData,
-    updateScheduleReducerWithNewEvents,
 } from '../../Functions/ScheduleFunctions';
 // END FUNCTION IMPORTS
 
@@ -123,7 +117,6 @@ class ScheduleView extends Component {
         const resourceId = newResource.id;
         const calendarID = newResource.calendarID;
         const calendar = newResource.title
-        
         // END PARSE NEW RESOURCE TO LOCAL VARIABLES
 
         // UPDATE MOVED EVENT
@@ -179,10 +172,10 @@ class ScheduleView extends Component {
             eventBeforeMovedEvent: eventBeforeMovedEvent,
             eventBeforeMovedEventInPreviousArray,
             updatedMovedEvent: updatedMovedEvent,
-            events: events,
+            events: nextEvents,
         }
         this.props.dispatch({
-            type: SCHEDULE_ACTIONS.UPDATE_MOVED_AND_BEFORE_MOVED,
+            type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
             payload
         })
 
