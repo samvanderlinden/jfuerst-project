@@ -1,4 +1,16 @@
 /*START OF NEW CSS FOR GROUP PROJECT*/
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background: #003973;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #E5E5BE, #003973);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #E5E5BE, #003973); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
 form {
   background-color: white;
@@ -12,10 +24,8 @@ form {
 }
 
 html   {
-  background: #003973;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #E5E5BE, #003973);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #E5E5BE, #003973); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+  height: 100%;
+  width: 100%; 
 }
 
 i.fas.fa-user {
@@ -63,10 +73,12 @@ label {
   right: -300px;
 }
 
-.MuiInput-input-10 {
+.MuiInput-input-78 {
   width: 372px;
   margin: 0 auto;
 }
+
+
 
 .navbar {
   float: left;
