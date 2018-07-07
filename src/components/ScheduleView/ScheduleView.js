@@ -268,13 +268,23 @@ class ScheduleView extends Component {
                 console.log('After the moved event is the event: ');
                 console.log(eventAfterMovedEvent);
 
-                // UPDATE EVENT BEFORE THE MOVED EVENT
-                console.log('updating event before moved event');
-                this.updateEventWithDriveData(eventBeforeMovedEvent, updatedMovedEvent, nextEvents);
+                // TRY THIS 1.1.1
+                // UPDATE EVENT BEFORE THE MOVED EVENT AND THE MOVED EVENT
+                this.updateDriveDataForMovedEventAndEventBeforeMovedEvent(
+                    eventBeforeMovedEvent, updatedMovedEvent, eventAfterMovedEvent, nextEvents
+                );
+                // END TRY THIS 1.1.1
 
-                // UPDATE THE MOVED EVENT
-                console.log('updating the moved event');
-                this.updateEventWithDriveData(updatedMovedEvent, eventAfterMovedEvent, nextEvents);
+                // COMMENT OUT THIS 1.1.1
+                // // UPDATE EVENT BEFORE THE MOVED EVENT
+                // console.log('updating event before moved event');
+                // this.updateEventWithDriveData(eventBeforeMovedEvent, updatedMovedEvent, nextEvents);
+
+                // // UPDATE THE MOVED EVENT
+                // console.log('updating the moved event');
+                // this.updateEventWithDriveData(updatedMovedEvent, eventAfterMovedEvent, nextEvents);
+                // console.log('updating drive data for moved event and event before moved event');
+                // END COMMENT OUT THIS 1.1.1
 
             } // END CASE: EVENT ORDER CHANGED AND MOVED EVENT IS NOT FIRST
 
@@ -283,6 +293,9 @@ class ScheduleView extends Component {
                 && eventAfterMovedEvent === eventAfterMovedEventInPreviousArray) {
                 console.log('Moved event is now first, and event order did not change.');
                 console.log('updating schedule reducer from ScheduleView.js with local state events:');
+                this.setState({
+                    events: nextEvents
+                })
                 updateScheduleReducerWithNewEvents(this.state.events, this.props);
                 // UPDATE DATABASE WITH UPDATED EVENT
                 putUpdatedEventToDatabase(updatedMovedEvent, this.props);
@@ -480,6 +493,22 @@ class ScheduleView extends Component {
         }
         this.props.dispatch({
             type: SCHEDULE_ACTIONS.UPDATE_EVENT_UPON_MOVE,
+            payload
+        })
+    }
+
+    updateDriveDataForMovedEventAndEventBeforeMovedEvent = (
+        eventBeforeMovedEvent, updatedMovedEvent, eventAfterMovedEvent, events
+    ) => {
+        console.log('init updateDriveDataForMovedEventAndEventBeforeMovedEvent')
+        const payload = {
+            eventBeforeMovedEvent: eventBeforeMovedEvent,
+            updatedMovedEvent: updatedMovedEvent,
+            eventAfterMovedEvent: eventAfterMovedEvent,
+            events: events,
+        }
+        this.props.dispatch({
+            type: SCHEDULE_ACTIONS.UPDATE_MOVED_AND_BEFORE_MOVED,
             payload
         })
     }

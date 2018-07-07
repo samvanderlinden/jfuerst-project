@@ -178,15 +178,15 @@ function* updateEventDriveDataUponEventMove(action) {
     };
 
     try {
-        // CALCULATE DRIVE DATA BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-        const currentDriveData = yield callGetDriveData(locationsObject);
-        // END CALCULATE DRIVE DATA BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
-
         // RESET EVENT END TIME
         const end = yield resetEventEndTime(eventToUpdate.start, eventToUpdate.duration);
         yield console.log(`reset end time to ${end}`)
         let updatedEvent = { ...eventToUpdate, end};
         // END RESET EVENT END TIME
+
+        // CALCULATE DRIVE DATA BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+        const currentDriveData = yield callGetDriveData(locationsObject);
+        // END CALCULATE DRIVE DATA BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
 
         // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
         yield console.log('updating event with currentDriveData');
@@ -212,8 +212,103 @@ function* updateEventDriveDataUponEventMove(action) {
     } catch (error) {
         console.log('UPDATE UPON EVENT MOVE FAILED', error);
     }
+}
 
+    function* updateDriveDataForMovedEventAndEventBeforeMovedEvent(action) {
+        console.log('init saga updateDriveDataForMovedEventAndEventBeforeMovedEvent');
+        const eventBeforeMovedEvent = action.payload.eventBeforeMovedEvent;
+        const updatedMovedEvent = action.payload.updatedMovedEvent;
+        const eventAfterMovedEvent = action.payload.eventAfterMovedEvent
+        const events = action.payload.events;
+        let currentDriveData;
+        let end;
+        let eventToUpdate;
+        let idx;
+        let locationsObject;
+        let updatedEvent;
+    
+        try {
 
+            // UPDATE MOVED EVENT
+            eventToUpdate = updatedMovedEvent;
+            locationsObject = {
+                origins: eventToUpdate,
+                destinations: eventAfterMovedEvent
+            }
+            idx = events.indexOf(eventToUpdate)
+            // RESET EVENT END TIME
+            end = yield resetEventEndTime(eventToUpdate.start, eventToUpdate.duration);
+            yield console.log(`reset end time to ${end}`)
+            updatedEvent = { ...eventToUpdate, end};
+            // END RESET EVENT END TIME
+    
+            // CALCULATE DRIVE DATA BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+            currentDriveData = yield callGetDriveData(locationsObject);
+            // END CALCULATE DRIVE DATA BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+    
+            // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+            yield console.log('updating event with currentDriveData');
+            updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, updatedEvent)
+            // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+    
+            // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+            yield events.splice(idx, 1, updatedEvent);
+            // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+    
+            yield console.log(updatedEvent);
+            yield console.log('setting appointments to reducer from scheduleSaga');
+
+            yield console.log('putting appointment to database from scheduleSaga:');
+            yield put({
+                type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+                payload: updatedEvent
+            })
+            // END UPDATE MOVED EVENT
+
+            // UPDATED EVENT BEFORE MOVED EVENT
+            eventToUpdate = eventBeforeMovedEvent;
+            locationsObject = {
+                origins: eventBeforeMovedEvent,
+                destinations: updatedMovedEvent
+            }
+            idx = events.indexOf(eventToUpdate)
+            // RESET EVENT END TIME
+            end = yield resetEventEndTime(eventToUpdate.start, eventToUpdate.duration);
+            yield console.log(`reset end time to ${end}`)
+            updatedEvent = { ...eventToUpdate, end};
+            // END RESET EVENT END TIME
+    
+            // CALCULATE DRIVE DATA BETWEEN THE MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+            currentDriveData = yield callGetDriveData(locationsObject);
+            // END CALCULATE DRIVE DATA BETWEEN MOVED EVENT AND THE EVENT AFTER THE MOVED EVENT
+    
+            // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+            yield console.log('updating event with currentDriveData');
+            updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, updatedEvent)
+            // END UPDATE EVENT END TIME TO INCLUDE DRIVE TIME AND DISTANCE
+    
+            // UPDATE EVENTS ARRAY WITH UPDATED EVENT
+            yield events.splice(idx, 1, updatedEvent);
+            // END UPDATE EVENTS ARRAY WITH UPDATED EVENT
+    
+            yield console.log(updatedEvent);
+            yield console.log('setting appointments to reducer from scheduleSaga');
+
+            yield console.log('putting appointment to database from scheduleSaga:');
+            yield put({
+                type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+                payload: updatedEvent
+            })
+            // END UPDTAE EVENT BEFORE MOVED EVENT
+
+            // INITIATE RE-RENDER OF UPDATED EVENTS
+            yield put({
+                type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_AFTER_DRAG_AND_DROP,
+                payload: events
+            }) // END INITIATE RE-RENDER OF UPDATED EVENTS
+        } catch (error) {
+            console.log('UPDATE UPON EVENT MOVE FAILED', error);
+        }
 }
 
 function* scheduleSaga() {
@@ -223,7 +318,7 @@ function* scheduleSaga() {
     yield takeLatest(SCHEDULE_ACTIONS.PUT_APPOINTMENTS_TO_THIRDPARTY_API, initiatePutAppointmentsToThirdPartyAPI);
     yield takeLatest(SCHEDULE_ACTIONS.UPDATE_CURRENT_DATE, updateCurrentDate);
     yield takeLatest(SCHEDULE_ACTIONS.UPDATE_EVENT_UPON_MOVE, updateEventDriveDataUponEventMove);
-
+    yield takeLatest(SCHEDULE_ACTIONS.UPDATE_MOVED_AND_BEFORE_MOVED, updateDriveDataForMovedEventAndEventBeforeMovedEvent);
 }
 
 export default scheduleSaga;
