@@ -4,6 +4,13 @@ import { connect } from 'react-redux';
 import { triggerLogin, formError, clearError } from '../../redux/actions/loginActions';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+  button: {
+    width: 400,
+  },
+}
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -65,15 +72,22 @@ class LoginPage extends Component {
   }
 
   render() {
+  const { classes } = this.props
     return (
       <div>
         {this.renderAlert()}
         <form onSubmit={this.login}>
-          <h1>Login</h1>
+          <div className="loginAndRegisterTitle">
           <div>
+            <h1>Login Here</h1>
+            </div>
+          </div>
+          <div className="inputFieldsDiv">
+          <div className="usernameInput">
             <label htmlFor="username">
-              Username:
+              <i class="fas fa-user"></i>
               <Input
+                placeholder="Username"
                 type="text"
                 name="username"
                 value={this.state.username}
@@ -83,8 +97,9 @@ class LoginPage extends Component {
           </div>
           <div>
             <label htmlFor="password">
-              Password:
+              <i class="fas fa-lock"></i>
               <Input
+                placeholder="Password"
                 type="password"
                 name="password"
                 value={this.state.password}
@@ -92,14 +107,14 @@ class LoginPage extends Component {
               />
             </label>
           </div>
+          </div>
           <div>
-            {/* <input
-              type="submit"
-              name="submit"
-              value="Log In"
-            /> */}
-            <Button variant="contained" color="primary" onClick={this.login}>Login</Button>
-            <Button variant="contained" color="default" ><Link to="/register" style={{textDecoration: 'none'}}>Register</Link></Button>
+            <div className="loginButton">
+              <Button className={classes.button} variant="contained" color="primary" onClick={this.login}>Login</Button>
+            </div>
+            <div className="registerAndCancelButton">
+              <Button className={classes.button} variant="contained" color="default" ><Link to="/register" style={{ textDecoration: 'none' }}>Register</Link></Button>
+            </div>
           </div>
         </form>
       </div>
@@ -108,4 +123,4 @@ class LoginPage extends Component {
 }
 
 
-export default connect(mapStateToProps)(LoginPage);
+export default connect(mapStateToProps)(withStyles(styles)(LoginPage));

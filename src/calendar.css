@@ -1,11 +1,33 @@
 /*START OF NEW CSS FOR GROUP PROJECT*/
+
 form {
-  background-color: #dbd5d5;
+  background-color: white;
   width: 30%;
   height: 250px;
   margin: 20px auto;
   padding: 25px;
   border-radius: 2px;
+  opacity: 0.7;
+  margin-top: 200px;
+}
+
+html   {
+  background: #003973;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #E5E5BE, #003973);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #E5E5BE, #003973); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
+}
+
+i.fas.fa-user {
+  padding-right: 10px;
+}
+
+i.fas.fa-lock {
+  padding-right: 10px;
+}
+
+#usernameInput {
+  padding: 30px;
 }
 
 .instructions {
@@ -16,14 +38,34 @@ form {
   height: 40px;
 }
 
+label {
+  margin: 0px 100px auto;
+}
+
+.loginButton {
+  padding-top: 20px;
+  margin: 0 100px auto;
+}
+
+.loginAndRegisterTitle {
+  margin: 0 200px auto;
+  text-align: center;
+}
+
 #logoutButton {
   position: fixed;
   bottom: 0;
 }
 
+
 .menuButton {
   top: -200px;
   right: -300px;
+}
+
+.MuiInput-input-10 {
+  width: 372px;
+  margin: 0 auto;
 }
 
 .navbar {
@@ -32,6 +74,11 @@ form {
 
 .phoneNumber {
   color: white;
+}
+
+.registerAndCancelButton {
+  padding-top: 20px;
+  margin: 0 100px auto;
 }
 /*END OF NEW CSS FOR GROUP PROJECT*/
 

@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+  button: {
+    width: 400,
+  },
+}
+
+const mapStateToProps = state => ({
+  user: state.user,
+  login: state.login,
+});
 
 class RegisterPage extends Component {
   constructor(props) {
@@ -72,44 +85,51 @@ class RegisterPage extends Component {
   }
 
   render() {
+    const {classes} = this.props;
     return (
       <div>
         {this.renderAlert()}
         <form onSubmit={this.registerUser}>
-          <h1>Register User</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
-              <Input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleInputChange}
-              />
-            </label>
+          <div className="loginAndRegisterTitle">
+            <div>
+              <h1>Register User</h1>
+            </div>
           </div>
           <div>
-            <label htmlFor="password">
-              Password:
-              <Input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-              />
-            </label>
-          </div>
-          <div>
-            {/* <input
-              type="submit"
-              name="submit"
-              value="Register"
-            /> */}
-            <Button variant="contained" color="primary" onClick={this.registerUser}>Login</Button>
-            <Button variant="contained" color="default" ><Link to="/home" style={{textDecoration: 'none'}}>Cancel</Link></Button>
-
-            {/* <Link to="/home">Cancel</Link> */}
-            
+            <div className="inputFieldsDiv">
+              <div className="usernameInput">
+                <label htmlFor="username">
+                  <i class="fas fa-user"></i>
+                  <Input
+                    placeholder="Username"
+                    type="text"
+                    name="username"
+                    value={this.state.username}
+                    onChange={this.handleInputChange}
+                  />
+                </label>
+              </div>
+              <div>
+                <label htmlFor="password">
+                  <i class="fas fa-lock"></i>
+                  <Input
+                    placeholder="Password"
+                    type="password"
+                    name="password"
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
+                  />
+                </label>
+              </div>
+            </div>
+            <div>
+              <div className="loginButton">
+                <Button className={classes.button} variant="contained" color="primary" onClick={this.registerUser}>Login</Button>
+              </div>
+              <div className="registerAndCancelButton">
+                <Button className={classes.button} variant="contained" color="default" ><Link to="/home" style={{ textDecoration: 'none' }}>Cancel</Link></Button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -117,5 +137,5 @@ class RegisterPage extends Component {
   }
 }
 
-export default RegisterPage;
+export default connect(mapStateToProps)(withStyles(styles)(RegisterPage));
 
