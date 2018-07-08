@@ -40,7 +40,7 @@ const currentAppointments = (state = [], action) => {
   }
 };
 
-const pageIsLoading = (state = false, action) => {
+const pageIsLoading = (state = 'true', action) => {
   switch (action.type) {
     case SCHEDULE_ACTIONS.START_PAGE_IS_LOADING:
       return action.payload

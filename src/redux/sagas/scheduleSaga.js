@@ -159,10 +159,9 @@ function* endPageLoadingSpinner() {
     }
 }
 
-
 function* startPageLoadingSpinner() {
     console.log('starting page loading spinner');
-    const payload = true;
+    const payload = 'true';
     try {
         yield put({
             type: SCHEDULE_ACTIONS.START_PAGE_IS_LOADING,
