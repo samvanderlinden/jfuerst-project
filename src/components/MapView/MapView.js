@@ -14,6 +14,10 @@ const mapStateToProps = state => ({
 
 class MapView extends Component {
 
+  constructor(props) {
+    super(props);
+}
+
   componentDidMount() {
     this.props.dispatch({
       type: USER_ACTIONS.FETCH_USER
@@ -32,6 +36,7 @@ class MapView extends Component {
   render() {
     let content = null;
 
+
     if (this.props.user.userName) {
       content = (
         <div>
@@ -41,11 +46,15 @@ class MapView extends Component {
 
     return (
       <div className="mapView">
+      <div className="navbar">
         <Nav />
+        </div>
+        <div className="instructions">
+         </div> 
         {content}
         <div className="wrapper">
           <MapContainer />
-          <Mileage />
+          <Mileage/>
         </div>
 
       </div>
