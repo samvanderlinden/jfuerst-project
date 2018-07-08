@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   button: {
-    width: 400,
+    width: 500
   },
 }
 
@@ -87,7 +87,7 @@ class LoginPage extends Component {
           <div className="inputFieldsDiv">
           <div className="usernameInput">
             <label htmlFor="username">
-              <i class="fas fa-user"></i>
+              <i className="fas fa-user"></i>
               <Input
                 className="inputFields"
                 placeholder="Username"
@@ -95,6 +95,7 @@ class LoginPage extends Component {
                 name="username"
                 value={this.state.username}
                 onChange={this.handleInputChange}
+                style={{fontSize: 25}}
               />
             </label>
           </div>
@@ -108,6 +109,7 @@ class LoginPage extends Component {
                 name="password"
                 value={this.state.password}
                 onChange={this.handleInputChange}
+                style={{fontSize: 25}}
               />
             </label>
             </div>

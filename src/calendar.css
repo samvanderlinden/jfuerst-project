@@ -14,8 +14,8 @@ body {
 
 form {
   background-color: white;
-  width: 500px;
-  height: 350px;
+  width: 600px;
+  height: 500px;
   margin: 20px auto;
   padding: 25px;
   border-radius: 2px;
@@ -37,7 +37,7 @@ i.fas.fa-lock {
 }
 
 .inputFields {
-  width: 375px;
+  width: 460px;
 }
 
 .inputFieldsAndButtonsDiv {
@@ -45,11 +45,11 @@ i.fas.fa-lock {
 }
 
 .instructions {
-  background-image: url('./drag-and-drop-library/src/img/jFuerstLogo.png');
+  background-image: url('./drag-and-drop-library/src/img/logo.png');
   background-repeat: no-repeat;
   padding: 20px;
   margin-left: 80px;
-  height: 40px;
+  height: 80px;
 
 }
 
@@ -62,6 +62,7 @@ i.fas.fa-lock {
   text-align: center;
 }
 
+/*FONT-SIZE FOR LABEL PROPERTY CONTROLS THE SIZE OF FONT AWESOME ICONS*/
 label {
   font-size: 30px;
 }
@@ -83,6 +84,7 @@ input {
 
 .navbar {
   float: left;
+  margin-top: 30px;
 }
 
 .passwordInput {
@@ -890,6 +892,7 @@ input {
     width: fit-content;
     border: 1px solid #DDD;
     min-height: 0;
+    background: #eaeaea;
   }
   .rbc-time-view .rbc-time-gutter {
     white-space: nowrap;
