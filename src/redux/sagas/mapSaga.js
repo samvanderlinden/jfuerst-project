@@ -5,7 +5,7 @@ import { getData, getGeoCoordinates, getTravelDistance } from '../requests/mapRe
 function* fetchData() {
     try {
         const mapData = yield getData()
-        const geoCodeData = yield getGeoCoordinates()
+        // const geoCodeData = yield getGeoCoordinates()
         // const travelDistance = yield getTravelDistance()
         yield put({
             type: MAP_ACTIONS.SET_DATA,
