@@ -28,6 +28,7 @@ import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 // FUNCTION IMPORTS
 import {
     confirmTimeChange,
+    dispatchActionToUpdateMovedEvents,
     orderEventsByResourceAndTime,
 } from '../../Functions/ScheduleFunctions';
 // END FUNCTION IMPORTS
@@ -182,36 +183,18 @@ class ScheduleView extends Component {
         console.log(updatedMovedEvent.start);
         console.log(event.start - updatedMovedEvent.start);
         if (event.start - updatedMovedEvent.start != 0) {
-            let action = {
+            let dialogueData = {
                 title: 'Change times?',
                 message: 'The appointment is dropping into a different start time. \n Do you want to change start times?'
             }
-            let confirmResponse = confirmTimeChange(action);
-            console.log('user responded with');
-            console.log(confirmResponse);
-            // CASE: USER CONFIRMS YES
-            if (confirmResponse == true) {
+            confirmTimeChange(dialogueData, payload, this.props);
+        }// END IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
 
-                this.props.dispatch({
-                    type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
-                    payload
-                })
-            } // END CASE: USER CONFIRMS YES
-
-            // CASE: USER CONFIRMS NO
-            else {
-                alert('Aborted');
-            } // END CASE: USER CONFIRMS NO
-        }// IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
-
-        // CASE: MOVED EVENT DOES NOT CHANGE TIMES
+        // CASE: MOVED EVENT DOES NOT CHANGE TIMESx
         else {
-            this.props.dispatch({
-                type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
-                payload
-            })
+            dispatchActionToUpdateMovedEvents(payload, this.props);
         } // END CASE: MOVED EVENT DOES NOT CHANGE TIMES
-    } // END UPDATE DOM UPON MOVING EVENT
+       } // END UPDATE DOM UPON MOVING EVENT
 
     // ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -235,22 +218,6 @@ class ScheduleView extends Component {
         }
         return arrayOfArrays;
     } // END ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
-
-    updateDriveDataForMovedEventAndEventBeforeMovedEvent = (
-        eventBeforeMovedEvent, updatedMovedEvent, eventAfterMovedEvent, events
-    ) => {
-        console.log('init updateDriveDataForMovedEventAndEventBeforeMovedEvent')
-        const payload = {
-            eventBeforeMovedEvent: eventBeforeMovedEvent,
-            updatedMovedEvent: updatedMovedEvent,
-            eventAfterMovedEvent: eventAfterMovedEvent,
-            events: events,
-        }
-        this.props.dispatch({
-            type: SCHEDULE_ACTIONS.UPDATE_MOVED_AND_BEFORE_MOVED,
-            payload
-        })
-    }
 
     selectEventAfterMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
         let eventAfterMovedEvent = {};
