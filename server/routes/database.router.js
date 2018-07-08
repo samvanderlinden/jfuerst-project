@@ -16,8 +16,8 @@ router.get('/appointments', rejectUnauthenticated, (req, res) => {
     })
 });
 
-router.get('/calendars', rejectUnauthenticated, (req, res) => {
-    Calendar.find({})
+router.get('/calendars', (req, res) => {
+    Calendar.find({}).sort({ name: 1 })
     .then(response => {
       res.send(response)
     })
