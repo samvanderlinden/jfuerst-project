@@ -40,6 +40,7 @@ const mapStateToProps = state => ({
     currentAppointments: state.schedule.currentAppointments,
     currentDate: state.schedule.currentDate,
     currentDriveData: state.schedule.currentDriveData,
+    isLoading: state.schedule.pageIsLoading,
     resources: state.schedule.resources,
     user: state.user,
 });
@@ -52,6 +53,7 @@ class ScheduleView extends Component {
         this.state = {
             events: [...this.props.currentAppointments],
             usersAvailability: {},
+            pageIsLoading: this.props.pageIsLoading,
         }
         this.moveEvent = this.moveEvent.bind(this)
     }
@@ -299,7 +301,13 @@ class ScheduleView extends Component {
                 <div className="navbar">
                     <Nav />
                 </div>
-                <div className="loader"></div>
+                {
+                    this.props.pageIsLoading ? 
+                    <div className="loader"></div>
+                    :
+                    <div></div>
+                }
+
                 <div className="instructions">
 
                     {/* <h1 className="lead">{title}</h1> */}

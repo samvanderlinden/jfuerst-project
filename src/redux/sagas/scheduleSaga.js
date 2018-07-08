@@ -40,6 +40,7 @@ function* getAppointmentsFromThirdPartyAPI(action) {
     console.log(action.payload);
     let dateObject = (action.payload)
     try {
+        yield startPageLoadingSpinner();
         // POPULATE THE DATABASE WITH DATA FROM THIRD-PARTY SCHEDULING API
         yield callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject);
         yield callPopulateDatabaseAppointmentsWithGeoCoordinates();
@@ -68,6 +69,7 @@ function* getAppointmentsFromThirdPartyAPI(action) {
             payload: appointmentsWithInitialDriveTimes,
         })
         // END UPDATE SCHEDULE REDUCER WITH CONVERTED DATA
+        yield endPageLoadingSpinner();
     } catch (error) {
         console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);
     }
@@ -87,6 +89,7 @@ function* getInitialDriveData(appointmentsArray, resourcesArray) {
     console.log('the array of resources with arrays of events is:');
     console.log(arrayOfResourcesWithOrderedArraysOfEvents);
     // loop through each resource array
+    startPageLoadingSpinner();
     for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
         let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
         console.log('the current resource events array is: ');
@@ -119,6 +122,7 @@ function* getInitialDriveData(appointmentsArray, resourcesArray) {
             }
         }
     }
+    endPageLoadingSpinner();
     return nextEvents;
 } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
@@ -140,6 +144,33 @@ function* initiatePutAppointmentsToThirdPartyAPI() {
         console.log('UPDATE THIRD-PARTY API WITH APPOINTMENTS FAILED', error);
     }
 
+}
+
+function* endPageLoadingSpinner() {
+    console.log('ending page loading spinner');
+    const payload = false;
+    try {
+        yield put({
+            type: SCHEDULE_ACTIONS.END_PAGE_IS_LOADING,
+            payload
+        })
+    } catch (error) {
+        console.log('END PAGE LOADING SPINNER FAILED', error);
+    }
+}
+
+
+function* startPageLoadingSpinner() {
+    console.log('starting page loading spinner');
+    const payload = true;
+    try {
+        yield put({
+            type: SCHEDULE_ACTIONS.START_PAGE_IS_LOADING,
+            payload
+        })
+    } catch (error) {
+        console.log('START PAGE LOADING SPINNER FAILED', error);
+    }
 }
 
 function* updateCurrentDate(action) {

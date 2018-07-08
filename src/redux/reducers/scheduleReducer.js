@@ -40,6 +40,18 @@ const currentAppointments = (state = [], action) => {
   }
 };
 
+const pageIsLoading = (state = false, action) => {
+  switch (action.type) {
+    case SCHEDULE_ACTIONS.START_PAGE_IS_LOADING:
+      return action.payload
+    case SCHEDULE_ACTIONS.END_PAGE_IS_LOADING:
+      return action.payload
+    default:
+      console.log('pageIsLoading reducer is returning default case.')
+      return state;
+  }
+}
+
 const resources = (state = [], action) => {
   switch (action.type) {
     case SCHEDULE_ACTIONS.SET_RESOURCES:
@@ -56,5 +68,6 @@ export default combineReducers({
   currentDate,
   currentDriveTime,
   currentAppointments,
-  resources
+  pageIsLoading,
+  resources,
 });
