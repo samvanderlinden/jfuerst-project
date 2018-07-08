@@ -7,8 +7,22 @@ import message from './utils/messages';
 import { navigate } from './utils/constants';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
 
 import { handleClickChangeDate, handleClickSubmit } from '../../Functions/ScheduleFunctions';
+import { blue100 } from 'material-ui/styles/colors';
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 350,
+    fontSize: 30,
+  },
+});
+
 
 const mapStateToProps = state => ({
   currentAppointments: state.schedule.currentAppointments,
@@ -40,16 +54,16 @@ class Toolbar extends Component {
 
   // HANDLE INPUT CHANGE
   handleChangeFor = (propertyName) => event => {
-      console.log(`init handleChangeFor ${[propertyName]}`);
-      console.log('look at this:')
-      let newDate = new Date(event.target.value);
-      // FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN THE SELECTED DAY
-      newDate = moment(newDate).add(1, "day").toDate();
-      // END FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN SELECTED DAY
-      this.setState({
-        currentDate: newDate
-      })
-    }
+    console.log(`init handleChangeFor ${[propertyName]}`);
+    console.log('look at this:')
+    let newDate = new Date(event.target.value);
+    // FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN THE SELECTED DAY
+    newDate = moment(newDate).add(1, "day").toDate();
+    // END FIXES BUG WHERE DATE PICKER VALUE RETURNS DATE THAT IS 1 DAY LESS THAN SELECTED DAY
+    this.setState({
+      currentDate: newDate
+    })
+  }
   // END HANDLE INPUT CHANGE
 
 
@@ -90,6 +104,7 @@ class Toolbar extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     let { messages, label } = this.props;
 
     messages = message(messages)
@@ -97,45 +112,55 @@ class Toolbar extends Component {
     const currentDateString = this.props.currentDate.toString();
 
     return (
-      <div className='rbc-toolbar'>
-        <span className='rbc-toolbar-label monthlabel'>
-          {label}
-        </span>
-        <span>
-          <input
-            id="date"
-            label="Schedule Date"
-            type="date"
-            onChange={this.handleChangeFor('currentDate')}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <Button
-            onClick={() => { handleClickChangeDate(this.state.currentDate, this.props) }}
-            variant="contained"
-            color="primary"
-          >
-            Change Date
+      <div>
+        <div className='rbc-toolbar'>
+          <span className='rbc-toolbar-label monthlabel'>
+            {label}
+          </span>
+        </div>
+        <div>
+          <span>
+            <TextField
+              id="date"
+              label="Schedule Date"
+              type="date"
+              onChange={this.handleChangeFor('currentDate')}
+              className={classes.textField}
+              inputStyle={styles.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </span>
+          <span>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => { handleClickChangeDate(this.state.currentDate, this.props) }}
+              className={classes.button}
+              style={{ backgroundColor: "#999999", color: "#ffffff" }}
+            >
+              Change Date
         </Button>
-        </span>
-        <span>
-
-          <Button
-            onClick={() => { handleClickSubmit(this.props) }}
-            variant="contained"
-            color="primary"
-          >
-            Submit changes to Third-Party Scheduling Application
+          </span>
+          <span>
+            <Button
+              onClick={() => { handleClickSubmit(this.props) }}
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: "#999999", color: "#ffffff" }}
+            >
+              Submit changes to Third-Party Scheduling Application
         </Button>
 
-          {/* <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
+            {/* <button type='button' onClick={this.navigate.bind(null, navigate.PREVIOUS)}>
           <i className="fa fa-angle-left" aria-hidden="true"></i>
         </button>
         <button type='button' onClick={this.navigate.bind(null, navigate.NEXT)}>
             <i className="fa fa-angle-right" aria-hidden="true"></i>
         </button> */}
-        </span>
+          </span>
+        </div>
         {/*<span className='rbc-btn-group todaybtn'>*/}
         {/* <span className='rbc-btn-group monthweekbtn'>
         <button
@@ -155,4 +180,4 @@ class Toolbar extends Component {
 
 }
 
-export default connect(mapStateToProps)(Toolbar);
+export default connect(mapStateToProps)(withStyles(styles)(Toolbar));
