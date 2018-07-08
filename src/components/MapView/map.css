@@ -10,7 +10,8 @@ th, td {
 }
 
 th{
-    background: linear-gradient(to right, #b6e0f5 , #63a8d8)
+    background: #b6e0f5;
+    /* background: linear-gradient(to right, #b6e0f5 , #63a8d8) */
 }
 
 .mileage-table{
