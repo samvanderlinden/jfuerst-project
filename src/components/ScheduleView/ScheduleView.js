@@ -302,7 +302,7 @@ class ScheduleView extends Component {
                     <Nav />
                 </div>
                 {
-                    this.props.pageIsLoading ?
+                    this.props.pageIsLoading.status ?
                     <div className="loaderContainer">
                     <div className="loader"></div>
                     </div>
