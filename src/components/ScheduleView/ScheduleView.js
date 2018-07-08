@@ -197,7 +197,7 @@ class ScheduleView extends Component {
         else {
             dispatchActionToUpdateMovedEvents(payload, this.props);
         } // END CASE: MOVED EVENT DOES NOT CHANGE TIMES
-       } // END UPDATE DOM UPON MOVING EVENT
+    } // END UPDATE DOM UPON MOVING EVENT
 
     // ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -301,14 +301,6 @@ class ScheduleView extends Component {
                 <div className="navbar">
                     <Nav />
                 </div>
-                {
-                    this.props.pageIsLoading.status ?
-                    <div className="loaderContainer">
-                    <div className="loader"></div>
-                    </div>
-                    :
-                    <div></div>
-                }
 
                 <div className="instructions">
 
@@ -316,8 +308,21 @@ class ScheduleView extends Component {
 
                 </div>
 
-                {content}
+                {
+                    this.props.pageIsLoading.status ?
+                        <div className="loaderContainer">
+                            <div className="loader">
 
+                            </div>
+                            <div className="loaderMessage">
+                            <p>{this.props.pageIsLoading.message}</p>
+                            </div>
+                        </div>
+                        :
+                        <div>
+                        { content }
+                        </div>
+                }
 
             </div>
         );

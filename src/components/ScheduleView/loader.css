@@ -5,15 +5,22 @@
     height: 120px;
     width: 120px;
     animation: spin 2s linear infinite;
+    margin: 0px auto;
 }
 
 .loaderContainer {
-    position: relative;
+    position: absolute;
     margin:auto;
-    opacity: 0.5;
+    opacity: 0.90;
     background-color:#F5F5F5;
     height: 360px;
     width:360px;
+    padding-top: 80px;
+}
+
+.loaderMessage {
+    position: relative;
+    margin: auto;
 }
 
 @keyframes spin {
