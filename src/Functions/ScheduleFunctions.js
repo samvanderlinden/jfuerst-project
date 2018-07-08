@@ -1,73 +1,9 @@
-// do this stuff
-// add calendarId key to BigCalendar object when importing form acuity
-
-
 import moment from 'moment';
-
-import { callGetDriveTime } from '../redux/requests/scheduleRequests';
 
 import { SCHEDULE_ACTIONS } from '../redux/actions/scheduleActions';
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-// PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
-export function getInitialDriveTimes(appointmentsArray, resourcesArray) {
-    console.log('init getInitialDriveTimes');
-    const events = appointmentsArray;
-    const resources = resourcesArray;
-    console.log(events);
-    const nextEvents = events;
-    let end;
-    let currentEvent;
-    let locationsObject;
-    let nextEvent;
-    let updatedEvent;
-    const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
-    console.log('the array of resources with arrays of events is:');
-    console.log(arrayOfResourcesWithOrderedArraysOfEvents);
-    // loop through each resource array
-    for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
-        let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
-        console.log('the current resource events array is: ');
-        console.log(currentResourceEvents);
-        // loop through event array
-        for (let j = 0; j < currentResourceEvents.length - 1; j++) {
-            const idx = events.indexOf(currentResourceEvents[j]);
-            currentEvent = currentResourceEvents[j];
-            nextEvent = currentResourceEvents[j + 1];
-            console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
-            console.log(currentEvent);
-            console.log('Its index in events array is ' + idx);
-            console.log('next event is:')
-            console.log(nextEvent);
-            locationsObject = {
-                origins: currentEvent,
-                destinations: nextEvent,
-            }
-            // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-            let currentDriveTime = callGetDriveTime(locationsObject);
-            console.log('confirming that scheduleReducer state has currentDriveTime of: ' + currentDriveTime);
-            // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
-            end = moment(currentEvent.end).add(currentDriveTime, 'm').toDate();
-            console.log(`after drive time, currentEvent's end is ${end}`);
-            // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
-            updatedEvent = { ...currentEvent, end };
-            console.log('current event start is' + updatedEvent.start);
-            console.log('current event duration: ' + updatedEvent.duration);
-            console.log('currentDriveTime is ' + currentDriveTime);
-            console.log('confirming that end time is updated to: ' + updatedEvent.end);
-            console.log('updated event is: ');
-            console.log(updatedEvent);
-            // UPDATE ARRAY OF EVENTS TO SHOW CURRENT EVENT'S DRIVE TIME
-            nextEvents.splice(idx, 1, updatedEvent);
-            console.log('updated nextEvents array:');
-            console.log(nextEvents);
-            console.log('returning events array');
-        }
-    }
-    return nextEvents;
-} // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
 export function searchArray(propertyName, array, desiredValuesIndex) {
     for (let i = 0; i < array.length; i++) {
@@ -95,6 +31,7 @@ export function convertAppointmentsFromDatabase(originalObject) {
     const objectConverter = originalObject => {
         console.log(originalObject);
         let finalObject = {
+            'title': `${originalObject.firstName} ${originalObject.lastName}`,
             'amountPaid': originalObject.amountPaid,
             'appointmentAddress': originalObject.location,
             'appointmentTime': originalObject.time,
@@ -142,7 +79,6 @@ export function convertAppointmentsFromDatabase(originalObject) {
             'squareFoot': searchArray('Step 1: Details',originalObject.forms,3),
 
             'start': moment(originalObject.datetime, 'YYYY-MM-DDTHH:mm:ssZ').toDate(),
-            'title': `${originalObject.firstName} ${originalObject.lastName}`,
             'tvScreenEnhancement': searchArray('Step 2: Freebies',originalObject.forms,1),
             //difference between propertyComments and notes?
         };
@@ -172,6 +108,8 @@ export function confirmAction(action, props) {
 
 // CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
 export function convertAppointmentForSendingToDatabase(updatedObject) {
+    console.log('init convertAppointmentForSendingToDatabase given:')
+    console.log(updatedObject);
     let finalObject = {
         "databaseID": updatedObject.databaseID,
         "updates": {
@@ -250,3 +188,45 @@ export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {
     }
     return arrayOfArrays;
 }// END ORDER ARRAY OF EVENTS BY TIME IN SUB-ARRAYS DEFINED BY EVENT RESOURCE
+
+// UPDATE DATABASE WITH NEW EVENT INFORMATION
+export function putUpdatedEventToDatabase(updatedEvent, props) {
+    const payload = updatedEvent;
+    props.dispatch({
+        type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+        payload
+    });
+}
+// END UPDATE DATABASE WITH NEW EVENT INFORMATION 
+
+// RESET EVENT END TIME
+export function resetEventEndTime(start, duration) {
+    return moment(start).add(duration, 'm').toDate();
+}
+// END RESET EVENT END TIME
+
+// UPDATE EVENT WITH DRIVE DATA TO NEXT EVENT
+export function updateOriginsEventWithDriveData(currentDriveData, eventToUpdate) {
+    console.log('confirming that scheduleReducer state has currentDriveData:');
+    console.log(currentDriveData);
+    let end;
+    // convert drive time in seconds to drive time in minutes (to nearest minute)
+    let driveTimeToNextAppointment = Math.round(currentDriveData.duration / 60); // convert time in seconds to minutes
+    // convert drive distance in meters to drive distance in miles (to nearest tenth mile)
+    let driveDistanceToNextAppointment = Number(Math.round((currentDriveData.distance / 1609.34)+'e2')+'e-2'); 
+    // UPDATE EVENT END TIME TO INCLUDE DRIVE TIME
+    end = moment(eventToUpdate.end).add(driveTimeToNextAppointment, 'm').toDate();
+    console.log(`after drive time, currentEvent's end is ${end}`);
+    // UPDATE CURRENT EVENT'S END TIME TO INCLUDE DRIVE TIME TO NEXT EVENT
+    let updatedEvent = { ...eventToUpdate, driveDistanceToNextAppointment, driveTimeToNextAppointment, end };
+    console.log('updated event is: ');
+    console.log(updatedEvent);
+    return updatedEvent
+} // END UPDATE EVENT WITH DRIVE DATA TO NEXT EVENT
+
+export function updateScheduleReducerWithNewEvents(nextEvents, props) {
+    props.dispatch({
+        type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_AFTER_DRAG_AND_DROP,
+        payload: nextEvents
+    })
+}

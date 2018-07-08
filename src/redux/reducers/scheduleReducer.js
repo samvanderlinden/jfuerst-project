@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
+import moment from 'moment';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 
-const currentDate = (state = new Date(), action) => {
+const tomorrow = moment(new Date()).add(1, "day").toDate();
+
+const currentDate = (state = tomorrow, action) => {
   switch (action.type) {
     case SCHEDULE_ACTIONS.SET_CURRENT_DATE:
       return action.payload;
