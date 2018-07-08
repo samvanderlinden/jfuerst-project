@@ -95,12 +95,14 @@ class RegisterPage extends Component {
               <h1>Register User</h1>
             </div>
           </div>
+          <div className = "inputFieldsAndButtonsDiv">
           <div>
             <div className="inputFieldsDiv">
               <div className="usernameInput">
                 <label htmlFor="username">
                   <i class="fas fa-user"></i>
                   <Input
+                    className="inputFields"
                     placeholder="Username"
                     type="text"
                     name="username"
@@ -109,10 +111,11 @@ class RegisterPage extends Component {
                   />
                 </label>
               </div>
-              <div>
+              <div className="passwordInput">
                 <label htmlFor="password">
                   <i class="fas fa-lock"></i>
                   <Input
+                    className="inputFields"
                     placeholder="Password"
                     type="password"
                     name="password"
@@ -130,6 +133,7 @@ class RegisterPage extends Component {
                 <Button className={classes.button} variant="contained" color="default" ><Link to="/home" style={{ textDecoration: 'none' }}>Cancel</Link></Button>
               </div>
             </div>
+          </div>
           </div>
         </form>
       </div>

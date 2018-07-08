@@ -14,7 +14,7 @@ body {
 
 form {
   background-color: white;
-  width: 30%;
+  width: 500px;
   height: 350px;
   margin: 20px auto;
   padding: 25px;
@@ -36,8 +36,12 @@ i.fas.fa-lock {
   padding-right: 10px;
 }
 
-#usernameInput {
-  padding: 30px;
+.inputFields {
+  width: 375px;
+}
+
+.inputFieldsAndButtonsDiv {
+  margin: 0px 50px;
 }
 
 .instructions {
@@ -46,19 +50,15 @@ i.fas.fa-lock {
   padding: 20px;
   margin-left: 80px;
   height: 40px;
-}
 
-label {
-  margin: 0px 100px auto;
 }
 
 .loginButton {
   padding-top: 20px;
-  margin: 0 100px auto;
 }
 
 .loginAndRegisterTitle {
-  margin: 0 200px auto;
+  margin: 0 100px auto;
   text-align: center;
 }
 
@@ -73,12 +73,16 @@ label {
 }
 
 input {
-  width: 372px;
+  width: 272px;
   margin: 0 auto;
 }
 
 .navbar {
   float: left;
+}
+
+.passwordInput {
+  margin-bottom: 30px;
 }
 
 .phoneNumber {
@@ -87,7 +91,10 @@ input {
 
 .registerAndCancelButton {
   padding-top: 20px;
-  margin: 0 100px auto;
+}
+
+.usernameInput {
+  margin: 30px 0px;
 }
 /*END OF NEW CSS FOR GROUP PROJECT*/
 

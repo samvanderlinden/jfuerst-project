@@ -76,17 +76,20 @@ class LoginPage extends Component {
     return (
       <div>
         {this.renderAlert()}
+        
         <form onSubmit={this.login}>
           <div className="loginAndRegisterTitle">
           <div>
             <h1>Login Here</h1>
             </div>
           </div>
+          <div className="inputFieldsAndButtonsDiv">
           <div className="inputFieldsDiv">
           <div className="usernameInput">
             <label htmlFor="username">
               <i class="fas fa-user"></i>
               <Input
+                className="inputFields"
                 placeholder="Username"
                 type="text"
                 name="username"
@@ -95,10 +98,11 @@ class LoginPage extends Component {
               />
             </label>
           </div>
-          <div>
+          <div className="passwordInput">        
             <label htmlFor="password">
               <i class="fas fa-lock"></i>
               <Input
+                className="inputFields"
                 placeholder="Password"
                 type="password"
                 name="password"
@@ -106,8 +110,9 @@ class LoginPage extends Component {
                 onChange={this.handleInputChange}
               />
             </label>
+            </div>
           </div>
-          </div>
+          
           <div>
             <div className="loginButton">
               <Button className={classes.button} variant="contained" color="primary" onClick={this.login}>Login</Button>
@@ -116,7 +121,9 @@ class LoginPage extends Component {
               <Button className={classes.button} variant="contained" color="default" ><Link to="/register" style={{ textDecoration: 'none' }}>Register</Link></Button>
             </div>
           </div>
+          </div>
         </form>
+        
       </div>
     );
   }
