@@ -17,7 +17,7 @@ class MapContainer extends Component {
                 lat: 44.986656,
                 lng: -93.258133,
             },
-            zoom: 12,
+            zoom: 10,
         };
     }
 
@@ -26,7 +26,7 @@ class MapContainer extends Component {
         let appointments = this.props.reduxState.mapData.mapData;
         let placeDisplayOnMarker = appointments.map(((appointment, i) => {
             return (
-                <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={(i ++) + '.png' } />
+                <Marker key={appointment._id} position={{ lat: appointment.lat, lng: appointment.lng }} icon={appointment.marker} />
             )
         }));
 

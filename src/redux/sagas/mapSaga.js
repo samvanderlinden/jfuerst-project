@@ -1,12 +1,18 @@
 import { put, takeEvery } from 'redux-saga/effects';
 import { MAP_ACTIONS } from '../actions/mapActions';
-import { getData } from '../requests/mapRequests';
+import { getData, getGeoCoordinates, getTravelDistance } from '../requests/mapRequests';
 
 function* fetchData() {
     try {
-        const mapData = yield getData();
+        const mapData = yield getData()
+        // const geoCodeData = yield getGeoCoordinates()
+        // const travelDistance = yield getTravelDistance()
         yield put({
             type: MAP_ACTIONS.SET_DATA,
+            payload: mapData,
+        });
+        yield put({
+            type: MAP_ACTIONS.SET_MILES_VIEW_DATA,
             payload: mapData,
         });
     } catch (error) {
