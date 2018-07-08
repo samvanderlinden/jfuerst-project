@@ -16,6 +16,10 @@ form {
   height: 40px;
 }
 
+label {
+  font-size: 30px;
+}
+
 #logoutButton {
   position: fixed;
   bottom: 0;

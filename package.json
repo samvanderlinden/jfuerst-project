@@ -24,6 +24,7 @@
     "lodash": "^4.17.4",
     "material-design-icons": "^3.0.1",
     "material-ui": "^0.20.1",
+    "material-ui-pickers": "^1.0.0-rc.11",
     "mongoose": "^5.0.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
