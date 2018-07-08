@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // dnd library imports //
@@ -26,6 +27,8 @@ import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 
 // FUNCTION IMPORTS
 import {
+    confirmTimeChange,
+    dispatchActionToUpdateMovedEvents,
     orderEventsByResourceAndTime,
 } from '../../Functions/ScheduleFunctions';
 // END FUNCTION IMPORTS
@@ -128,6 +131,7 @@ class ScheduleView extends Component {
         console.log(events[idx] === updatedMovedEvent);
         // END UPDATE MOVED EVENT
 
+
         // INSERT UPDATED MOVED EVENT INTO EVENTS ARRAY
         let nextEvents = [...events];
         nextEvents.splice(idx, 1, updatedMovedEvent);
@@ -174,12 +178,23 @@ class ScheduleView extends Component {
             updatedMovedEvent: updatedMovedEvent,
             events: nextEvents,
         }
-        this.props.dispatch({
-            type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
-            payload
-        })
+        // IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
+        console.log(event.start);
+        console.log(updatedMovedEvent.start);
+        console.log(event.start - updatedMovedEvent.start);
+        if (event.start - updatedMovedEvent.start != 0) {
+            let dialogueData = {
+                title: 'Change times?',
+                message: 'The appointment is dropping into a different start time. \n Do you want to change start times?'
+            }
+            confirmTimeChange(dialogueData, payload, this.props);
+        }// END IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
 
-    } // END UPDATE DOM UPON MOVING EVENT
+        // CASE: MOVED EVENT DOES NOT CHANGE TIMESx
+        else {
+            dispatchActionToUpdateMovedEvents(payload, this.props);
+        } // END CASE: MOVED EVENT DOES NOT CHANGE TIMES
+       } // END UPDATE DOM UPON MOVING EVENT
 
     // ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -203,22 +218,6 @@ class ScheduleView extends Component {
         }
         return arrayOfArrays;
     } // END ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
-
-    updateDriveDataForMovedEventAndEventBeforeMovedEvent = (
-        eventBeforeMovedEvent, updatedMovedEvent, eventAfterMovedEvent, events
-    ) => {
-        console.log('init updateDriveDataForMovedEventAndEventBeforeMovedEvent')
-        const payload = {
-            eventBeforeMovedEvent: eventBeforeMovedEvent,
-            updatedMovedEvent: updatedMovedEvent,
-            eventAfterMovedEvent: eventAfterMovedEvent,
-            events: events,
-        }
-        this.props.dispatch({
-            type: SCHEDULE_ACTIONS.UPDATE_MOVED_AND_BEFORE_MOVED,
-            payload
-        })
-    }
 
     selectEventAfterMovedEventInOrderedArrayOfEvents = (arrayOfArrays, movedEventId) => {
         let eventAfterMovedEvent = {};

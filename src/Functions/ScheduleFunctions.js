@@ -106,6 +106,24 @@ export function confirmAction(action, props) {
     })
 } // END CONFIRM ACTION
 
+// CONFIRM TIME CHANGE
+export function confirmTimeChange(dialogueData, payload, props) {
+    confirmAlert({
+        title: `${dialogueData.title}`,
+        message: `${dialogueData.message}`,
+        buttons: [
+            {
+                label: 'Yes',
+                onClick: () => dispatchActionToUpdateMovedEvents(payload, props)
+            },
+            {
+                label: 'No',
+                onClick: () => alert('Aborted.')
+            }
+        ]
+    })
+} // END CONFIRM TIME CHANGE
+
 // CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
 export function convertAppointmentForSendingToDatabase(updatedObject) {
     console.log('init convertAppointmentForSendingToDatabase given:')
@@ -122,6 +140,13 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
     };
     return finalObject;
 } // END CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
+
+export function dispatchActionToUpdateMovedEvents(payload, props) {
+    props.dispatch({
+        type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
+        payload
+    })
+}
 
 // DISPATCH ACTION TO SUBMIT DATABASE APPOINTMENT DATA TO THIRD-PARTY SCHEDULING API
 export function executeSubmitChangesToThirdPartyAPI(props) {

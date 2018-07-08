@@ -1,5 +1,4 @@
 import { put, takeLatest } from 'redux-saga/effects';
-import moment from 'moment';
 import { SCHEDULE_ACTIONS } from '../actions/scheduleActions';
 import {
     callGetAppointmentsFromDatabase,
