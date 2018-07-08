@@ -1,7 +1,7 @@
 table {
     border-collapse: collapse;
     background: #fff;
-    width: 50%;
+    width: 90%;
     position: relative;
 }
 
@@ -10,15 +10,15 @@ th, td {
 }
 
 th{
-    background: #b6e0f5;
-    background: linear-gradient(to left, #b6e0f5 ,#b6e0f5, #63a8d8)
+    background: linear-gradient(to right, #b6e0f5 , #63a8d8)
 }
 
 .mileage-table{
     grid-column: 2;
     grid-row: 1;
     min-height: 300px;
-    min-width: 50%;
+    width: 100%;
+    min-width: 300px;
     display: grid;
     align-items: center;
 }
@@ -39,7 +39,7 @@ th{
     display: grid;
     grid-gap: 20px;
     margin: 20px;
-    grid-template-columns: 80% 37%;
+    grid-template-columns: 75% 25%;
     grid-template-rows: 1fr;
     background-color: #fff;
     color: #444;
