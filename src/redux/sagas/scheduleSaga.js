@@ -39,7 +39,9 @@ function* getAppointmentsFromThirdPartyAPI(action) {
     console.log('init populateDatabaseAppointmentsFromThirdPartyAPI');
     console.log(action.payload);
     let dateObject = (action.payload)
+    let message = 'Fetching appointments...';
     try {
+        yield startPageLoadingSpinner(message);
         // POPULATE THE DATABASE WITH DATA FROM THIRD-PARTY SCHEDULING API
         yield callPopulateDatabaseAppointmentsFromThirdPartyAPI(dateObject);
         yield callPopulateDatabaseAppointmentsWithGeoCoordinates();
@@ -68,6 +70,7 @@ function* getAppointmentsFromThirdPartyAPI(action) {
             payload: appointmentsWithInitialDriveTimes,
         })
         // END UPDATE SCHEDULE REDUCER WITH CONVERTED DATA
+        yield endPageLoadingSpinner();
     } catch (error) {
         console.log('POPULATE DATABASE WITH THIRD-PARTY APPOINTMENTS FAILED', error);
     }
@@ -83,10 +86,13 @@ function* getInitialDriveData(appointmentsArray, resourcesArray) {
     let locationsObject;
     let nextEvent;
     let updatedEvent;
+    let message = 'Getting initial commute data...';
     const arrayOfResourcesWithOrderedArraysOfEvents = orderEventsByResourceAndTime(resources, events);
     console.log('the array of resources with arrays of events is:');
     console.log(arrayOfResourcesWithOrderedArraysOfEvents);
-    // loop through each resource array
+    try {
+        yield startPageLoadingSpinner(message);
+        // LOOP THROUGH EACH RESOURCE ARRAY
     for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
         let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
         console.log('the current resource events array is: ');
@@ -114,12 +120,22 @@ function* getInitialDriveData(appointmentsArray, resourcesArray) {
                 updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, currentEvent)
                 nextEvents.splice(idx, 1, updatedEvent);
                 console.log('updated nextEvents array:');
-                console.log(nextEvents);
                 console.log('returning events array');
+                console.log(nextEvents);
             }
-        }
+            // UDPDATE THE DATABASE WITH UPDATED EVENT
+            yield put({
+                type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+                payload: updatedEvent
+            }) // END UPDATE THE DATABASE WITH UPDATED EVENT
+        }// END LOOP THROUGH EACH RESOURCE ARRAY
+        return nextEvents;
     }
-    return nextEvents;
+    endPageLoadingSpinner();
+}catch (error) {
+    console.log('GET INITIAL DRIVE DATA FAILED', error);
+}
+
 } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 
 
@@ -141,6 +157,39 @@ function* initiatePutAppointmentsToThirdPartyAPI() {
     }
 
 }
+
+function* endPageLoadingSpinner() {
+    console.log('ending page loading spinner');
+    const payload = {
+        status: false
+    }
+    try {
+        yield put({
+            type: SCHEDULE_ACTIONS.END_PAGE_IS_LOADING,
+            payload
+        })
+    } catch (error) {
+        console.log('END PAGE LOADING SPINNER FAILED', error);
+    }
+}
+
+function* startPageLoadingSpinner(message) {
+    console.log('starting page loading spinner');
+    console.log(message);
+    const payload = {
+        status: true,
+        message: message,
+    }
+    try {
+        yield put({
+            type: SCHEDULE_ACTIONS.START_PAGE_IS_LOADING,
+            payload
+        })
+    } catch (error) {
+        console.log('START PAGE LOADING SPINNER FAILED', error);
+    }
+}
+
 
 function* updateCurrentDate(action) {
     console.log('init updateCurrentDate');
@@ -175,10 +224,12 @@ function* updateEventsUponMove(action) {
     let eventToUpdate;
     let idx;
     let locationsObject;
+    let message = 'Updating appointments.';
     let updatedEvent;
 
     try {
         // UPDATE MOVED EVENT
+        startPageLoadingSpinner(message);
         console.log('Updating the moved event.');
         eventToUpdate = updatedMovedEvent;
         idx = events.indexOf(eventToUpdate)
@@ -382,7 +433,7 @@ function* updateEventsUponMove(action) {
             type: SCHEDULE_ACTIONS.SET_APPOINTMENTS_AFTER_DRAG_AND_DROP,
             payload: events
         }) // END INITIATE RE-RENDER OF UPDATED EVENTS
-
+        endPageLoadingSpinner();
     } catch (error) {
         console.log('UPDATE UPON EVENT MOVE FAILED', error);
     }

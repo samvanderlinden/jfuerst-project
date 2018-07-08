@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import './loader.css';
 
 // dnd library imports //
 import localizer from '../../drag-and-drop-library/src/localizers/globalize';
@@ -39,6 +40,7 @@ const mapStateToProps = state => ({
     currentAppointments: state.schedule.currentAppointments,
     currentDate: state.schedule.currentDate,
     currentDriveData: state.schedule.currentDriveData,
+    pageIsLoading: state.schedule.pageIsLoading,
     resources: state.schedule.resources,
     user: state.user,
 });
@@ -51,6 +53,7 @@ class ScheduleView extends Component {
         this.state = {
             events: [...this.props.currentAppointments],
             usersAvailability: {},
+            pageIsLoading: this.props.pageIsLoading,
         }
         this.moveEvent = this.moveEvent.bind(this)
     }
@@ -194,7 +197,7 @@ class ScheduleView extends Component {
         else {
             dispatchActionToUpdateMovedEvents(payload, this.props);
         } // END CASE: MOVED EVENT DOES NOT CHANGE TIMES
-       } // END UPDATE DOM UPON MOVING EVENT
+    } // END UPDATE DOM UPON MOVING EVENT
 
     // ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
     orderEventsByResourceAndTime = (resourcesArray, eventsArray) => {
@@ -298,14 +301,29 @@ class ScheduleView extends Component {
                 <div className="navbar">
                     <Nav />
                 </div>
+
+
                 <div className="instructions">
 
                     {/* <h1 className="lead">{title}</h1> */}
 
                 </div>
 
-                {content}
+                {
+                    this.props.pageIsLoading.status ?
+                        <div className="loaderContainer">
+                            <div className="loader">
 
+                            </div>
+                            <div className="loaderMessage">
+                            <p>{this.props.pageIsLoading.message}</p>
+                            </div>
+                        </div>
+                        :
+                        <div>
+                        { content }
+                        </div>
+                }
 
             </div>
         );
