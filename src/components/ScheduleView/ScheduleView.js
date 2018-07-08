@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import './loader.css';
 
 // dnd library imports //
 import localizer from '../../drag-and-drop-library/src/localizers/globalize';
@@ -298,6 +299,7 @@ class ScheduleView extends Component {
                 <div className="navbar">
                     <Nav />
                 </div>
+                <div className="loader"></div>
                 <div className="instructions">
 
                     {/* <h1 className="lead">{title}</h1> */}
