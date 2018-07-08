@@ -83,7 +83,7 @@ class Nav extends Component {
 
     return (
       <div className={classes.list}>
-        <Button onClick={this.toggleDrawer('left', true)}><i className="fas fa-bars fa-2x"></i></Button>
+        <Button onClick={this.toggleDrawer('left', true)}><i className="fas fa-bars fa-3x"></i></Button>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
           <div
             tabIndex={0}
