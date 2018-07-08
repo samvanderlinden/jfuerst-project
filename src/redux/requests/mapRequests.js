@@ -12,18 +12,18 @@ export function getData() {
 }
 
 
-export function getGeoCoordinates() {
-  const config = {
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true,
-  };
-  console.log(' getGeoCoordinates');
-  return axios.get('/api/google/geocode', config)
-  .then(response => response.data)
-  .catch((error) => {
-    throw error;
-  });
-}
+// export function getGeoCoordinates() {
+//   const config = {
+//     headers: { 'Content-Type': 'application/json' },
+//     withCredentials: true,
+//   };
+//   console.log(' getGeoCoordinates');
+//   return axios.get('/api/google/geocode', config)
+//   .then(response => response.data)
+//   .catch((error) => {
+//     throw error;
+//   });
+// }
 
 // export function getTravelDistance(mapData) {
 //   console.log('-----mapData----', mapData)
