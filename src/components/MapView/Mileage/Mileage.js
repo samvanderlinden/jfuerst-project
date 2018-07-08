@@ -34,6 +34,8 @@ class Mileage extends Component {
                         {photogs}
                     </tbody>
                 </table>
+
+          
             </div>
         )
     }

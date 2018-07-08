@@ -1,7 +1,7 @@
 table {
     border-collapse: collapse;
     background: #fff;
-    width: 100%;
+    width: 50%;
     position: relative;
 }
 
@@ -10,7 +10,7 @@ th, td {
 }
 
 th{
-    background: rgb(187, 186, 186); 
+    background: #b6e0f5;
 }
 
 .mileage-table{
@@ -23,7 +23,7 @@ th{
 }
 
 .mapContainer{
-    grid-column: 1;
+    grid-template-columns: 1fr;
     grid-row: 3;
     border: 3px solid #000;
     min-height: 300px;
@@ -38,8 +38,11 @@ th{
     display: grid;
     grid-gap: 20px;
     margin: 20px;
-    grid-template-columns: 500px,250px;
-    grid-template-rows: 500px,250px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
     background-color: #fff;
     color: #444;
     }
+
+
+

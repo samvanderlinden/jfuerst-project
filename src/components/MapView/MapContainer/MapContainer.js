@@ -17,7 +17,7 @@ class MapContainer extends Component {
                 lat: 44.986656,
                 lng: -93.258133,
             },
-            zoom: 12,
+            zoom: 10,
         };
     }
 
