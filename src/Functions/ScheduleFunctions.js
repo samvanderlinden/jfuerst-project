@@ -106,6 +106,24 @@ export function confirmAction(action, props) {
     })
 } // END CONFIRM ACTION
 
+// CONFIRM ACTION
+export function confirmTimeChange(action) {
+    confirmAlert({
+        title: `${action.title}`,
+        message: `${action.message}`,
+        buttons: [
+            {
+                label: 'Yes',
+                onClick: () => {return true}
+            },
+            {
+                label: 'No',
+                onClick: () => {return false}
+            }
+        ]
+    })
+} // END CONFIRM ACTION
+
 // CONVERT APPOINTMENTS TO FORMAT EXPECTED BY THIRD-PARTY SCHEDULING API
 export function convertAppointmentForSendingToDatabase(updatedObject) {
     console.log('init convertAppointmentForSendingToDatabase given:')

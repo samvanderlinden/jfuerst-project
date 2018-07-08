@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // dnd library imports //
@@ -26,6 +27,7 @@ import { SCHEDULE_ACTIONS } from '../../redux/actions/scheduleActions';
 
 // FUNCTION IMPORTS
 import {
+    confirmTimeChange,
     orderEventsByResourceAndTime,
 } from '../../Functions/ScheduleFunctions';
 // END FUNCTION IMPORTS
@@ -128,6 +130,7 @@ class ScheduleView extends Component {
         console.log(events[idx] === updatedMovedEvent);
         // END UPDATE MOVED EVENT
 
+
         // INSERT UPDATED MOVED EVENT INTO EVENTS ARRAY
         let nextEvents = [...events];
         nextEvents.splice(idx, 1, updatedMovedEvent);
@@ -174,11 +177,40 @@ class ScheduleView extends Component {
             updatedMovedEvent: updatedMovedEvent,
             events: nextEvents,
         }
-        this.props.dispatch({
-            type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
-            payload
-        })
+        // IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
+        console.log(event.start);
+        console.log(updatedMovedEvent.start);
+        console.log(event.start - updatedMovedEvent.start);
+        if (event.start - updatedMovedEvent.start != 0) {
+            let action = {
+                title: 'Change times?',
+                message: 'The appointment is dropping into a different start time. \n Do you want to change start times?'
+            }
+            let confirmResponse = confirmTimeChange(action);
+            console.log('user responded with');
+            console.log(confirmResponse);
+            // CASE: USER CONFIRMS YES
+            if (confirmResponse == true) {
 
+                this.props.dispatch({
+                    type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
+                    payload
+                })
+            } // END CASE: USER CONFIRMS YES
+
+            // CASE: USER CONFIRMS NO
+            else {
+                alert('Aborted');
+            } // END CASE: USER CONFIRMS NO
+        }// IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
+
+        // CASE: MOVED EVENT DOES NOT CHANGE TIMES
+        else {
+            this.props.dispatch({
+                type: SCHEDULE_ACTIONS.UPDATE_EVENTS_UPON_MOVE,
+                payload
+            })
+        } // END CASE: MOVED EVENT DOES NOT CHANGE TIMES
     } // END UPDATE DOM UPON MOVING EVENT
 
     // ORDER EVENTS IN ARRAYS SORTED BY RESOURCE AND TIME
