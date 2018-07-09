@@ -4,7 +4,6 @@ import { SCHEDULE_ACTIONS } from '../redux/actions/scheduleActions';
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { brown100 } from 'material-ui/styles/colors';
 
 export function searchArray(propertyName, array, desiredValuesIndex) {
     for (let i = 0; i < array.length; i++) {
@@ -114,9 +113,13 @@ export function confirmTimeChange(dialogueData, payload, props) {
         message: `${dialogueData.message}`,
         buttons: [
             {
-                label: 'OK',
+                label: 'Yes',
                 onClick: () => dispatchActionToUpdateMovedEvents(payload, props)
             },
+            {
+                label: 'No',
+                onClick: () => alert('Aborted.')
+            }
         ]
     })
 } // END CONFIRM TIME CHANGE
@@ -128,11 +131,9 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
     let finalObject = {
         "databaseID": updatedObject.databaseID,
         "updates": {
-            // FUTURE FUNCTIONALITY
-            // "time": moment(updatedObject.start).format('h:mma'),
-            // "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
-            // "datetime": moment(updatedObject.start).toDate(),
-            // END FUTURE FUNCTIONALITY
+            "time": moment(updatedObject.start).format('h:mma'),
+            "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
+            "datetime": moment(updatedObject.start).toDate(),
             "calendar": updatedObject.calendar,
             "calendarID": updatedObject.calendarID,
             "driveDistanceToNextAppointment": updatedObject.driveDistanceToNextAppointment,
@@ -158,43 +159,11 @@ export function executeSubmitChangesToThirdPartyAPI(props) {
 
 // PARSE EVENTS ARRAY FOR UNIQUE RESOURCES AND BUILD A UNIQUE-RESOURCES ARRAY
 export function extractResourcesFromCalendars(originalObject) {
-    const colors = [
-        'red',
-        'green',
-        'blue',
-        'purple',
-        'cyan',
-        'grey',
-        'brown',
-        'teal',
-        'orange',
-        'lavendar',
-        'dark blue',
-        'black',
-        'navy',
-        'cherry',
-        'red',
-        'green',
-        'blue',
-        'purple',
-        'cyan',
-        'grey',
-        'brown',
-        'teal',
-        'orange',
-        'lavendar',
-        'dark blue',
-        'black',
-        'navy',
-        'cherry',
-    ]
-
-    const resourceList = originalObject.map((currentResource, i) => {
+    const resourceList = originalObject.map(currentResource => {
         return {
             id: currentResource.name,
             title: currentResource.name,
             calendarID: currentResource.id,
-            calendarColor: colors[i]
         }
     });
     return resourceList;
@@ -231,7 +200,6 @@ export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {
     console.log(eventsArray);
     // create array to contain an array of events for each resource
     let arrayOfArrays = [];
-    let backgroundColor;
     // creates an array of events for each resource
     for (let i = 0; i < resourcesArray.length; i++) {
         let currentResource = resourcesArray[i];
@@ -239,8 +207,6 @@ export function orderEventsByResourceAndTime(resourcesArray, eventsArray) {
         // each event is checked by resource id and pushed into that resources' array of events
         for (let j = 0; j < eventsArray.length; j++) {
             if (eventsArray[j].resourceId === currentResource.id) {
-                backgroundColor = currentResource.calendarColor;
-                eventsArray[j] = {...eventsArray[j], backgroundColor};
                 newArray.push(eventsArray[j])
             }
         }

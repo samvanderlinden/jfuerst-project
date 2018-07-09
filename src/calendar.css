@@ -73,8 +73,8 @@ label {
 }
 
 .menuButton {
-  top: -200px;
-  right: -300px;
+  top: -240px;
+  /* right: -300px; */
 }
 
 input {
@@ -579,6 +579,7 @@ input {
   }
   .rbc-event-label {
     font-size: 80%;
+    padding-top: 50px;
   }
   .rbc-event-overlaps {
     box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5);

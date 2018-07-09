@@ -123,11 +123,10 @@ class ScheduleView extends Component {
         const resourceId = newResource.id;
         const calendarID = newResource.calendarID;
         const calendar = newResource.title
-        const backgroundColor = newResource.calendarColor;
         // END PARSE NEW RESOURCE TO LOCAL VARIABLES
 
         // UPDATE MOVED EVENT
-        let updatedMovedEvent = { ...event, start, end, resourceId, calendar, calendarID, backgroundColor };
+        let updatedMovedEvent = { ...event, start, end, resourceId, calendar, calendarID };
         console.log(updatedMovedEvent);
         console.log('event and updatedEvent have similar data?');
         console.log(updatedMovedEvent === event);
@@ -174,7 +173,7 @@ class ScheduleView extends Component {
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
         // END FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY AFTER IT WAS MOVED
         console.log('dispatching action to update events upon drag and drop')
-        let payload = {
+        const payload = {
             eventAfterMovedEvent: eventAfterMovedEvent,
             eventAfterMovedEventInPreviousArray: eventAfterMovedEventInPreviousArray,
             eventBeforeMovedEvent: eventBeforeMovedEvent,
@@ -187,17 +186,10 @@ class ScheduleView extends Component {
         console.log(updatedMovedEvent.start);
         console.log(event.start - updatedMovedEvent.start);
         if (event.start - updatedMovedEvent.start != 0) {
-            start = event.start;
-            updatedMovedEvent = { ...updatedMovedEvent, start };
             let dialogueData = {
-                title: `Changing calendar to ${updatedMovedEvent.calendar}`,
-                message: `Start time remaining at ${updatedMovedEvent.start}.`
+                title: 'Change times?',
+                message: 'The appointment is dropping into a different start time. \n Do you want to change start times?'
             }
-            payload = {
-                ...payload,
-                updatedMovedEvent
-            }
-            console.log(payload);
             confirmTimeChange(dialogueData, payload, this.props);
         }// END IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
 
