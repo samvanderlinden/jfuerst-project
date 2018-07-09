@@ -383,7 +383,9 @@ class DaySlot extends React.Component {
               height: `${height}%`,
               [isRtl ? 'right' : 'left']: `${Math.max(0, xOffset)}%`,
               width: `${width}%`,
+              // SET EVENT BACKGROUND COLOR BASED UPON EVENT KEY
               backgroundColor: `${event.backgroundColor}`
+              // END SET EVENT BACKGROUND COLOR BASED UPON EVENT KEY
             }}
             className={cn(`rbc-event ${dayClass}`, className, {
               'rbc-selected': _isSelected,
