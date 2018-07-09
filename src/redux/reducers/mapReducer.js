@@ -61,6 +61,7 @@ const mapData = (state = [], action) => {
 
 //Mileage table logic to only show each photog only once with the marker img and add all the travel distance/mileages of that photog together
 const milesViewData = (state = [], action) => {
+  console.log('---------ACTIONNNNNN', action)
   switch (action.type) {
     case MAP_ACTIONS.SET_MILES_VIEW_DATA:
 
@@ -76,16 +77,26 @@ const milesViewData = (state = [], action) => {
 
         let photogExist = false;
 
+        //check if travel distant is undefine, if so continue to next appointment
+        if(action.payload[i].driveDistanceToNextAppointment == null){
+          continue;
+        }
+
         for (let j = 0; j < photogArray.length; j++) {
           if (photogArray[j].photog == action.payload[i].calendar) {
             photogExist = true;
-            photogArray[j].miles += action.payload[i].travel_distance;
+            // photogArray[j].miles += action.payload[i].travel_distance;
+            console.log('distant i at ' + i, action.payload[i].driveDistanceToNextAppointment)
+            photogArray[j].miles += parseFloat(action.payload[i].driveDistanceToNextAppointment);
+
             break;
           }
         }
 
         if (!photogExist) {
-          photogArray.push({ photog: action.payload[i].calendar, marker: markers[counter], miles: action.payload[i].travel_distance })
+          // photogArray.push({ photog: action.payload[i].calendar, marker: markers[counter], miles: action.payload[i].travel_distance })
+          photogArray.push({ photog: action.payload[i].calendar, marker: markers[counter], miles: parseFloat(action.payload[i].driveDistanceToNextAppointment) })
+
           if (counter == markers.length - 1) {
             counter = 0;
           } else {
@@ -95,6 +106,10 @@ const milesViewData = (state = [], action) => {
 
       }
 //End of mileage table only allow one one marker to show and add all the travel distance/mileages of the photog together
+
+for (let i = 0; i < photogArray.length ; i++) {
+  photogArray[i].miles = photogArray[i].miles.toFixed(2);
+}
 
       return photogArray;
     default:
