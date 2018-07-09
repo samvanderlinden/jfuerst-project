@@ -114,9 +114,13 @@ export function confirmTimeChange(dialogueData, payload, props) {
         message: `${dialogueData.message}`,
         buttons: [
             {
-                label: 'OK',
+                label: 'Yes',
                 onClick: () => dispatchActionToUpdateMovedEvents(payload, props)
             },
+            {
+                label: 'No',
+                onClick: () => alert('Aborted.')
+            }
         ]
     })
 } // END CONFIRM TIME CHANGE
@@ -128,11 +132,9 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
     let finalObject = {
         "databaseID": updatedObject.databaseID,
         "updates": {
-            // FUTURE FUNCTIONALITY
-            // "time": moment(updatedObject.start).format('h:mma'),
-            // "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
-            // "datetime": moment(updatedObject.start).toDate(),
-            // END FUTURE FUNCTIONALITY
+            "time": moment(updatedObject.start).format('h:mma'),
+            "endTime": moment(updatedObject.start).add(Number(updatedObject.duration), 'm').format('h:mma'),
+            "datetime": moment(updatedObject.start).toDate(),
             "calendar": updatedObject.calendar,
             "calendarID": updatedObject.calendarID,
             "driveDistanceToNextAppointment": updatedObject.driveDistanceToNextAppointment,
