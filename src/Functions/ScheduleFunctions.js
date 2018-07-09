@@ -136,6 +136,8 @@ export function convertAppointmentForSendingToDatabase(updatedObject) {
             "datetime": moment(updatedObject.start).toDate(),
             "calendar": updatedObject.calendar,
             "calendarID": updatedObject.calendarID,
+            "driveDistanceToNextAppointment": updatedObject.driveDistanceToNextAppointment,
+            "driveTimeToNextAppointment": updatedObject.driveTimeToNextAppointment,
         }
     };
     return finalObject;

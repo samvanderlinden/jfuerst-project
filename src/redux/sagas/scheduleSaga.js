@@ -93,48 +93,48 @@ function* getInitialDriveData(appointmentsArray, resourcesArray) {
     try {
         yield startPageLoadingSpinner(message);
         // LOOP THROUGH EACH RESOURCE ARRAY
-    for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
-        let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
-        console.log('the current resource events array is: ');
-        console.log(currentResourceEvents);
-        // loop through event array
-        for (let j = 0; j < currentResourceEvents.length - 1; j++) {
-            const idx = events.indexOf(currentResourceEvents[j]);
-            currentEvent = currentResourceEvents[j];
-            // CASE: CURRENT EVENT IS IN THE PAST
-            if (currentEvent.end < new Date()) {
-                console.log('current event ends in the past. Drive data cannot be fetched');
-            } else {
-                nextEvent = currentResourceEvents[j + 1];
-                console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
-                console.log(currentEvent);
-                console.log('Its index in events array is ' + idx);
-                console.log('next event is:')
-                console.log(nextEvent);
-                locationsObject = {
-                    origins: currentEvent,
-                    destinations: nextEvent,
+        for (let i = 0; i < arrayOfResourcesWithOrderedArraysOfEvents.length; i++) {
+            let currentResourceEvents = arrayOfResourcesWithOrderedArraysOfEvents[i];
+            console.log('the current resource events array is: ');
+            console.log(currentResourceEvents);
+            // loop through event array
+            for (let j = 0; j < currentResourceEvents.length - 1; j++) {
+                const idx = events.indexOf(currentResourceEvents[j]);
+                currentEvent = currentResourceEvents[j];
+                // CASE: CURRENT EVENT IS IN THE PAST
+                if (currentEvent.end < new Date()) {
+                    console.log('current event ends in the past. Drive data cannot be fetched');
+                } else {
+                    nextEvent = currentResourceEvents[j + 1];
+                    console.log('current event is: ' + j + ' of ' + currentResourceEvents.length);
+                    console.log(currentEvent);
+                    console.log('Its index in events array is ' + idx);
+                    console.log('next event is:')
+                    console.log(nextEvent);
+                    locationsObject = {
+                        origins: currentEvent,
+                        destinations: nextEvent,
+                    }
+                    // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
+                    let currentDriveData = yield callGetDriveData(locationsObject);
+                    updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, currentEvent)
+                    nextEvents.splice(idx, 1, updatedEvent);
+                    console.log('updated nextEvents array:');
+                    console.log('returning events array');
+                    console.log(nextEvents);
+                    // UDPDATE THE DATABASE WITH UPDATED EVENT
+                    yield put({
+                        type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
+                        payload: updatedEvent
+                    }) // END UPDATE THE DATABASE WITH UPDATED EVENT
                 }
-                // GET DRIVE TIME BETWEEN CURRENT EVENT AND NEXT EVENT
-                let currentDriveData = yield callGetDriveData(locationsObject);
-                updatedEvent = yield updateOriginsEventWithDriveData(currentDriveData, currentEvent)
-                nextEvents.splice(idx, 1, updatedEvent);
-                console.log('updated nextEvents array:');
-                console.log('returning events array');
-                console.log(nextEvents);
-            }
-            // UDPDATE THE DATABASE WITH UPDATED EVENT
-            yield put({
-                type: SCHEDULE_ACTIONS.PUT_APPOINTMENT_TO_DATABASE,
-                payload: updatedEvent
-            }) // END UPDATE THE DATABASE WITH UPDATED EVENT
-        }// END LOOP THROUGH EACH RESOURCE ARRAY
-        return nextEvents;
+            }// END LOOP THROUGH EACH RESOURCE ARRAY
+        }
+        yield endPageLoadingSpinner();
+    } catch (error) {
+        console.log('GET INITIAL DRIVE DATA FAILED', error);
     }
-    endPageLoadingSpinner();
-}catch (error) {
-    console.log('GET INITIAL DRIVE DATA FAILED', error);
-}
+    return nextEvents;
 
 } // END PARSE EVENTS ARRAY AND GET DRIVE TIMES BETWEEN EVENTS
 

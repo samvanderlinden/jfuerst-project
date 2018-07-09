@@ -302,7 +302,6 @@ class ScheduleView extends Component {
                     <Nav />
                 </div>
 
-
                 <div className="instructions">
 
                     {/* <h1 className="lead">{title}</h1> */}
@@ -316,7 +315,7 @@ class ScheduleView extends Component {
 
                             </div>
                             <div className="loaderMessage">
-                            <p>{this.props.pageIsLoading.message}</p>
+                            <h4>{this.props.pageIsLoading.message}</h4>
                             </div>
                         </div>
                         :

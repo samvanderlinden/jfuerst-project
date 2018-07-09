@@ -14,6 +14,8 @@ const AppointmentSchema = new Schema({
   dateCreated: { type: String },
   datetimeCreated: { type: Date },
   datetime: { type: Date },
+  driveDistanceToNextAppointment: { type: String },
+  driveTimeToNextAppointment: { type: String},
   price: { type: String },
   priceSold: { type: String },
   paid: { type: String },
