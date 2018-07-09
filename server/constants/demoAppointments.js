@@ -1162,8 +1162,8 @@ const appointments = [
     "phone": "612-545-1231",
     "email": "ssamsville@livingdomo.com",
     "date": "July 11, 2018",
-    "time": "11:00am",
-    "endTime": "11:45am",
+    "time": "1:30pm",
+    "endTime": "2:15pm",
     "dateCreated": "June 18, 2018",
     "datetimeCreated": "2018-06-18T19:07:11-0500",
     "datetime": "2018-07-11T11:00:00-0500",
@@ -1436,7 +1436,7 @@ const appointments = [
         ]
       }
     ],
-    "location": "1501 Hennepin Ave, Minneapolis, MN 55403",
+    "location": "3300 Lyndale Ave N, Minneapolis, MN 55412",
     "notes": "m\r\nElk River\r\nM",
     "timezone": "America/Chicago",
     "calendarTimezone": "America/Chicago",
