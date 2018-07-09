@@ -113,13 +113,9 @@ export function confirmTimeChange(dialogueData, payload, props) {
         message: `${dialogueData.message}`,
         buttons: [
             {
-                label: 'Yes',
+                label: 'OK',
                 onClick: () => dispatchActionToUpdateMovedEvents(payload, props)
             },
-            {
-                label: 'No',
-                onClick: () => alert('Aborted.')
-            }
         ]
     })
 } // END CONFIRM TIME CHANGE
