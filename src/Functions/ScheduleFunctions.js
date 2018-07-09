@@ -162,8 +162,8 @@ export function extractResourcesFromCalendars(originalObject) {
 
     // COLORS FOR ASSIGNING TO CALENDAR
     const colors = [
-        '##B150FB',
-        '##497DFB',
+        '#B150FB',
+        '#497DFB',
         '#E5427A',
         '#39B341',
         '#52FCFD',
