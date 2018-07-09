@@ -173,7 +173,7 @@ class ScheduleView extends Component {
         const eventAfterMovedEvent = this.selectEventAfterMovedEventInOrderedArrayOfEvents(arrayOfResourcesWithOrderedArraysOfEvents, event.id);
         // END FIND THE EVENT BEFORE AND AFTER THE MOVED EVENT IN ITS ORDERED ARRAY AFTER IT WAS MOVED
         console.log('dispatching action to update events upon drag and drop')
-        const payload = {
+        let payload = {
             eventAfterMovedEvent: eventAfterMovedEvent,
             eventAfterMovedEventInPreviousArray: eventAfterMovedEventInPreviousArray,
             eventBeforeMovedEvent: eventBeforeMovedEvent,
@@ -186,10 +186,17 @@ class ScheduleView extends Component {
         console.log(updatedMovedEvent.start);
         console.log(event.start - updatedMovedEvent.start);
         if (event.start - updatedMovedEvent.start != 0) {
+            start = event.start;
+            updatedMovedEvent = { ...updatedMovedEvent, start };
             let dialogueData = {
-                title: 'Change times?',
-                message: 'The appointment is dropping into a different start time. \n Do you want to change start times?'
+                title: `Changing calendar to ${updatedMovedEvent.calendar}`,
+                message: `Start time remaining at ${updatedMovedEvent.start}.`
             }
+            payload = {
+                ...payload,
+                updatedMovedEvent
+            }
+            console.log(payload);
             confirmTimeChange(dialogueData, payload, this.props);
         }// END IF MOVED EVENT IS AT A NEW TIME, CONFIRM TIME CHANGE
 
