@@ -3491,7 +3491,7 @@ const appointments = [
     "addonIDs": [],
     "category": "MSP FusionTech™ Virtual Tours (Photography)",
     "duration": "60",
-    "calendar": "Ahsley",
+    "calendar": "Ashley",
     "calendarID": 1,
     "certificate": null,
     "confirmationPage": "https://www.acuityscheduling.com/schedule.php?action=appt&owner=11229138&id%5B%5D=4a8d7052b04197c3aeb5f886b0de9174",
